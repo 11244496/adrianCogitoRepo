@@ -10,7 +10,9 @@ import Entity.Address;
 import Entity.Barangay;
 import Entity.Citizen;
 import Entity.Files;
+import Entity.Location;
 import Entity.Project;
+import Entity.TLocation;
 import Entity.Testimonial;
 import Entity.User;
 import java.sql.Connection;
@@ -129,7 +131,6 @@ public class CitizenDAO {
     }
 
     //=======================================ALL TESTIMONIAL RELATED CODES=============================================
-    //FIX THIS BASED ON NEW DB MAKE THIS JUST LIKE THE GET PROJECT
     public Testimonial getTestimonial(int id) {
         Testimonial t = null;
         Citizen c = null;
@@ -137,60 +138,30 @@ public class CitizenDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "select * from testimonial join citizen on citizen.id = citizen_id join users on users.id = users_id where testimonial.ID = ?";
+            String query = "select testimonial.id, title, dateuploaded, \n"
+                    + "category, message, foldername, status, citizen.id, \n"
+                    + "firstname, lastname, users.id, username from testimonial \n"
+                    + "join citizen on citizen_id = citizen.ID\n"
+                    + "join users on users_id = users.id"
+                    + " where testimonial.ID = ?";
 
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             result = statement.executeQuery();
             while (result.next()) {
                 u = new User(result.getInt("users.id"), result.getString("username"));
-                c = new Citizen(result.getInt("citizen.id"), result.getString("FirstName"), result.getString("middlename"), u);
-                t = new Testimonial(result.getInt("testimonial.id"), result.getString("testimonial.title"), result.getString("testimonial.dateuploaded"), result.getString("testimonial.message"), result.getString("testimonial.foldername"), result.getString("testimonial.location"), result.getString("testimonial.locationdetails"), result.getString("testimonial.category"), result.getString("testimonial.concern"), result.getString("testimonial.status"), c);
-                Project p = new Project();
-                p.setId(result.getString("testimonial.Project_ID"));
-                t.setProject(p);
+                c = new Citizen(result.getInt("citizen.id"), result.getString("FirstName"), result.getString("lastname"), u);
+                t = new Testimonial(result.getInt("testimonial.id"), result.getString("title"), result.getString("dateuploaded"),
+                        result.getString("message"), result.getString("foldername"), result.getString("category"),
+                        result.getString("status"), c);
             }
 
             connection.close();
         } catch (SQLException ex) {
+            System.out.println("Error in getTestimonial();");
             Logger.getLogger(DAO.ActivityDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return t;
-    }
-
-    //CITIZEN HOME METHODS
-    public ArrayList<Integer> gettoptestimonialID() {
-
-        ArrayList<Integer> toptestiID = new ArrayList<Integer>();
-
-        try {
-            myFactory = ConnectionFactory.getInstance();
-            connection = myFactory.getConnection();
-
-            String query = "SELECT Testimonial_ID, COUNT(*)\n"
-                    + "FROM supporters\n"
-                    + "Group By Testimonial_ID\n"
-                    + "Order By COUNT(*) DESC\n"
-                    + "LIMIT 10";
-
-            statement = connection.prepareStatement(query);
-            result = statement.executeQuery();
-
-            while (result.next()) {
-
-                int ID = result.getInt("Testimonial_ID");
-
-                toptestiID.add(ID);
-            }
-            connection.close();
-            return toptestiID;
-
-        } catch (SQLException ex) {
-            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return toptestiID;
-
     }
 
     public int gettestimonialcount(Citizen c) {
@@ -208,6 +179,7 @@ public class CitizenDAO {
             }
             connection.close();
         } catch (SQLException ex) {
+            System.out.println("Error in gettestimonialcount()");
             Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return test;
@@ -218,7 +190,9 @@ public class CitizenDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "SELECT COUNT(*) as c FROM testimonial where Citizen_ID = ? AND Project_ID = ?";
+            String query = "select count(*) c from project_has_testimonial\n"
+                    + "join testimonial on testimonial_id = testimonial.id\n"
+                    + "where citizen_id = ? and project_id = ?";
 
             statement = connection.prepareStatement(query);
             statement.setInt(1, c.getId());
@@ -254,8 +228,56 @@ public class CitizenDAO {
         return subscribers;
     }
 
+    public ArrayList<Integer> getTestimonials(String query, Citizen c) {
+        ArrayList<Integer> testId = new ArrayList<>();
+        int id;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String ids = query;
+
+            statement = connection.prepareStatement(ids);
+            if (c != null) {
+                statement.setInt(1, c.getId());
+            }
+            result = statement.executeQuery();
+            while (result.next()) {
+                id = result.getInt("t");
+                testId.add(id);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            System.out.println("Error in getTestimonials()");
+            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return testId;
+    }
+
+    public ArrayList<TLocation> getLocation(Testimonial t) {
+        ArrayList<TLocation> locList = new ArrayList<>();
+        TLocation loc;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String ids = "select * from tlocation where testimonial_id = ?";
+
+            statement = connection.prepareStatement(ids);
+            statement.setInt(1, t.getId());
+
+            result = statement.executeQuery();
+            while (result.next()) {
+                loc = new TLocation(result.getInt("id"), result.getString("longitude"), result.getString("latitude"), t);
+                locList.add(loc);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            System.out.println("Error in getLocation()");
+            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return locList;
+    }
+
     //========================================ALL FILE RELATED CODES===========================================
-    
     public ArrayList<Files> getFiles(int id, Testimonial t, String type) {
 
         ArrayList<Files> fl = new ArrayList<Files>();

@@ -8,7 +8,6 @@ package Servlet;
 import DAO.CitizenDAO;
 import Entity.Citizen;
 import Entity.Testimonial;
-import Entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -22,9 +21,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Lenovo
+ * @author RoAnn
  */
-public class Citizen_Home extends HttpServlet {
+public class Citizen_SearchTestimonial extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,46 +41,59 @@ public class Citizen_Home extends HttpServlet {
         HttpSession session = request.getSession();
         try {
 
-            CitizenDAO citizenDAO = new CitizenDAO();
+            CitizenDAO c = new CitizenDAO();
+            Citizen citizen = (Citizen) session.getAttribute("user");
+            
+            String getSubscribedQ = "select testimonial_id t from supporters where citizen_id = ?";
+            String getAllQ = "select id from testimonial";
+            String getTrendingQ = "select testimonial_id from supporters group by testimonial_id order by count(*) desc";
+            String getMineQ = "select id from testimonial where citizen_id = ?";
 
-            CitizenDAO ctDAO = new CitizenDAO();
-            Citizen c = (Citizen) session.getAttribute("user");
-            User user = ctDAO.getUser(c);
+            ArrayList<Integer> subscribedId = c.getTestimonials(getSubscribedQ, citizen);
+            ArrayList<Integer> allTestId = c.getTestimonials(getAllQ, null);
+            ArrayList<Integer> trendingTestId = c.getTestimonials(getTrendingQ, null);
+            ArrayList<Integer> myTestId = c.getTestimonials(getMineQ, citizen);
 
-            //Get ArrayList of ID of Testimonials that has the most followers
-            String query = "SELECT Testimonial_ID \n"
-                    + "FROM supporters\n"
-                    + "Group By Testimonial_ID\n"
-                    + "Order By COUNT(*) DESC\n"
-                    + "LIMIT 10";
-
-            ArrayList<Integer> toptestiID = citizenDAO.getTestimonials(query, null);
-            ArrayList<Integer> Subscribers = new ArrayList<Integer>();
-
-            ArrayList<Testimonial> toptestifinal = new ArrayList<Testimonial>();
-
-            for (int x = 0; x < toptestiID.size(); x++) {
-                toptestifinal.add(ctDAO.getTestimonial(toptestiID.get(x)));
+            ArrayList<Testimonial> subscribedTestimonials = new ArrayList<Testimonial>();
+            ArrayList<Testimonial> allTestimonials = new ArrayList<Testimonial>();
+            ArrayList<Testimonial> trendingTestimonials = new ArrayList<Testimonial>();
+            ArrayList<Testimonial> myTestimonials = new ArrayList<Testimonial>();
+            Testimonial t;
+            
+            for (int id : subscribedId) {
+                t = c.getTestimonial(id);
+                t.setTlocation(c.getLocation(t));
+                subscribedTestimonials.add(t);
             }
 
-            for (int x = 0; x < toptestifinal.size(); x++) {
-                toptestifinal.get(x).setFiles(ctDAO.getFiles(toptestifinal.get(x).getId(), toptestifinal.get(x), "Image"));
-                Subscribers.add(ctDAO.getnumberofsubscribers(toptestifinal.get(x)));
+            for (int id : allTestId) {
+                t = c.getTestimonial(id);
+                t.setTlocation(c.getLocation(t));
+                allTestimonials.add(t);
             }
 
-            //Get Count of Testimonials with this user
-            int mytestimonialnumber = citizenDAO.gettestimonialcount(c);
+            for (int id : trendingTestId) {
+                t = c.getTestimonial(id);
+                t.setTlocation(c.getLocation(t));
+                trendingTestimonials.add(t);
+            }
 
-            //Get Count of Testimonials without projet ID
-            int unlinkedtestimonials = citizenDAO.getunlikedtestimonial(c);
+            for (int id : myTestId) {
+                t = c.getTestimonial(id);
+                t.setTlocation(c.getLocation(t));
+                myTestimonials.add(t);
+            }
 
-            request.setAttribute("toptesti", toptestifinal);
-            request.setAttribute("mytestimonialnumber", mytestimonialnumber);
-            request.setAttribute("unlikedtestimonial", unlinkedtestimonials);
-            request.setAttribute("Subscribers", Subscribers);
+            request.setAttribute("allTestimonials", allTestimonials);
+            request.setAttribute("myTestimonials", myTestimonials);
+            request.setAttribute("subscribedTestimonials", subscribedTestimonials);
+            request.setAttribute("trendingTestimonials", trendingTestimonials);
 
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch = context.getRequestDispatcher("/Citizen_Home.jsp");
+            String success = (String) request.getAttribute("success");
+
+            request.setAttribute("success", success);
+            RequestDispatcher dispatch = context.getRequestDispatcher("/Citizen_SearchTestimonial2.jsp");
             dispatch.forward(request, response);
 
         } finally {

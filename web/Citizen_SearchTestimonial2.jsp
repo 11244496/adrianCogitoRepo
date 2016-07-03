@@ -146,10 +146,6 @@
                         </header>
                         <div class="panel-body">
 
-
-
-
-
                             <a href="Citizen_CreateTestimonial.jsp" class="pull-right position"><button type="button" align="right" class="btn btn-primary">Create Image/Video Testimonial </button></a>
                             &nbsp;<a href="Citizen_CreateLetter.jsp" class="pull-right position" style="margin-right: 5px"><button type="button" align="right" class="btn btn-primary">Create Letter Testimonial</button></a>
                             <br>

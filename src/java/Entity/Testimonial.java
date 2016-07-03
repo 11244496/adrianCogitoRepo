@@ -19,7 +19,6 @@ public class Testimonial {
     private String message;
     private String folderName;
     private String category;
-    private String concern;
     private String status;
     private Citizen citizen;
     private ArrayList<TLocation> tlocation;
@@ -27,19 +26,29 @@ public class Testimonial {
     private ArrayList<Reply> replies;
     private ArrayList<Files> files;
     private ArrayList<TComments> tcomments;
+    private ArrayList<Supporter> supporters;
 
     
     public Testimonial() {
     }
 
-    public Testimonial(int id, String title, String dateUploaded, String message, String folderName, String category, String concern, String status, Citizen citizen, ArrayList<TLocation> tlocation, ArrayList<Project> project, ArrayList<Reply> replies, ArrayList<Files> files, ArrayList<TComments> tcomments) {
+    public Testimonial(int id, String title, String dateUploaded, String message, String folderName, String category, String status, Citizen citizen) {
         this.id = id;
         this.title = title;
         this.dateUploaded = dateUploaded;
         this.message = message;
         this.folderName = folderName;
         this.category = category;
-        this.concern = concern;
+        this.status = status;
+        this.citizen = citizen;
+    }
+
+    public Testimonial(String title, String dateUploaded, String message, String folderName, String category, String status, Citizen citizen, ArrayList<TLocation> tlocation, ArrayList<Project> project, ArrayList<Reply> replies, ArrayList<Files> files, ArrayList<TComments> tcomments) {
+        this.title = title;
+        this.dateUploaded = dateUploaded;
+        this.message = message;
+        this.folderName = folderName;
+        this.category = category;
         this.status = status;
         this.citizen = citizen;
         this.tlocation = tlocation;
@@ -131,20 +140,6 @@ public class Testimonial {
      */
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    /**
-     * @return the concern
-     */
-    public String getConcern() {
-        return concern;
-    }
-
-    /**
-     * @param concern the concern to set
-     */
-    public void setConcern(String concern) {
-        this.concern = concern;
     }
 
     /**
@@ -243,6 +238,14 @@ public class Testimonial {
      */
     public void setTcomments(ArrayList<TComments> tcomments) {
         this.tcomments = tcomments;
+    }
+
+    public ArrayList<Supporter> getSupporters() {
+        return supporters;
+    }
+
+    public void setSupporters(ArrayList<Supporter> supporters) {
+        this.supporters = supporters;
     }
 
     

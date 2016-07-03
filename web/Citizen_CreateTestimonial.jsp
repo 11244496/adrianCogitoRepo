@@ -66,7 +66,7 @@
                         <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <img alt="" src="img/avatar1_small.jpg">
-                                <span class="username">Hello <b><u><%=c.getFirstName()%></u></b>!</span>
+                                <span class="username">Hello <b><u><%//=c.getFirstName()%></u></b>!</span>
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu extended logout">
@@ -122,7 +122,7 @@
             <section class="wrapper site-min-height">
                 <section class="panel">
                     <header class="panel-heading">
-                        Create New Image / Video Testimonial
+                        Create Testimonial
                     </header>
                     <br>
                     <div class="panel-body">
