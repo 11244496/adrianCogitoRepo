@@ -44,10 +44,10 @@ public class Citizen_SearchTestimonial extends HttpServlet {
             CitizenDAO c = new CitizenDAO();
             Citizen citizen = (Citizen) session.getAttribute("user");
             
-            String getSubscribedQ = "select testimonial_id t from supporters where citizen_id = ?";
-            String getAllQ = "select id from testimonial";
-            String getTrendingQ = "select testimonial_id from supporters group by testimonial_id order by count(*) desc";
-            String getMineQ = "select id from testimonial where citizen_id = ?";
+            String getSubscribedQ = "select testimonial_id as t from supporters where citizen_id = ?";
+            String getAllQ = "select id as t from testimonial";
+            String getTrendingQ = "select testimonial_id as t from supporters group by testimonial_id order by count(*) desc";
+            String getMineQ = "select id as t from testimonial where citizen_id = ?";
 
             ArrayList<Integer> subscribedId = c.getTestimonials(getSubscribedQ, citizen);
             ArrayList<Integer> allTestId = c.getTestimonials(getAllQ, null);
@@ -62,25 +62,21 @@ public class Citizen_SearchTestimonial extends HttpServlet {
             
             for (int id : subscribedId) {
                 t = c.getTestimonial(id);
-                t.setTlocation(c.getLocation(t));
                 subscribedTestimonials.add(t);
             }
 
             for (int id : allTestId) {
                 t = c.getTestimonial(id);
-                t.setTlocation(c.getLocation(t));
                 allTestimonials.add(t);
             }
 
             for (int id : trendingTestId) {
                 t = c.getTestimonial(id);
-                t.setTlocation(c.getLocation(t));
                 trendingTestimonials.add(t);
             }
 
             for (int id : myTestId) {
                 t = c.getTestimonial(id);
-                t.setTlocation(c.getLocation(t));
                 myTestimonials.add(t);
             }
 
@@ -93,7 +89,8 @@ public class Citizen_SearchTestimonial extends HttpServlet {
             String success = (String) request.getAttribute("success");
 
             request.setAttribute("success", success);
-            RequestDispatcher dispatch = context.getRequestDispatcher("/Citizen_SearchTestimonial2.jsp");
+
+            RequestDispatcher dispatch = context.getRequestDispatcher("/Citizen_SearchTestimonial.jsp");
             dispatch.forward(request, response);
 
         } finally {

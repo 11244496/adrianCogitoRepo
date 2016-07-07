@@ -20,6 +20,18 @@
         <servlet-name>Citizen_SearchTestimonial</servlet-name>
         <servlet-class>Servlet.Citizen_SearchTestimonial</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Citizen_SendTestimonial</servlet-name>
+        <servlet-class>Servlet.Citizen_SendTestimonial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Citizen_OpenTestimonial</servlet-name>
+        <servlet-class>Servlet.Citizen_OpenTestimonial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Citizen_UnfollowTestimonial</servlet-name>
+        <servlet-class>Servlet.Citizen_UnfollowTestimonial</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -39,6 +51,18 @@
     <servlet-mapping>
         <servlet-name>Citizen_SearchTestimonial</servlet-name>
         <url-pattern>/Citizen_SearchTestimonial</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_SendTestimonial</servlet-name>
+        <url-pattern>/Citizen_SendTestimonial</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_OpenTestimonial</servlet-name>
+        <url-pattern>/Citizen_OpenTestimonial</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_UnfollowTestimonial</servlet-name>
+        <url-pattern>/Citizen_UnfollowTestimonial</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

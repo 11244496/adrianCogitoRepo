@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @author RoAnn
  */
 public class Testimonial {
-    
+
     private int id;
     private String title;
     private String dateUploaded;
@@ -22,18 +22,19 @@ public class Testimonial {
     private String status;
     private Citizen citizen;
     private ArrayList<TLocation> tlocation;
-    private ArrayList<Project> project;
+    private ArrayList<Project> mainproject;
+    private ArrayList<Project> referencedproject;
     private ArrayList<Reply> replies;
     private ArrayList<Files> files;
     private ArrayList<TComments> tcomments;
     private ArrayList<Supporter> supporters;
 
-    
     public Testimonial() {
     }
 
-    public Testimonial(int id, String title, String dateUploaded, String message, String folderName, String category, String status, Citizen citizen) {
-        this.id = id;
+    //title, dateuploaded, category, message, foldername, status, citizen_id
+
+    public Testimonial(String title, String dateUploaded, String message, String folderName, String category, String status, Citizen citizen) {
         this.title = title;
         this.dateUploaded = dateUploaded;
         this.message = message;
@@ -42,8 +43,9 @@ public class Testimonial {
         this.status = status;
         this.citizen = citizen;
     }
-
-    public Testimonial(String title, String dateUploaded, String message, String folderName, String category, String status, Citizen citizen, ArrayList<TLocation> tlocation, ArrayList<Project> project, ArrayList<Reply> replies, ArrayList<Files> files, ArrayList<TComments> tcomments) {
+    
+    
+    public Testimonial(String title, String dateUploaded, String message, String folderName, String category, String status, Citizen citizen, ArrayList<TLocation> tlocation, ArrayList<Project> mainproject,ArrayList<Project> referencedproject, ArrayList<Reply> replies, ArrayList<Files> files, ArrayList<TComments> tcomments, ArrayList<Supporter> supporters) {
         this.title = title;
         this.dateUploaded = dateUploaded;
         this.message = message;
@@ -52,10 +54,12 @@ public class Testimonial {
         this.status = status;
         this.citizen = citizen;
         this.tlocation = tlocation;
-        this.project = project;
+        this.mainproject = mainproject;
+        this.referencedproject = referencedproject;
         this.replies = replies;
         this.files = files;
         this.tcomments = tcomments;
+        this.supporters = supporters;
     }
 
     /**
@@ -185,20 +189,6 @@ public class Testimonial {
     }
 
     /**
-     * @return the project
-     */
-    public ArrayList<Project> getProject() {
-        return project;
-    }
-
-    /**
-     * @param project the project to set
-     */
-    public void setProject(ArrayList<Project> project) {
-        this.project = project;
-    }
-
-    /**
      * @return the replies
      */
     public ArrayList<Reply> getReplies() {
@@ -248,7 +238,33 @@ public class Testimonial {
         this.supporters = supporters;
     }
 
-    
-   
+    /**
+     * @return the mainproject
+     */
+    public ArrayList<Project> getMainproject() {
+        return mainproject;
+    }
+
+    /**
+     * @param mainproject the mainproject to set
+     */
+    public void setMainproject(ArrayList<Project> mainproject) {
+        this.mainproject = mainproject;
+    }
+
+    /**
+     * @return the referencedproject
+     */
+    public ArrayList<Project> getReferencedproject() {
+        return referencedproject;
+    }
+
+    /**
+     * @param referencedproject the referencedproject to set
+     */
+    public void setReferencedproject(ArrayList<Project> referencedproject) {
+        this.referencedproject = referencedproject;
+    }
+
     
 }

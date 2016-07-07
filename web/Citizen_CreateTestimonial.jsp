@@ -15,6 +15,22 @@
         <link href="css/bootstrap-reset.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
         <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <style>
+            #floating-panel {
+                position: absolute;
+                top: 10px;
+                left: 25%;
+                z-index: 5;
+                background-color: #fff;
+                padding: 5px;
+                border: 1px solid #999;
+                text-align: center;
+                font-family: 'Roboto','sans-serif';
+                line-height: 30px;
+                padding-left: 10px;
+            }
+
+        </style>
     </head>
 
     <body>
@@ -125,90 +141,79 @@
                         Create Testimonial
                     </header>
                     <br>
-                    <div class="panel-body">
-                        <form action="Citizen_CreateTestimonial" class="form-horizontal tasi-form" method="POST" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label class="col-sm-2 col-sm-2 control-label">Title</label>
+                    <form action="Citizen_SendTestimonial" class="form-horizontal tasi-form" method="POST" enctype="multipart/form-data">
+                        <div class="col-sm-12 panel">
+                            <div class="col-sm-6">
+                                <label class="col-sm-2 col-sm-2 control-label">Title <i class="formAsterisk">*</i></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="testimonialtitle">
+                                    <input type="text" class="form-control" required name="testimonialtitle">
                                     <span class="help-block">Input title of your testimonial.</span>
+                                    <br>
                                 </div>
-                                <label class="col-sm-2 col-sm-2 control-label">Message</label>
+                                <label class="col-sm-2 col-sm-2 control-label">Concern<i class="formAsterisk">*</i></label>
                                 <div class="col-sm-10">
-                                    <textarea class="wysihtml5 form-control" rows="10" name="testimonialdescription"></textarea>
-                                    <span class="help-block">Input Message of your testimonial.</span>
-                                </div>
-
-                                <label class="col-sm-2 col-sm-2 control-label">Location</label>
-                                <div class="col-sm-10">
-
-                                    <select class="form-control regField" name="testimoniallocation">
-                                        <option value="" disabled selected>Select Barangay</option>
-                                        <option value="Almanza Uno">Almanza Uno</option>
-                                        <option value="Daniel Fajardo">Daniel Fajardo</option>
-                                        <option value="Elias Aldana">Elias Aldana</option>
-                                        <option value="Ilaya">Ilaya</option>
-                                        <option value="Manuyo Uno">Manuyo Uno</option>
-                                        <option value="Pamplona Uno">Pamplona Uno</option>
-                                        <option value="Pulang Lupa Uno">Pulang Lupa Uno</option>
-                                        <option value="Talon Uno">Talon Uno</option>
-                                        <option value="Zapote">Zapote</option>
-                                        <option value="Almanza Dos">Almanza Dos</option>
-                                        <option value="B.F. International Village">B.F. International Village</option>
-                                        <option value="Manuyo Dos">Manuyo Dos</option>
-                                        <option value="Palmpona Dos">Pamplona Dos</option>
-                                        <option value="Pamplona Tres">Pamplona Tres</option>
-                                        <option value="Pilar">Pilar</option>
-                                        <option value="Pulang Lupa Dos">Pulang Lupa Dos</option>
-                                        <option value="Talon Dos">Talon Dos</option>
-                                        <option value="Talon Tres">Talon Tres</option>
-                                        <option value="Talon Kuatro">Talon Kuatro</option>
-                                        <option value="Talon Singko">Talon Singko</option>
+                                    <select class="form-control" rows="10" name="testimonialtype" onchange="showDiv(this)">
+                                        <option  selected disabled hidden required>Select category</option>
+                                        <option value="NewProject">Suggest project</option>
+                                        <option value="Maintenance">Maintenance/Repair</option>
                                     </select>
+                                    <span class="help-block">Select area of concern</span>
+                                    <br>
                                 </div>
-
-                                <label class="col-sm-2 col-sm-2 control-label">Location Details</label>
+                                <label class="col-sm-2 col-sm-2 control-label">Message<i class="formAsterisk">*</i></label>
                                 <div class="col-sm-10">
-                                    <textarea class="wysihtml5 form-control" rows="10" name="testimoniallocationdetails"></textarea>
-                                    <span class="help-block">Input location details.</span>
+                                    <textarea class="wysihtml5 form-control" required rows="5" name="testimonialdescription"></textarea>
+                                    <span class="help-block">Input Message of your testimonial.</span>
+                                    <br>
+                                </div>
+                                <label class="col-sm-2 col-sm-2 control-label">Video</label>
+                                <div class="col-sm-10">
+                                    <input name="Videos" type="file" class="default form-control" multiple style="border:0"/>
+                                    <textarea class="wysihtml5 form-control" name="videodescription" placeholder=""></textarea>
+                                    <br>
                                 </div>
 
+                                <label class="col-sm-2 col-sm-2 control-label">Image</label>
+                                <div class="col-sm-10">
+                                    <input name="Videos" type="file" class="default form-control" multiple style="border:0"/>
+                                    <textarea class="wysihtml5 form-control" name="imagedescription" placeholder=""></textarea>
+                                    <br>
+                                </div>
 
-
-                                <header class="panel-heading">
-                                    Upload Files
-                                </header>
-
-                                <div class="panel-body">
-
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3">Video</label>
-                                        <div class="col-md-4">
-                                            <input name="Videos" type="file" class="default" multiple/>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3">Image</label>
-                                        <div class="col-md-4">
-                                            <input name="Images" type="file" class="default" multiple/>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3">Add Documents</label>
-                                        <div class="col-md-4">
-                                            <input name="Documents" type="file" class="default" multiple/>
-                                        </div>
-                                    </div>
-                                    <center>
-                                        <button type="submit" class="btn btn-success">Create</button>
-                                        <button type="button" class="btn btn-danger">Cancel</button>
-                                    </center>
-
+                                <label class="col-sm-2 col-sm-2 control-label">Documents</label>
+                                <div class="col-sm-10">
+                                    <input name="Documents" type="file" class="default form-control" multiple style="border:0"/>
+                                    <textarea class="wysihtml5 form-control" name="documentdescription" placeholder=""></textarea>
                                 </div>
                             </div>
-                        </form>
+
+
+                            <div class="col-sm-6">
+                                <label class="col-sm-2 col-sm-2 control-label">Location<i class="formAsterisk">*</i></label>
+                                <div class="col-sm-10">
+                                    <div class="default form-control" style="border:0"></div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div id="floating-panel">
+                                        <input onclick="removeMarker();" type=button value="Delete Markers">
+                                    </div>
+                                    <div id="map" style="height: 500px; margin: 0; padding: 0; width: 100%"></div>
+                                    <input type="hidden" name="hiddenlocation" id="location" value="">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <center>
+                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="button" class="btn btn-danger">Cancel</button>
+                        </center>
+                        <br>
+                        <br>
+                        </div>
+
+
+                    </form>
                     </div>
                 </section>
             </section>
@@ -228,6 +233,45 @@
         <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
         <script type="text/javascript" src="js/jquery.pulsate.min.js"></script>
         <script src="js/slidebars.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"
+        async defer></script>
+        <script>
+                                            var map;
+                                            var markers = [];
+                                            var allPosition = [];
+                                            function initMap() {
+                                                map = new google.maps.Map(document.getElementById('map'), {
+                                                    center: {lat: 14.45, lng: 120.98},
+                                                    zoom: 14
+                                                });
+                                                google.maps.event.addListener(map, 'click', function (event) {
+                                                    placeMarker(event.latLng);
+                                                });
+                                                function placeMarker(location) {
+                                                    var marker = new google.maps.Marker({
+                                                        position: location,
+                                                        map: map
+                                                    });
+                                                    markers.push(marker);
+                                                    latitude = marker.position.lat();
+                                                    longitude = marker.position.lng();
+                                                    var string = latitude + "&" + longitude;
+                                                    allPosition.push(string);
+                                                    document.getElementById("location").value = allPosition;
+                                                }
+
+                                            }
+
+                                            function removeMarker() {
+                                                for (var i = 0; i < markers.length; i++) {
+                                                    markers[i].setMap(null);
+                                                }
+                                                markers = [];
+                                                allPosition = [];
+                                            }
+
+        </script>
+
 
     </body>
 </html>

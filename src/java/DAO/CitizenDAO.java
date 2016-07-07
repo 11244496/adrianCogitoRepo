@@ -9,9 +9,13 @@ import DB.ConnectionFactory;
 import Entity.Address;
 import Entity.Barangay;
 import Entity.Citizen;
+import Entity.Comment;
 import Entity.Files;
 import Entity.Location;
 import Entity.Project;
+import Entity.Reply;
+import Entity.Supporter;
+import Entity.TComments;
 import Entity.TLocation;
 import Entity.Testimonial;
 import Entity.User;
@@ -131,29 +135,151 @@ public class CitizenDAO {
     }
 
     //=======================================ALL TESTIMONIAL RELATED CODES=============================================
+    //Include all parts of the testimonial
     public Testimonial getTestimonial(int id) {
-        Testimonial t = null;
-        Citizen c = null;
-        User u = null;
+        Testimonial t = new Testimonial();
+        t.setId(id);
+        Citizen c;
+        User u;
+
+        ArrayList<TLocation> tlocation = new ArrayList<TLocation>();
+        ArrayList<Project> mainproject = new ArrayList<Project>();
+        ArrayList<Project> referencedproject = new ArrayList<Project>();
+        ArrayList<Reply> replies = new ArrayList<Reply>();
+        ArrayList<Files> files = new ArrayList<Files>();
+        ArrayList<TComments> tcomments = new ArrayList<TComments>();
+        ArrayList<Supporter> supporters = new ArrayList<Supporter>();
+
+        PreparedStatement statement1, statement2, statement3, statement4, statement5, statement6, statement7;
+
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "select testimonial.id, title, dateuploaded, \n"
-                    + "category, message, foldername, status, citizen.id, \n"
-                    + "firstname, lastname, users.id, username from testimonial \n"
+
+            String locationQuery = ("select * from tlocation where Testimonial_ID = ?");
+            statement1 = connection.prepareStatement(locationQuery);
+            statement1.setInt(1, id);
+            result = statement1.executeQuery();
+            while (result.next()) {
+                TLocation loc = new TLocation();
+                loc.setId(result.getInt("ID"));
+                loc.setLatitude(result.getString("latitude"));
+                loc.setLongitude(result.getString("longitude"));
+                tlocation.add(loc);
+            }
+            t.setTlocation(tlocation);
+
+            String mainprojectQuery = ("select * from project_has_testimonial where Testimonial_ID = ?");
+            statement2 = connection.prepareStatement(mainprojectQuery);
+            statement2.setInt(1, id);
+            result = statement2.executeQuery();
+            while (result.next()) {
+                Project p = new Project();
+                p.setId(result.getString("Project_ID"));
+                mainproject.add(p);
+            }
+            t.setMainproject(mainproject);
+
+            String referencedprojectQuery = ("select * from project_has_testimonial where Testimonial_ID = ?");
+            statement7 = connection.prepareStatement(referencedprojectQuery);
+            statement7.setInt(1, id);
+            result = statement7.executeQuery();
+            while (result.next()) {
+                Project p = new Project();
+                p.setId(result.getString("otherProject_ID"));
+                referencedproject.add(p);
+            }
+            t.setReferencedproject(referencedproject);
+
+            String repliesQuery = ("select * from reply where Testimonial_ID = ?");
+            statement3 = connection.prepareStatement(repliesQuery);
+            statement3.setInt(1, id);
+            result = statement3.executeQuery();
+            while (result.next()) {
+                Reply r = new Reply();
+                r.setId(result.getInt("ID"));
+                r.setMessage(result.getString("Message"));
+                r.setSender(result.getString("Sender"));
+                r.setDateSent(result.getString("Datesend"));
+                replies.add(r);
+            }
+            t.setReplies(replies);
+
+            String filesQuery = ("select * from files where Testimonial_ID = ?");
+            statement4 = connection.prepareStatement(filesQuery);
+            statement4.setInt(1, id);
+            result = statement4.executeQuery();
+            while (result.next()) {
+                Files f = new Files();
+                f.setId(id);
+                f.setFileName(filesQuery);
+                f.setDateUploaded(filesQuery);
+                f.setType(filesQuery);
+                f.setStatus(filesQuery);
+                f.setUploader(filesQuery);
+                f.setDescription(filesQuery);
+                Testimonial testi = new Testimonial();
+                t.setId(id);
+                Project project = new Project();
+                project.setId(result.getString("Project_ID"));
+                f.setTestimonial(testi);
+                f.setProject(project);
+                files.add(f);
+            }
+            t.setFiles(files);
+
+            String commentsQuery = ("select * from tcomments where Testimonial_ID = ?");
+            statement5 = connection.prepareStatement(commentsQuery);
+            statement5.setInt(1, id);
+            result = statement5.executeQuery();
+            while (result.next()) {
+                TComments comment = new TComments();
+                comment.setId(result.getInt("ID"));
+                comment.setComment(result.getString("Comment"));
+                comment.setDateSent(result.getString("DateSent"));
+                Citizen citizen = new Citizen();
+                citizen.setId(result.getInt("Citizen_ID"));
+                comment.setCitizen(citizen);
+                Testimonial ctestimonial = new Testimonial();
+                ctestimonial.setId(result.getInt("Testimonial_ID"));
+                comment.setTestimonial(ctestimonial);
+
+                tcomments.add(comment);
+            }
+            t.setTcomments(tcomments);
+
+            String supportersQuery = ("select * from supporters where Testimonial_ID = ?");
+            statement6 = connection.prepareStatement(commentsQuery);
+            statement6.setInt(1, id);
+            result = statement6.executeQuery();
+            while (result.next()) {
+                Supporter s = new Supporter();
+                s.setId(result.getInt("ID"));
+                s.setTestimonial(t);
+                Citizen cit = new Citizen();
+                cit.setId(result.getInt("Citizen_ID"));
+                s.setCitizen(cit);
+
+                supporters.add(s);
+            }
+            t.setSupporters(supporters);
+
+            //Get Testimonial Info
+            String testimonialquery = "select * from testimonial \n"
                     + "join citizen on citizen_id = citizen.ID\n"
                     + "join users on users_id = users.id"
                     + " where testimonial.ID = ?";
 
-            statement = connection.prepareStatement(query);
+            statement = connection.prepareStatement(testimonialquery);
             statement.setInt(1, id);
             result = statement.executeQuery();
             while (result.next()) {
                 u = new User(result.getInt("users.id"), result.getString("username"));
                 c = new Citizen(result.getInt("citizen.id"), result.getString("FirstName"), result.getString("lastname"), u);
-                t = new Testimonial(result.getInt("testimonial.id"), result.getString("title"), result.getString("dateuploaded"),
+                t = new Testimonial(result.getString("title"), result.getString("dateuploaded"),
                         result.getString("message"), result.getString("foldername"), result.getString("category"),
-                        result.getString("status"), c);
+                        result.getString("status"), c, tlocation, mainproject, referencedproject, replies, files, tcomments, supporters);
+                t.setId(result.getInt("testimonial.id"));
             }
 
             connection.close();
@@ -252,29 +378,25 @@ public class CitizenDAO {
         }
         return testId;
     }
-
-    public ArrayList<TLocation> getLocation(Testimonial t) {
-        ArrayList<TLocation> locList = new ArrayList<>();
-        TLocation loc;
+    
+    public void submitTestimonial(Testimonial t) {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String ids = "select * from tlocation where testimonial_id = ?";
-
+            String ids = "insert into testimonial (title, dateuploaded, category, message, foldername, status, citizen_id) values (?, now(), ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(ids);
-            statement.setInt(1, t.getId());
-
-            result = statement.executeQuery();
-            while (result.next()) {
-                loc = new TLocation(result.getInt("id"), result.getString("longitude"), result.getString("latitude"), t);
-                locList.add(loc);
-            }
+            statement.setString(1, t.getTitle());
+            statement.setString(2, t.getCategory());
+            statement.setString(3, t.getMessage());
+            statement.setString(4, t.getFolderName());
+            statement.setString(5, t.getStatus());
+            statement.setInt(6, t.getCitizen().getId());
+            statement.executeUpdate();
             connection.close();
         } catch (SQLException ex) {
-            System.out.println("Error in getLocation()");
+            System.out.println("Error in submitTestimonial()");
             Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return locList;
     }
 
     //========================================ALL FILE RELATED CODES===========================================
@@ -316,6 +438,93 @@ public class CitizenDAO {
 
         return fl;
 
+    }
+
+    public void submitFiles(Files f) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String ids = "insert into files (filename, dateuploaded, type, status, uploader, description, testimonial_id) values (?, now(), ?, ?, ?, ?, ?)";
+            statement = connection.prepareStatement(ids);
+            statement.setString(1, f.getFileName());
+            statement.setString(2, f.getType());
+            statement.setString(3, f.getStatus());
+            statement.setString(4, f.getUploader());
+            statement.setString(5, f.getDescription());
+            statement.setInt(6, f.getTestimonial().getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            System.out.println("Error in submitFiles()");
+            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //========================================ALL LOCATION RELATED CODES===========================================
+    public void setLocation(TLocation tl) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String ids = "insert into tlocation (longitude, latitude, testimonial_id) values (?, ?, ?)";
+            statement = connection.prepareStatement(ids);
+            statement.setString(1, tl.getLongitude());
+            statement.setString(2, tl.getLatitude());
+            statement.setInt(3, tl.getTestimonial().getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            System.out.println("Error in setLocation()");
+            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //========================================  ETC ===========================================
+    public int lastID() {
+        int id = 0;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select max(id) id from testimonial";
+
+            statement = connection.prepareStatement(query);
+            result = statement.executeQuery();
+            while (result.next()) {
+                id = result.getInt("id");
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            System.out.println("Error in lastID()");
+            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+    }
+    
+    public boolean isSubscribed(Testimonial t, Citizen c) {
+        int count = 0;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select count(*) as c from supporters where testimonial_ID = ? and citizen_ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, t.getId());
+            statement.setInt(2, c.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                count = result.getInt("c");
+            }
+            connection.close();
+
+            if (count > 0) {
+                return true;
+            }
+
+            return false;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ActivityDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
 }

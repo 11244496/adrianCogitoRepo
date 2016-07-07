@@ -132,6 +132,8 @@
                     </ul>
                 </div>
             </aside>
+
+
             <%
                 ArrayList<Testimonial> myTestimonials = (ArrayList<Testimonial>) request.getAttribute("myTestimonials");
                 ArrayList<Testimonial> allTestimonials = (ArrayList<Testimonial>) request.getAttribute("allTestimonials");
@@ -147,12 +149,7 @@
                         </header>
                         <div class="panel-body">
 
-
-
-
-
-                            <a href="Citizen_CreateTestimonial.jsp" class="pull-right position"><button type="button" align="right" class="btn btn-primary">Create Image/Video Testimonial </button></a>
-                            &nbsp;<a href="Citizen_CreateLetter.jsp" class="pull-right position" style="margin-right: 5px"><button type="button" align="right" class="btn btn-primary">Create Letter Testimonial</button></a>
+                            <a href="Citizen_CreateTestimonial.jsp" class="pull-right position"><button type="button" align="right" class="btn btn-primary">Create New Testimonial</button></a>
                             <br>
                             <br>
                             <br>
@@ -161,23 +158,13 @@
                                 <header class="panel-heading tab-bg-dark-navy-blue">
                                     <ul class="nav nav-tabs nav-justified ">
                                         <li class="active">
-                                            <a href="#all" data-toggle="tab">
-                                                All
+                                            <a href="#mapview" data-toggle="tab">
+                                                Map View
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#followed" data-toggle="tab">
-                                                Followed
-                                            </a>
-                                        </li>
-                                        <li class="">
-                                            <a href="#mytestimonials" data-toggle="tab">
-                                                My Testimonials
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#trending" data-toggle="tab">
-                                                Trending
+                                            <a href="#tabview" data-toggle="tab">
+                                                Tab view
                                             </a>
                                         </li>
                                     </ul>
@@ -185,129 +172,49 @@
 
                                 <div class="panel-body">
                                     <div class="tab-content tasi-tab">
-                                        <div class="tab-pane active" id="all">
+                                        <div class="tab-pane active" id="mapview">
                                             <div>
-                                                <input size="30" type="text" placeholder="Type to search" id="all-testimonial">
+                                                <input size="50" type="text" placeholder="Type to search" id="all-testimonial">
+
+                                                <input type="checkbox" value="All" style="margin-left: 320px">All
+
+                                                <input type="checkbox" value="Followed" style="margin-left: 20px">Followed
+
+                                                <input type="checkbox" value="My" style="margin-left: 20px">My Testimonials
+
+                                                <input type="checkbox" value="Trending" style="margin-left: 20px">Trending
                                             </div>
                                             <div class="form-group">
                                                 <div class="directory-info-row">                                                    
                                                     <div class="row">
-                                                        <table class="table" data-search-field="#all-testimonial">
-
-
-                                                            <thead>
-                                                                <tr>
-
-                                                                    <th style="width: 15%">Title</th>
-                                                                    <th style="width: 10%">Location</th>
-                                                                    <th style="width: 25%">Description</th>
-                                                                    <th style="width: 10%">Date Uploaded</th>
-                                                                    <th style="width: 8%">Project Linked</th>
-                                                                    <th style="width: 17%">Uploader</th>    
-                                                                    <th style="width: 15%"></th>   
-
-                                                                </tr>
-                                                            </thead>
-
-                                                            <%                                                                for (int x = 0; x < allTestimonials.size(); x++) {
-                                                                    int testID1 = allTestimonials.get(x).getId();
-                                                                    Testimonial test1 = allTestimonials.get(x);
-                                                                    ArrayList<Files> files = test1.getFiles();
-                                                                    String[] split = allTestimonials.get(x).getDateUploaded().split("\\s+");
-                                                                    int fileID = 0;
-
-                                                                    if (test1.getCategory().equalsIgnoreCase("video") || test1.getCategory().equalsIgnoreCase("image")) {
-                                                            %>
-                                                            <tbody>
-                                                                <tr>
-
-                                                                    <td>
-                                                                        <a href="Citizen_OpenTestimonial?idd=<%=testID1%>"> <%out.print(test1.getTitle());%> </a>
-                                                                    </td>
-                                                                    <td>
-                                                                        <% if (!test1.getCategory().equalsIgnoreCase("letter")) {
-                                                                                out.print(test1.getLocation());
-                                                                            } else {
-                                                                                out.print("-");
-                                                                            }%> 
-                                                                    </td>
-                                                                    <td>
-                                                                        <%out.print(test1.getMessage());%> 
-                                                                    </td>
-
-                                                                    <td>
-                                                                        <%out.print(split[0]);%>
-                                                                    </td>
-
-                                                                    <%if (allTestimonials.get(x).getProject().getId() != null) {%>
-                                                                    <td>
-                                                                        Available
-                                                                    </td>   
-                                                                    <%} else {%>
-                                                                    <td>
-                                                                        None
-                                                                    </td>
-                                                                    <%}%>
-
-                                                                    <td>
-                                                                        <%out.print(test1.getCitizen().getUser().getUsername());%> 
-                                                                    </td>    
-
-                                                                    <td>
-                                                                        <%
-                                                                            boolean hasimage = false;
-                                                                            boolean hasvideo = false;
-                                                                            boolean hasdoc = false;
-                                                                            boolean isletter = false;
-                                                                            if (!test1.getCategory().equalsIgnoreCase("letter")) {
-
-                                                                                for (int a = 0; a < files.size(); a++) {
-                                                                                    if (files.get(a).getType().equalsIgnoreCase("image")) {
-                                                                                        hasimage = true;
-                                                                                    } else if (files.get(a).getType().equalsIgnoreCase("video")) {
-                                                                                        hasvideo = true;
-                                                                                    } else if (files.get(a).getType().equalsIgnoreCase("document")) {
-                                                                                        hasdoc = true;
-                                                                                    }
-                                                                                }
-
-                                                                            } else {
-                                                                                isletter = true;
-                                                                            }%>
-                                                                        <%if (hasimage == true) {%>        
-                                                                        <img  src="img/imgicon.png" width="30" height="30" alt="">
-                                                                        <%}
-                                                                            if (hasvideo == true) {%>
-                                                                        <img  src="img/vidicon.png" width="30" height="30" alt="">
-                                                                        <%}
-                                                                            if (hasdoc == true) {%>
-                                                                        <img  src="img/docicon.png" width="30" height="30" alt="">
-                                                                        <%}%>
-
-                                                                    </td>
-                                                                </tr>    
-
-                                                            </tbody>  
-
-                                                            <%
-                                                                    }
-                                                                }
-                                                            %>
-                                                        </table>    
+                                                        <div class="col-lg-13">
+                                                            <!--Map should be here -->
+                                                            <div id="map" style="height: 1000px; margin: 0; padding: 0; width: 100%"></div>
+                                                        </div> 
                                                     </div>
                                                 </div>
                                             </div>
 
                                         </div>
 
-                                        <div class="tab-pane" id="followed">
+                                        <div class="tab-pane" id="tabview">
                                             <div>
-                                                <input size="30" type="text" placeholder="Type to search" id="followed-testimonial">
+                                                <input size="50" type="text" placeholder="Type to search" id="all-testimonial">
+
+                                                <input type="checkbox" value="All" style="margin-left: 320px">All
+
+                                                <input type="checkbox" value="Followed" style="margin-left: 20px">Followed
+
+                                                <input type="checkbox" value="My" style="margin-left: 20px">My Testimonials
+
+                                                <input type="checkbox" value="Trending" style="margin-left: 20px">Trending
                                             </div> 
                                             <div class="directory-info-row">
 
 
                                                 <div class="row">
+
+
                                                     <table class="table" data-search-field="#followed-testimonial">
 
                                                         <thead>
@@ -320,32 +227,24 @@
                                                                 <th style="width: 8%">Project Linked</th>
                                                                 <th style="width: 17%">Uploader</th>    
                                                                 <th style="width: 15%"></th>
-
                                                             </tr>
                                                         </thead>
 
-                                                        <%
-                                                            for (int x = 0; x < subscribedTestimonials.size(); x++) {
-                                                                int testID = subscribedTestimonials.get(x).getId();
-                                                                Testimonial test1 = subscribedTestimonials.get(x);
+                                                        <%      for (int x = 0; x < allTestimonials.size(); x++) {
+                                                                int testID1 = allTestimonials.get(x).getId();
+                                                                Testimonial test1 = allTestimonials.get(x);
                                                                 ArrayList<Files> files = test1.getFiles();
-                                                                String[] split = subscribedTestimonials.get(x).getDateUploaded().split("\\s+");
+                                                                String[] split = allTestimonials.get(x).getDateUploaded().split("\\s+");
                                                                 int fileID = 0;
-
-                                                                if (test1.getCategory().equalsIgnoreCase("video") || test1.getCategory().equalsIgnoreCase("image")) {
                                                         %>
                                                         <tbody>
                                                             <tr>
 
                                                                 <td>
-                                                                    <a href="Citizen_OpenTestimonial?idd=<%=testID%>"> <%out.print(test1.getTitle());%> </a>
+                                                                    <a href="Citizen_OpenTestimonial?idd=<%=testID1%>"> <%out.print(test1.getTitle());%> </a>
                                                                 </td>
                                                                 <td>
-                                                                    <% if (!test1.getCategory().equalsIgnoreCase("letter")) {
-                                                                            out.print(test1.getLocation());
-                                                                        } else {
-                                                                            out.print("-");
-                                                                        }%> 
+                                                                    Insert Location Here
                                                                 </td>
                                                                 <td>
                                                                     <%out.print(test1.getMessage());%> 
@@ -355,240 +254,7 @@
                                                                     <%out.print(split[0]);%>
                                                                 </td>
 
-                                                                <%if (subscribedTestimonials.get(x).getProject().getId() != null) {%>
-                                                                <td>
-                                                                    Available
-                                                                </td>   
-                                                                <%} else {%>
-                                                                <td>
-                                                                    None
-                                                                </td>
-                                                                <%}%>
-                                                                <td>
-                                                                    <%out.print(test1.getCitizen().getUser().getUsername());%> 
-                                                                </td>
-                                                                <td><center>
-                                                                <%
-                                                                    boolean hasimage = false;
-                                                                    boolean hasvideo = false;
-                                                                    boolean hasdoc = false;
-                                                                    boolean isletter = false;
-                                                                    if (!test1.getCategory().equalsIgnoreCase("letter")) {
-
-                                                                        for (int a = 0; a < files.size(); a++) {
-                                                                            if (files.get(a).getType().equalsIgnoreCase("image")) {
-                                                                                hasimage = true;
-                                                                            } else if (files.get(a).getType().equalsIgnoreCase("video")) {
-                                                                                hasvideo = true;
-                                                                            } else if (files.get(a).getType().equalsIgnoreCase("document")) {
-                                                                                hasdoc = true;
-                                                                            }
-                                                                        }
-
-                                                                    } else {
-                                                                        isletter = true;
-                                                                    }%>
-                                                                <%if (hasimage == true) {%>        
-                                                            <img  src="img/imgicon.png" width="30" height="30" alt="">
-                                                            <%}
-                                                                if (hasvideo == true) {%>
-                                                            <img  src="img/vidicon.png" width="30" height="30" alt="">
-                                                            <%}
-                                                                if (hasdoc == true) {%>
-                                                            <img  src="img/docicon.png" width="30" height="30" alt="">
-                                                            <%}
-                                                                if (isletter == true) {%>
-                                                            <img  src="img/leticon.png" width="30" height="30" alt=""> 
-                                                            <%}%>
-
-                                                        </center>
-                                                        </td>
-                                                        </tr>    
-
-                                                        </tbody> 
-
-                                                        <%}
-                                                            }%>
-
-                                                    </table>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-
-                                        <div class="tab-pane " id="mytestimonials">
-                                            <div>
-                                                <input size="30" type="text" placeholder="Type to search" id="my-testimonial">
-                                            </div> 
-                                            <div class="directory-info-row">
-
-
-                                                <div class="row">
-                                                    <table class="table" data-search-field="#my-testimonial">
-
-                                                        <thead>
-                                                            <tr>
-
-                                                                <th style="width: 15%">Title</th>
-                                                                <th style="width: 10%">Location</th>
-                                                                <th style="width: 25%">Description</th>
-                                                                <th style="width: 10%">Date Uploaded</th>
-                                                                <th style="width: 8%">Project Linked</th>
-                                                                <th style="width: 17%">Uploader</th>    
-                                                                <th style="width: 15%"></th>
-
-                                                            </tr>
-                                                        </thead>
-
-                                                        <%
-                                                            for (int x = 0; x < myTestimonials.size(); x++) {
-                                                                int testID = myTestimonials.get(x).getId();
-                                                                Testimonial test1 = myTestimonials.get(x);
-                                                                ArrayList<Files> files = test1.getFiles();
-                                                                String[] split = myTestimonials.get(x).getDateUploaded().split("\\s+");
-                                                                int fileID = 0;
-                                                        %>
-                                                        <tbody>
-                                                            <tr>
-
-                                                                <td>
-                                                                    <a href="Citizen_OpenTestimonial?idd=<%=testID%>"> <%out.print(test1.getTitle());%> </a>
-                                                                </td>
-                                                                <td>
-                                                                    <% if (!test1.getCategory().equalsIgnoreCase("letter")) {
-                                                                            out.print(test1.getLocation());
-                                                                        } else {
-                                                                            out.print("-");
-                                                                        }%> 
-                                                                </td>
-                                                                <td>
-                                                                    <%out.print(test1.getMessage());%> 
-                                                                </td>
-
-                                                                <td>
-                                                                    <%out.print(split[0]);%>
-                                                                </td>
-
-                                                                <%if (myTestimonials.get(x).getProject().getId() != null) {%>
-                                                                <td>
-                                                                    Available
-                                                                </td>   
-                                                                <%} else {%>
-                                                                <td>
-                                                                    None
-                                                                </td>
-                                                                <%}%>
-                                                                <td>
-                                                                    <%out.print(test1.getCitizen().getUser().getUsername());%> 
-                                                                </td>
-
-                                                                <td><center>
-                                                                <%
-                                                                    boolean hasimage = false;
-                                                                    boolean hasvideo = false;
-                                                                    boolean hasdoc = false;
-                                                                    boolean isletter = false;
-                                                                    if (!test1.getCategory().equalsIgnoreCase("letter")) {
-
-                                                                        for (int a = 0; a < files.size(); a++) {
-                                                                            if (files.get(a).getType().equalsIgnoreCase("image")) {
-                                                                                hasimage = true;
-                                                                            } else if (files.get(a).getType().equalsIgnoreCase("video")) {
-                                                                                hasvideo = true;
-                                                                            } else if (files.get(a).getType().equalsIgnoreCase("document")) {
-                                                                                hasdoc = true;
-                                                                            }
-                                                                        }
-
-                                                                    } else {
-                                                                        isletter = true;
-                                                                    }%>
-                                                                <%if (hasimage == true) {%>        
-                                                            <img  src="img/imgicon.png" width="30" height="30" alt="">
-                                                            <%}
-                                                                if (hasvideo == true) {%>
-                                                            <img  src="img/vidicon.png" width="30" height="30" alt="">
-                                                            <%}
-                                                                if (hasdoc == true) {%>
-                                                            <img  src="img/docicon.png" width="30" height="30" alt="">
-                                                            <%}
-                                                                if (isletter == true) {%>
-                                                            <img  src="img/leticon.png" width="30" height="30" alt=""> 
-                                                            <%}%>
-
-                                                        </center>
-                                                        </td>
-                                                        </tr>    
-
-                                                        </tbody> 
-
-                                                        <%}%>
-
-                                                    </table>
-
-                                                </div>
-                                            </div>
-
-
-                                        </div>
-                                        <div class="tab-pane " id="trending">
-                                            <div>
-                                                <input size="30" type="text" placeholder="Type to search" id="trending-testimonial">
-                                            </div> 
-                                            <div class="directory-info-row">
-
-
-                                                <div class="row">
-                                                    <table class="table" data-search-field="#my-testimonial">
-
-                                                        <thead>
-                                                            <tr>
-
-                                                                <th style="width: 15%">Title</th>
-                                                                <th style="width: 10%">Location</th>
-                                                                <th style="width: 25%">Description</th>
-                                                                <th style="width: 10%">Date Uploaded</th>
-                                                                <th style="width: 8%">Project Linked</th>
-                                                                <th style="width: 17%">Uploader</th>    
-                                                                <th style="width: 15%"></th>
-
-                                                            </tr>
-                                                        </thead>
-
-                                                        <%
-                                                            for (int x = 0; x < trendingTestimonials.size(); x++) {
-                                                                int testID = trendingTestimonials.get(x).getId();
-                                                                Testimonial test1 = trendingTestimonials.get(x);
-                                                                ArrayList<Files> files = test1.getFiles();
-                                                                String[] split = trendingTestimonials.get(x).getDateUploaded().split("\\s+");
-                                                                int fileID = 0;
-                                                                if (test1.getCategory().equalsIgnoreCase("video") || test1.getCategory().equalsIgnoreCase("image")) {
-                                                        %>
-                                                        <tbody>
-                                                            <tr>
-
-                                                                <td>
-                                                                    <a href="Citizen_OpenTestimonial?idd=<%=testID%>"> <%out.print(test1.getTitle());%> </a>
-                                                                </td>
-                                                                <td>
-                                                                    <% if (!test1.getCategory().equalsIgnoreCase("letter")) {
-                                                                            out.print(test1.getLocation());
-                                                                        } else {
-                                                                            out.print("-");
-
-                                                                        }%> 
-                                                                </td>
-                                                                <td>
-                                                                    <%out.print(test1.getMessage());%> 
-                                                                </td>
-
-                                                                <td>
-                                                                    <%out.print(split[0]);%>
-                                                                </td>
-
-                                                                <%if (trendingTestimonials.get(x).getProject().getId() != null) {%>
+                                                                <%if (!(test1.getMainproject().isEmpty())) {%>
                                                                 <td>
                                                                     Available
                                                                 </td>   
@@ -600,15 +266,14 @@
 
                                                                 <td>
                                                                     <%out.print(test1.getCitizen().getUser().getUsername());%> 
-                                                                </td>
-                                                                <td><center>
-                                                                <%
-                                                                    boolean hasimage = false;
-                                                                    boolean hasvideo = false;
-                                                                    boolean hasdoc = false;
-                                                                    boolean isletter = false;
-                                                                    if (!test1.getCategory().equalsIgnoreCase("letter")) {
+                                                                </td>    
 
+                                                                <td>
+                                                                    <%
+                                                                        boolean hasimage = false;
+                                                                        boolean hasvideo = false;
+                                                                        boolean hasdoc = false;
+                                                                        boolean isletter = false;
                                                                         for (int a = 0; a < files.size(); a++) {
                                                                             if (files.get(a).getType().equalsIgnoreCase("image")) {
                                                                                 hasimage = true;
@@ -619,30 +284,27 @@
                                                                             }
                                                                         }
 
-                                                                    } else {
                                                                         isletter = true;
-                                                                    }%>
-                                                                <%if (hasimage == true) {%>        
-                                                            <img  src="img/imgicon.png" width="30" height="30" alt="">
-                                                            <%}
-                                                                if (hasvideo == true) {%>
-                                                            <img  src="img/vidicon.png" width="30" height="30" alt="">
-                                                            <%}
-                                                                if (hasdoc == true) {%>
-                                                            <img  src="img/docicon.png" width="30" height="30" alt="">
-                                                            <%}
-                                                                if (isletter == true) {%>
-                                                            <img  src="img/leticon.png" width="30" height="30" alt=""> 
-                                                            <%}%>
+                                                                    %>
+                                                                    <%if (hasimage == true) {%>        
+                                                                    <img  src="img/imgicon.png" width="30" height="30" alt="">
+                                                                    <%}
+                                                                        if (hasvideo == true) {%>
+                                                                    <img  src="img/vidicon.png" width="30" height="30" alt="">
+                                                                    <%}
+                                                                        if (hasdoc == true) {%>
+                                                                    <img  src="img/docicon.png" width="30" height="30" alt="">
+                                                                    <%}%>
 
-                                                        </center>
-                                                        </td>
-                                                        </tr>    
+                                                                </td>
+                                                            </tr>    
 
-                                                        </tbody> 
+                                                        </tbody>  
 
-                                                        <%}
-                                                            }%>
+                                                        <%
+
+                                                            }
+                                                        %>
 
                                                     </table>
 
@@ -677,14 +339,11 @@
                 {
                     var success = "<%=success%>";
                     if (success !== null) {
-                        if (success === "LetterSuccess") {
-                            $("#letterModal").click();
+                        if (success === "NewProjectSuccess") {
+                            $("#NPModal").click();
                         }
-                        else if (success === "imageSuccess") {
-                            $("#imageModal").click();
-                        }
-                        else if (success === "videoSuccess") {
-                            $("#videoModal").click();
+                        else if (success === "MaintenanceSuccess") {
+                            $("#MModal").click();
                         }
                     } else {
                     }
@@ -713,23 +372,22 @@
                     });
                 };
 // Initialize
-                $('.table').searchableTable();
-            </script>
+                $('.table').searchableTable();</script>
 
 
             <!-- modal -->
 
-            <button id="letterModal" style="visibility: hidden" data-toggle="modal" href="#LetterModal"></button> 
-            <div class="modal fade" id="LetterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <button id="NPModal" style="visibility: hidden" data-toggle="modal" href="#npModal"></button> 
+            <div class="modal fade" id="npModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Letter Sent</h4>
+                            <h4 class="modal-title">New Project Testimonial Sent</h4>
                         </div>
                         <div class="modal-body">
 
-                            Letter has been successfully sent. Please wait for the reply.
+                            Your Testimonial for a new project has been sent. Please wait for the Local Government Unit's reply. 
 
                         </div>
                         <div class="modal-footer">
@@ -741,17 +399,17 @@
 
             <!-- modal -->
 
-            <button id="imageModal" style="visibility: hidden" data-toggle="modal" href="#ImageModal"></button> 
-            <div class="modal fade" id="ImageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <button id="MModal" style="visibility: hidden" data-toggle="modal" href="#mModal"></button> 
+            <div class="modal fade" id="mModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Image Testimonial Sent</h4>
+                            <h4 class="modal-title">Maintenance Testimonial Sent</h4>
                         </div>
                         <div class="modal-body">
 
-                            The image has been uploaded and testimonial has been sent, please wait for it to be linked with a project.
+                            Your Testimonial for maintenance or repair has been sent. Please wait for the Local Government Unit's reply. 
 
                         </div>
                         <div class="modal-footer">
@@ -760,29 +418,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- modal -->
-
-            <button id="videoModal" style="visibility: hidden" data-toggle="modal" href="#VideoModal"></button> 
-            <div class="modal fade" id="VideoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Video Testimonial Sent</h4>
-                        </div>
-                        <div class="modal-body">
-
-                            The video has been uploaded and testimonial has been sent, please wait for it to be linked in a project
-
-                        </div>
-                        <div class="modal-footer">
-                            <button data-dismiss="modal" class="btn btn-default" type="button">Ok</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--Modal Pop-up End here--> 
 
 
             <script src="js/jquery.js"></script>
@@ -791,5 +426,46 @@
             <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
             <script type="text/javascript" src="js/jquery.pulsate.min.js"></script>
             <script src="js/slidebars.min.js"></script>
+
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"
+            async defer></script>
+
+
+            <!--PLACE ALL AJAX HERE
+            
+            1. LOAD ALL TESTIMONIALS BOTH IN MAPS AND IN TABULAR FORM
+            2. UPON CHECKBOX TOGGLE CALL AJAX METHOD
+            3. RELOAD MAP AND REFRESH THE TABLE
+            4. UPON SELECTING MARKER -- DISPLAY TESTI DETAILS -- CLICK ID/NAME DISPLAY FULL DETAILS
+            
+            -->
+
+            <script>
+                var map;
+                var markers = [];
+                var allPosition = [];
+                function initMap() {
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: {lat: 14.44, lng: 120.99},
+                        zoom: 14
+                    });
+                    google.maps.event.addListener(map, 'click', function (event) {
+                        placeMarker(event.latLng);
+                    });
+                    function placeMarker(location) {
+                        var marker = new google.maps.Marker({
+                            position: location,
+                            map: map
+                        });
+                        markers.push(marker);
+                        latitude = marker.position.lat();
+                        longitude = marker.position.lng();
+                        var string = latitude + "&" + longitude;
+                        allPosition.push(string);
+                        document.getElementById("location").value = allPosition;
+                    }
+
+                }
+            </script>
     </body>
 </html>

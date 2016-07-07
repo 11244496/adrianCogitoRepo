@@ -43,6 +43,16 @@ a, a:hover, a:focus {
     height: 100%;
 }
 
+.regField{
+    width: 80%;
+}
+.regFieldTitle{
+    margin-left:10%;
+}
+.regHeading{
+    margin-left:10%
+}
+
 /*login page*/
 
 .login-body {
