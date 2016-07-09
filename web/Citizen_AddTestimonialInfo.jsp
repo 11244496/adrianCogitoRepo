@@ -129,7 +129,7 @@
                     </header>
                     <br>
                     <div class="panel-body">
-                        <form action="Citizen_AddMoreInfo" class="form-horizontal tasi-form" method="POST" enctype="multipart/form-data">
+                        <form action="Citizen_AddInfo" class="form-horizontal tasi-form" method="POST" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label class="col-sm-2 col-sm-2 control-label">Title</label>
                                 <div class="col-sm-10">
@@ -139,16 +139,6 @@
                                 <label class="col-sm-2 col-sm-2 control-label">Message</label>
                                 <div class="col-sm-10">
                                     <textarea class="wysihtml5 form-control" name="testimonialdescription" style="background:white; cursor:default; resize: none;" readonly><%=t.getMessage()%></textarea> <br>
-                                </div>
-
-                                <label class="col-sm-2 col-sm-2 control-label">Location</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" name="testimoniallocation" readonly style="background:white; cursor:default;" value="<%=t.getLocation()%>"><br>
-                                </div>
-
-                                <label class="col-sm-2 col-sm-2 control-label">Location Details</label>
-                                <div class="col-sm-10">
-                                    <textarea class="wysihtml5 form-control" name="testimoniallocationdetails" style="background:white; cursor:default; resize: none;" readonly><%=t.getLocationdetails()%></textarea><br>
                                 </div>
 
                                 <header class="panel-heading">
@@ -161,6 +151,8 @@
                                         <label class="control-label col-md-3">Video</label>
                                         <div class="col-md-4">
                                             <input name="Videos" type="file" class="default" multiple/>
+                                            <textarea class="wysihtml5 form-control" name="videodescription" placeholder=""></textarea>
+                                            <br>
                                         </div>
                                     </div>
 
@@ -168,6 +160,8 @@
                                         <label class="control-label col-md-3">Image</label>
                                         <div class="col-md-4">
                                             <input name="Images" type="file" class="default" multiple/>
+                                            <textarea class="wysihtml5 form-control" name="imagedescription" placeholder=""></textarea>
+                                            <br>
                                         </div>
                                     </div>
 
@@ -175,6 +169,7 @@
                                         <label class="control-label col-md-3">Add Documents</label>
                                         <div class="col-md-4">
                                             <input name="Documents" type="file" class="default" multiple/>
+                                            <textarea class="wysihtml5 form-control" name="documentdescription" placeholder=""></textarea>
                                         </div>
                                     </div>
                                     <center>

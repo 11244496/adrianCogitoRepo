@@ -49,7 +49,7 @@ public class Citizen_Home extends HttpServlet {
             User user = ctDAO.getUser(c);
 
             //Get ArrayList of ID of Testimonials that has the most followers
-            String query = "SELECT Testimonial_ID \n"
+            String query = "SELECT Testimonial_ID as t\n"
                     + "FROM supporters\n"
                     + "Group By Testimonial_ID\n"
                     + "Order By COUNT(*) DESC\n"

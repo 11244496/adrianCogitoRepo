@@ -6,20 +6,19 @@
 package Servlet;
 
 import DAO.CitizenDAO;
-import DAO.GSDAO;
-import DAO.OCPDDAO;
+import DAO.LoginDAO;
+import DAO.NotificationDAO;
 import Entity.Citizen;
 import Entity.Files;
+import Entity.Notification;
 import Entity.Testimonial;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,10 +26,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Krist
+ * @author RoAnn
  */
-@WebServlet(name = "Citizen_OpenTestimonial", urlPatterns = {"/Citizen_OpenTestimonial"})
-public class Citizen_OpenTestimonial extends HttpServlet {
+public class Citizen_ApproveContributions extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,23 +44,27 @@ public class Citizen_OpenTestimonial extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
-
-            int id = Integer.parseInt(request.getParameter("idd"));
-
-            //DAOS
             CitizenDAO ctDAO = new CitizenDAO();
-            OCPDDAO ocpddao = new OCPDDAO();
+            NotificationDAO ntDAO = new NotificationDAO();
+            LoginDAO ldao = new LoginDAO();
+            String[] ids = request.getParameterValues("checked");
 
-            Testimonial t = ctDAO.getTestimonial(id);
+            Citizen c2 = (Citizen) session.getAttribute("user");
 
-            Citizen c = (Citizen) session.getAttribute("user");
+            Testimonial t = (Testimonial) session.getAttribute("openTestimonial");
+
+            for (int x = 0; x < ids.length; x++) {
+                Files f = ctDAO.getFile(Integer.parseInt(ids[x]));
+                ntDAO.addNotification(new Notification(0, c2.getFirstName() + " " + c2.getLastName() + " has approved your request to add additional files to testimonial entitled " + t.getTitle(), null, ldao.getUser(f.getUploader())));
+                ctDAO.changeMMStatus("Approved", Integer.parseInt(ids[x]));
+            }
 
             //Retrieve all the images and videos linked to the testimonial
-            ArrayList<Files> i = ctDAO.getFiles(id, t, "Image");
-            ArrayList<Files> v = ctDAO.getFiles(id, t, "Video");
-            ArrayList<Files> d = ctDAO.getFiles(id, t, "Document");
+            ArrayList<Files> i = ctDAO.getFiles(t.getId(), t, "Image");
+            ArrayList<Files> v = ctDAO.getFiles(t.getId(), t, "Video");
+            ArrayList<Files> d = ctDAO.getFiles(t.getId(), t, "Document");
 
-            if (ctDAO.getFilesWithStatus(id, t, "Pending").size() > 0) {
+            if (ctDAO.getFilesWithStatus(t.getId(),t, "Pending").size() > 0) {
                 session.setAttribute("showAdd", true);
             } else {
                 session.setAttribute("showAdd", false);
@@ -77,17 +79,13 @@ public class Citizen_OpenTestimonial extends HttpServlet {
             session.setAttribute("openVideo", v);
             session.setAttribute("openDocument", d);
             request.setAttribute("supporters", Integer.toString(supporter));
-            session.setAttribute("followCheck", ctDAO.isSubscribed(t, c));
+            session.setAttribute("followCheck", ctDAO.isSubscribed(t, c2));
 
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch;
-            dispatch = context.getRequestDispatcher("/Citizen_ViewTestimonial.jsp");
+            RequestDispatcher dispatch = context.getRequestDispatcher("/Citizen_ViewTestimonial.jsp");
             dispatch.forward(request, response);
 
-        } finally {
-            out.close();
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

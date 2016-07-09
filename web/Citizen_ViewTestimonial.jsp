@@ -229,7 +229,7 @@
                                             if (docs.isEmpty() == false || image == null) {
                                                 String d;
                                                 for (int x = 0; x < docs.size(); x++) {
-                                                    d = testimonial.getFolderName() + "/" + docs.get(x).getFileName();
+                                                    d = testimonial.getFolderName() + testimonial.getTitle() + "/" + docs.get(x).getFileName();
 
                                         %>
 
@@ -284,8 +284,9 @@
                                 <p><%=testimonial.getDateUploaded()%></p>
                                 <br>
 
+                                <%String supporters = (String) request.getAttribute("supporters");%>
                                 <h5 class="bold">Number of supporters</h5>
-                                <p><%=testimonial.getSupporters().size()%></p>
+                                <p><%=supporters%></p>
                                 <br>
 
                                 <h5 class="bold">Main Project</h5>

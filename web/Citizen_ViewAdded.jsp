@@ -1,9 +1,12 @@
+<%@page import="Entity.Testimonial"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="Entity.Citizen"%>
 <%@page import="Entity.Files"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%Citizen c = (Citizen) session.getAttribute("user");%>
-<%ArrayList<Files> fList = (ArrayList<Files>) request.getAttribute("pList");%>
+<%ArrayList<Files> fList = (ArrayList<Files>) request.getAttribute("pList");
+    Testimonial testimonial = (Testimonial) request.getAttribute("testimonial");
+%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -161,26 +164,26 @@
                                                 <tr>
                                                     <th></th>
                                                     <th>Submission</th>
+                                                    <th>Description</th>
                                                     <th>Uploader</th>
                                                     <th>Date Uploaded</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <%for (int x = 0; x < fList.size(); x++) {%>
-                                                <%String s = fList.get(x).getTestimonial().getFolderName() + "/" + fList.get(x).getFileName();%>
+                                                <%String s = fList.get(x).getTestimonial().getFolderName() + testimonial.getTitle() + "/" + fList.get(x).getFileName();%>
                                                 <tr>
                                                     <td><input type="checkbox" name="checked" value="<%=fList.get(x).getId()%>"></td>
                                                     <td>
                                                         <%if (fList.get(x).getType().equalsIgnoreCase("Image")) {%>
-                                                        <img data-u="image" style="width: 300px; height:250px;" src="<%=s%>" />
-
+                                                        <img data-u="image" style="width: 300px; height:250px;" src="<%=s%>" >                                                         
                                                         <%} else if (fList.get(x).getType().equalsIgnoreCase("Video")) {%>
-                                                        <video width="300">
-                                                            <source src=<%=s%> type="video/mkv">
-                                                            <source src=<%=s%> type="video/ogg">
+
+                                                        <video width="100%" height="100%" controls>
+                                                            <source src="<%=s%>" type="video/mp4">
+                                                            Your browser does not support the video tag.
                                                         </video>
-
-
+                                                            
                                                         <%} else if (fList.get(x).getType().equalsIgnoreCase("Document")) {%>
 
                                             <li><a href="<%=s%>"><i class="fa fa-file-text"></i> <%=fList.get(x).getFileName()%></a></li>
@@ -188,6 +191,7 @@
                                             <%}%>
 
                                             </td>
+                                            <td><%=fList.get(x).getDescription()%></td>
                                             <td><%=fList.get(x).getUploader()%></td>
                                             <td><%=fList.get(x).getDateUploaded()%></td>
                                             </tr>

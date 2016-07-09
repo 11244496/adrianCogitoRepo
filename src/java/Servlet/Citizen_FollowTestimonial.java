@@ -5,21 +5,23 @@
  */
 package Servlet;
 
+import DAO.ActivityDAO;
 import DAO.CitizenDAO;
-import DAO.GSDAO;
+import DAO.NotificationDAO;
 import DAO.OCPDDAO;
+import Entity.Activity;
 import Entity.Citizen;
 import Entity.Files;
+import Entity.Notification;
+import Entity.Supporter;
 import Entity.Testimonial;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,10 +29,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Krist
+ * @author RoAnn
  */
-@WebServlet(name = "Citizen_OpenTestimonial", urlPatterns = {"/Citizen_OpenTestimonial"})
-public class Citizen_OpenTestimonial extends HttpServlet {
+public class Citizen_FollowTestimonial extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,34 +45,29 @@ public class Citizen_OpenTestimonial extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
-        try (PrintWriter out = response.getWriter()) {
+        try {
+            int idd = Integer.parseInt(request.getParameter("idd"));
 
-            int id = Integer.parseInt(request.getParameter("idd"));
-
-            //DAOS
+            //DAO
+            ActivityDAO actdao = new ActivityDAO();
             CitizenDAO ctDAO = new CitizenDAO();
+            NotificationDAO ntDAO = new NotificationDAO();
             OCPDDAO ocpddao = new OCPDDAO();
 
-            Testimonial t = ctDAO.getTestimonial(id);
-
+            Testimonial t = ctDAO.getTestimonial(idd);
             Citizen c = (Citizen) session.getAttribute("user");
 
             //Retrieve all the images and videos linked to the testimonial
-            ArrayList<Files> i = ctDAO.getFiles(id, t, "Image");
-            ArrayList<Files> v = ctDAO.getFiles(id, t, "Video");
-            ArrayList<Files> d = ctDAO.getFiles(id, t, "Document");
-
-            if (ctDAO.getFilesWithStatus(id, t, "Pending").size() > 0) {
-                session.setAttribute("showAdd", true);
-            } else {
-                session.setAttribute("showAdd", false);
-            }
+            ArrayList<Files> i = ctDAO.getFiles(idd, t, "Image");
+            ArrayList<Files> v = ctDAO.getFiles(idd, t, "Video");
+            ArrayList<Files> d = ctDAO.getFiles(idd, t, "Document");
             int supporter = ctDAO.getnumberofsubscribers(t);
+            ctDAO.followTestimonial(new Supporter(0, t, c));
 
             String location = new Gson().toJson(t.getTlocation());
             session.setAttribute("location", location);
-
             session.setAttribute("openTestimonial", t);
             session.setAttribute("openImage", i);
             session.setAttribute("openVideo", v);
@@ -79,15 +75,26 @@ public class Citizen_OpenTestimonial extends HttpServlet {
             request.setAttribute("supporters", Integer.toString(supporter));
             session.setAttribute("followCheck", ctDAO.isSubscribed(t, c));
 
+            if (ctDAO.getFilesWithStatus(idd, t, "Pending").size() > 0) {
+                session.setAttribute("showAdd", true);
+            } else {
+                session.setAttribute("showAdd", false);
+            }
+
+            //Add activity
+            actdao.addActivity(new Activity(0, "you subscribed to " + t.getTitle(), null, c.getUser()));
+
+            //Add Notification
+            ntDAO.addNotification(new Notification(0, c.getFirstName() + " " + c.getLastName() + " has followed your testimonial entitled " + t.getTitle(), null, t.getCitizen().getUser()));
+
+            //request.setAttribute("success", "LetterSuccess");
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch;
-            dispatch = context.getRequestDispatcher("/Citizen_ViewTestimonial.jsp");
+            RequestDispatcher dispatch = context.getRequestDispatcher("/Citizen_ViewTestimonial.jsp");
             dispatch.forward(request, response);
 
         } finally {
             out.close();
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

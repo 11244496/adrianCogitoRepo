@@ -6,20 +6,15 @@
 package Servlet;
 
 import DAO.CitizenDAO;
-import DAO.GSDAO;
-import DAO.OCPDDAO;
 import Entity.Citizen;
 import Entity.Files;
 import Entity.Testimonial;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,10 +22,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Krist
+ * @author RoAnn
  */
-@WebServlet(name = "Citizen_OpenTestimonial", urlPatterns = {"/Citizen_OpenTestimonial"})
-public class Citizen_OpenTestimonial extends HttpServlet {
+public class Citizen_ViewPendingFiles extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,48 +40,19 @@ public class Citizen_OpenTestimonial extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
-
-            int id = Integer.parseInt(request.getParameter("idd"));
-
-            //DAOS
+            /* TODO output your page here. You may use following sample code. */
             CitizenDAO ctDAO = new CitizenDAO();
-            OCPDDAO ocpddao = new OCPDDAO();
-
-            Testimonial t = ctDAO.getTestimonial(id);
-
+            Testimonial t = (Testimonial) session.getAttribute("openTestimonial");
             Citizen c = (Citizen) session.getAttribute("user");
-
-            //Retrieve all the images and videos linked to the testimonial
-            ArrayList<Files> i = ctDAO.getFiles(id, t, "Image");
-            ArrayList<Files> v = ctDAO.getFiles(id, t, "Video");
-            ArrayList<Files> d = ctDAO.getFiles(id, t, "Document");
-
-            if (ctDAO.getFilesWithStatus(id, t, "Pending").size() > 0) {
-                session.setAttribute("showAdd", true);
-            } else {
-                session.setAttribute("showAdd", false);
-            }
-            int supporter = ctDAO.getnumberofsubscribers(t);
-
-            String location = new Gson().toJson(t.getTlocation());
-            session.setAttribute("location", location);
-
-            session.setAttribute("openTestimonial", t);
-            session.setAttribute("openImage", i);
-            session.setAttribute("openVideo", v);
-            session.setAttribute("openDocument", d);
-            request.setAttribute("supporters", Integer.toString(supporter));
-            session.setAttribute("followCheck", ctDAO.isSubscribed(t, c));
-
+            
+            ArrayList<Files> pending = ctDAO.getFilesWithStatus(t.getId(), t, "Pending");
+            request.setAttribute("testimonial", t);
+            request.setAttribute("pList", pending);
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch;
-            dispatch = context.getRequestDispatcher("/Citizen_ViewTestimonial.jsp");
+            RequestDispatcher dispatch = context.getRequestDispatcher("/Citizen_ViewAdded.jsp");
             dispatch.forward(request, response);
 
-        } finally {
-            out.close();
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

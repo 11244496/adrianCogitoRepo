@@ -32,6 +32,26 @@
         <servlet-name>Citizen_UnfollowTestimonial</servlet-name>
         <servlet-class>Servlet.Citizen_UnfollowTestimonial</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Citizen_FollowTestimonial</servlet-name>
+        <servlet-class>Servlet.Citizen_FollowTestimonial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Citizen_AddInfo</servlet-name>
+        <servlet-class>Servlet.Citizen_AddInfo</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Citizen_ViewPendingFiles</servlet-name>
+        <servlet-class>Servlet.Citizen_ViewPendingFiles</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Citizen_ApproveContributions</servlet-name>
+        <servlet-class>Servlet.Citizen_ApproveContributions</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Citizen_RejectContributions</servlet-name>
+        <servlet-class>Servlet.Citizen_RejectContributions</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -63,6 +83,26 @@
     <servlet-mapping>
         <servlet-name>Citizen_UnfollowTestimonial</servlet-name>
         <url-pattern>/Citizen_UnfollowTestimonial</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_FollowTestimonial</servlet-name>
+        <url-pattern>/Citizen_FollowTestimonial</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_AddInfo</servlet-name>
+        <url-pattern>/Citizen_AddInfo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_ViewPendingFiles</servlet-name>
+        <url-pattern>/Citizen_ViewPendingFiles</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_ApproveContributions</servlet-name>
+        <url-pattern>/Citizen_ApproveContributions</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_RejectContributions</servlet-name>
+        <url-pattern>/Citizen_RejectContributions</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

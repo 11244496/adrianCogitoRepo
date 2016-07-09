@@ -378,7 +378,7 @@ public class CitizenDAO {
         }
         return testId;
     }
-    
+
     public void submitTestimonial(Testimonial t) {
         try {
             myFactory = ConnectionFactory.getInstance();
@@ -397,6 +397,45 @@ public class CitizenDAO {
             System.out.println("Error in submitTestimonial()");
             Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void unfollowTestimonial(Supporter s) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "DELETE FROM supporters WHERE Citizen_ID = ? and Testimonial_ID = ?;";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, s.getCitizen().getId());
+            statement.setInt(2, s.getTestimonial().getId());
+
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void followTestimonial(Supporter s) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into supporters (testimonial_id, citizen_id) values (?, ?);";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, s.getTestimonial().getId());
+            statement.setInt(2, s.getCitizen().getId());
+
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     //========================================ALL FILE RELATED CODES===========================================
@@ -439,6 +478,45 @@ public class CitizenDAO {
         return fl;
 
     }
+    
+    public ArrayList<Files> getFilesWithStatus(int id, Testimonial t, String status) {
+
+        ArrayList<Files> f2 = new ArrayList<Files>();
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from files where Testimonial_ID = ? and status = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            statement.setString(2, status);
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                Files file = new Files();
+                file.setId(result.getInt("ID"));
+                file.setFileName(result.getString("FileName"));
+                file.setDateUploaded(result.getString("DateUploaded"));
+                file.setType(result.getString("Type"));
+                file.setStatus(result.getString("Status"));
+                file.setDescription(result.getString("Description"));
+                file.setUploader(result.getString("Uploader"));
+                file.setTestimonial(t);
+                f2.add(file);
+            }
+            connection.close();
+            return f2;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return f2;
+
+    }
 
     public void submitFiles(Files f) {
         try {
@@ -457,6 +535,105 @@ public class CitizenDAO {
         } catch (SQLException ex) {
             System.out.println("Error in submitFiles()");
             Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void uploadFiles(Files f, String username) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into files (FileName, DateUploaded, Type, Status, testimonial_id, uploader,description) values "
+                    + "(?, curdate(),?,?,(select testimonial.ID from testimonial join "
+                    + "citizen on citizen_id = citizen.id join users on Users_ID = users.ID where username = ? "
+                    + "and dateuploaded = (select max(testimonial.dateuploaded)),?,?);";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, f.getFileName());
+            statement.setString(2, f.getType());
+            statement.setString(3, f.getStatus());
+            statement.setString(4, f.getTestimonial().getCitizen().getUser().getUsername());
+            statement.setString(5, username);
+            statement.setString(6, f.getDescription());
+
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void disapproveAdded(int id) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "delete from files where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Files getFile(int id) {
+        Files f = new Files();
+        Testimonial t = new Testimonial();
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "SELECT * from files where id=?";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                t.setId(result.getInt("testimonial_id"));
+                f.setId(result.getInt("ID"));
+                f.setFileName(result.getString("FileName"));
+                f.setDateUploaded(result.getString("DateUploaded"));
+                Testimonial test = new Testimonial();
+                test.setId(result.getInt("Testimonial_ID"));
+                f.setTestimonial(test);
+                f.setDescription(result.getString("Description"));
+                f.setType(result.getString("Type"));
+                f.setStatus(result.getString("Status"));
+                f.setUploader(result.getString("Uploader"));
+            }
+            connection.close();
+            return f;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return f;
+    }
+
+    public void changeMMStatus(String status, int id) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "update files set status = ? where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, status);
+            statement.setInt(2, id);
+
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -498,7 +675,7 @@ public class CitizenDAO {
         }
         return id;
     }
-    
+
     public boolean isSubscribed(Testimonial t, Citizen c) {
         int count = 0;
         try {
