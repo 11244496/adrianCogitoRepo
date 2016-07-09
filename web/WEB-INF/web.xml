@@ -52,6 +52,10 @@
         <servlet-name>Citizen_RejectContributions</servlet-name>
         <servlet-class>Servlet.Citizen_RejectContributions</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Citizen_NotificationActivity</servlet-name>
+        <servlet-class>Servlet.Citizen_NotificationActivity</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -103,6 +107,10 @@
     <servlet-mapping>
         <servlet-name>Citizen_RejectContributions</servlet-name>
         <url-pattern>/Citizen_RejectContributions</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_NotificationActivity</servlet-name>
+        <url-pattern>/Citizen_NotificationActivity</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

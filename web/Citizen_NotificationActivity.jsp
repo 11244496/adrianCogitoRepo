@@ -220,9 +220,6 @@
                         <div class="panel-body">
                             <div class="">
                                 <section class="panel">
-                                    <header class="panel-heading">
-                                        Notifications
-                                    </header>
                                     <table class="table">
                                         <thead>
                                             <tr>
@@ -260,10 +257,6 @@
 
                             <div class="">
                                 <section class="panel">
-                                    <header class="panel-heading">
-                                        Activities
-                                    </header>
-
                                     <table class="table">
                                         <thead>
                                             <tr>

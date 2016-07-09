@@ -4,6 +4,8 @@
     Author     : RoAnn
 --%>
 
+<%@page import="Entity.TLocation"%>
+<%@page import="Entity.Location"%>
 <%@page import="Entity.Files"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="Entity.Testimonial"%>
@@ -135,10 +137,15 @@
 
 
             <%
-                ArrayList<Testimonial> myTestimonials = (ArrayList<Testimonial>) request.getAttribute("myTestimonials");
+                //ArrayList<Testimonial> myTestimonials = (ArrayList<Testimonial>) request.getAttribute("myTestimonials");
                 ArrayList<Testimonial> allTestimonials = (ArrayList<Testimonial>) request.getAttribute("allTestimonials");
-                ArrayList<Testimonial> subscribedTestimonials = (ArrayList<Testimonial>) request.getAttribute("subscribedTestimonials");
-                ArrayList<Testimonial> trendingTestimonials = (ArrayList<Testimonial>) request.getAttribute("trendingTestimonials");
+                //ArrayList<Testimonial> subscribedTestimonials = (ArrayList<Testimonial>) request.getAttribute("subscribedTestimonials");
+                //ArrayList<Testimonial> trendingTestimonials = (ArrayList<Testimonial>) request.getAttribute("trendingTestimonials");
+
+                String allLocation = (String) request.getAttribute("allLocation");
+                //ArrayList<Location> myLocation = new ArrayList<Location>();
+                //ArrayList<Location> subscribedLocation = new ArrayList<Location>();
+                //ArrayList<Location> trendingLocation = new ArrayList<Location>();
             %>
 
             <section id="main-content">
@@ -176,8 +183,6 @@
                                             <div>
                                                 <input size="50" type="text" placeholder="Type to search" id="all-testimonial">
 
-                                                <input type="checkbox" value="All" style="margin-left: 320px">All
-
                                                 <input type="checkbox" value="Followed" style="margin-left: 20px">Followed
 
                                                 <input type="checkbox" value="My" style="margin-left: 20px">My Testimonials
@@ -189,7 +194,9 @@
                                                     <div class="row">
                                                         <div class="col-lg-13">
                                                             <!--Map should be here -->
-                                                            <div id="map" style="height: 1000px; margin: 0; padding: 0; width: 100%"></div>
+                                                            <center>
+                                                            <div id="map" style="height: 700px; margin: 0; padding: 0; width: 80%;"></div>
+                                                            </center>
                                                         </div> 
                                                     </div>
                                                 </div>
@@ -199,9 +206,7 @@
 
                                         <div class="tab-pane" id="tabview">
                                             <div>
-                                                <input size="50" type="text" placeholder="Type to search" id="all-testimonial">
-
-                                                <input type="checkbox" value="All" style="margin-left: 320px">All
+                                                <input size="50" type="text" placeholder="Type to search" id="tabview-testimonial">
 
                                                 <input type="checkbox" value="Followed" style="margin-left: 20px">Followed
 
@@ -215,7 +220,7 @@
                                                 <div class="row">
 
 
-                                                    <table class="table" data-search-field="#followed-testimonial">
+                                                    <table id="ListViewTestimonial" class="table" data-search-field="#tabview-testimonial">
 
                                                         <thead>
                                                             <tr>
@@ -229,15 +234,15 @@
                                                                 <th style="width: 15%"></th>
                                                             </tr>
                                                         </thead>
+                                                        <tbody id="ListViewBody">
+                                                            <%      for (int x = 0; x < allTestimonials.size(); x++) {
+                                                                    int testID1 = allTestimonials.get(x).getId();
+                                                                    Testimonial test1 = allTestimonials.get(x);
+                                                                    ArrayList<Files> files = test1.getFiles();
+                                                                    String[] split = allTestimonials.get(x).getDateUploaded().split("\\s+");
+                                                                    int fileID = 0;
+                                                            %>
 
-                                                        <%      for (int x = 0; x < allTestimonials.size(); x++) {
-                                                                int testID1 = allTestimonials.get(x).getId();
-                                                                Testimonial test1 = allTestimonials.get(x);
-                                                                ArrayList<Files> files = test1.getFiles();
-                                                                String[] split = allTestimonials.get(x).getDateUploaded().split("\\s+");
-                                                                int fileID = 0;
-                                                        %>
-                                                        <tbody>
                                                             <tr>
 
                                                                 <td>
@@ -299,13 +304,13 @@
                                                                 </td>
                                                             </tr>    
 
+
+
+                                                            <%
+
+                                                                }
+                                                            %>
                                                         </tbody>  
-
-                                                        <%
-
-                                                            }
-                                                        %>
-
                                                     </table>
 
                                                 </div>
@@ -371,7 +376,7 @@
                                 .trigger('keyup');
                     });
                 };
-// Initialize
+                // Initialize
                 $('.table').searchableTable();</script>
 
 
@@ -442,29 +447,63 @@
 
             <script>
                 var map;
-                var markers = [];
-                var allPosition = [];
+                var markers = <%=allLocation%>;
                 function initMap() {
+
                     map = new google.maps.Map(document.getElementById('map'), {
-                        center: {lat: 14.44, lng: 120.99},
+                        center: {lat: 14.45, lng: 120.98},
                         zoom: 14
                     });
-                    google.maps.event.addListener(map, 'click', function (event) {
-                        placeMarker(event.latLng);
-                    });
-                    function placeMarker(location) {
+
+                    markers.forEach(function (coor) {
+
+                        var geocoder = new google.maps.Geocoder;
+                        var latLng = new google.maps.LatLng(coor.latitude, coor.longitude);
                         var marker = new google.maps.Marker({
-                            position: location,
+                            position: latLng,
                             map: map
                         });
-                        markers.push(marker);
-                        latitude = marker.position.lat();
-                        longitude = marker.position.lng();
-                        var string = latitude + "&" + longitude;
-                        allPosition.push(string);
-                        document.getElementById("location").value = allPosition;
-                    }
 
+                        var infowindow = new google.maps.InfoWindow;
+
+                        marker.addListener('click', function () {
+                            geocodeLatLng(geocoder, map, infowindow, latLng, coor);
+                        });
+                    });
+
+                }
+
+                function geocodeLatLng(geocoder, map, infowindow, latLng, coor) {
+                    var latlng = latLng;
+                    geocoder.geocode({'location': latlng}, function (results, status) {
+                        if (status === google.maps.GeocoderStatus.OK) {
+                            if (results[0]) {
+                                var marker = new google.maps.Marker({
+                                    position: latlng,
+                                    map: map
+                                });
+                                var contentString = '<div id="content">' +
+                                        '<div id="siteNotice">' +
+                                        '</div>' +
+                                        '<h1 id="firstHeading" class="firstHeading"><a href="Citizen_OpenTestimonial?idd=' + coor.testimonial.id + '">' + coor.testimonial.title + '</a></h1>' +
+                                        '<div id="bodyContent">' +
+                                        '<br><div>Date Uploaded: ' + coor.testimonial.dateuploaded + '</div>' +
+                                        '<br><div>Location: ' + results[0].formatted_address + '</div>' +
+                                        '<br><div>Category: ' + coor.testimonial.category + '</div>' +
+                                        '<br><div>Message: ' + coor.testimonial.message + ' </div>' +
+                                        '<br><div>Uploader: ' + coor.testimonial.citizen.firstName + ' ' +coor.testimonial.citizen.lastName+ ' </div>' +
+                                        '</div>' +
+                                        '</div>';
+
+                                infowindow.setContent(contentString);
+                                infowindow.open(map, marker);
+                            } else {
+                                window.alert('No results found');
+                            }
+                        } else {
+                            window.alert('Geocoder failed due to: ' + status);
+                        }
+                    });
                 }
             </script>
     </body>

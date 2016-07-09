@@ -24,8 +24,8 @@
         <link href="css/bootstrap-reset.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
         <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-        <link rel="stylesheet" type="text/css" href="assets/gritter/css/jquery.gritter.css" />
-
+        <link rel="stylesheet" type="text/css" href="assets/gritter/css/jquery.gritter.css">
+        <link  href='unitegallery/css/unite-gallery.css' rel='stylesheet' type='text/css'>
     </head>
 
     <body>
@@ -141,49 +141,35 @@
                     </header>
                     <br>
                     <div class="panel-body">
-                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                            <!-- Indicators -->
-                            <ol class="carousel-indicators">
-                                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                                <li data-target="#myCarousel" data-slide-to="1"></li>
-                                <li data-target="#myCarousel" data-slide-to="2"></li>
-                                <li data-target="#myCarousel" data-slide-to="3"></li>
-                            </ol>
 
-                            <div class="carousel-inner" role="listbox">
-                                <div class="item active">
-                                    <center>  <img src="carousel1.jpg" alt="court"> </center>
-                                </div>
+                        <div id="gallery" style="margin:0px auto;display:none;">
 
-                                <div class="item">
-                                    <center> <img src="carousel2.jpg" alt="Chania"> </center>
-                                </div>
+                            <img alt="court"
+                                 src="carousel1.jpg"
+                                 data-image="carousel1.jpg"
+                                 data-description="court"
+                                 >
 
-                                <div class="item">
-                                    <center><img src="carousel3.jpg" alt="Flower"> </center>
-                                </div>
+                            <img alt="Chania"
+                                 src="carousel2.jpg"
+                                 data-image="carousel2.jpg"
+                                 data-description="Chania"
+                                 >
 
-                                <div class="item">
-                                    <center><img src="carousel4.jpg" alt="Flower"></center>
-                                </div>
-                            </div>
+                            <img alt="Flower"
+                                 src="carousel3.jpg"
+                                 data-image="carousel3.jpg"
+                                 data-description="Flower"
+                                 >
+                        </div>
 
-                            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </div> 
-
-                        <header class="panel-heading">
-                            Trending Testimonials
-                        </header>  
                         <div class="directory-info-row">
-                            <div class="row">
+                            <header class="panel-heading">
+                                Trending Testimonials
+                            </header>  
 
+                            <div class="row">
+                                
                                 <%for (int x = 0; x < testilist.size(); x++) {
 
                                 %>
@@ -192,11 +178,11 @@
                                         <div class="panel-body">
                                             <div class="media">
                                                 <a class="pull-left" href="#">
-                                                    <img class="thumb media-object" src="<%=testilist.get(x).getFolderName() +"/"+ testilist.get(x).getFiles().get(0).getFileName()%>" alt="" style="width: 250px;height: 250px;">
+                                                    <img class="thumb media-object" src="<%=testilist.get(x).getFolderName() + "/" + testilist.get(x).getTitle() + "/" + testilist.get(x).getFiles().get(0).getFileName()%>" alt="" style="width: 250px;height: 250px;">
                                                 </a>
                                                 <div class="media-body">
-                                                    <h4>#<%out.print(x+1);%></h4>
-                                                    
+                                                    <h4>#<%out.print(x + 1);%></h4>
+
                                                     <h4><%out.print(testilist.get(x).getTitle());%></h4>
                                                     <h5>
                                                         <%out.print(testilist.get(x).getDateUploaded());%>
@@ -214,35 +200,38 @@
                                 <%}
                                 %>
 
-                                		  
-
+                            </div>
+                            <div class="row">
                                 <header class="panel-heading">
                                     Statistics
                                 </header>
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <section class="panel">
-                                            <div class="panel-body">
-                                                <ul class="summary-list">
-                                                    <li>
-                                                        <a href="javascript:;">
-                                                            <i class="fa fa-file-text-o"></i>
-                                                            <%out.print(mytestimonialnumber);%> Testimonials
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;">
-                                                            <i class=" fa fa-chain-broken"></i>
-                                                            <%out.print(unlikedtestimonial);%> Unlinked Testimonials
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </section>
-                                    </div>
+
+                                <div class="col-lg-12">
+                                    <section class="panel">
+                                        <div class="panel-body">
+                                            <ul class="summary-list">
+                                                <li>
+                                                    <a href="javascript:;">
+                                                        <i class="fa fa-file-text-o"></i>
+                                                        <%out.print(mytestimonialnumber);%> Testimonials
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;">
+                                                        <i class=" fa fa-chain-broken"></i>
+                                                        <%out.print(unlikedtestimonial);%> Unlinked Testimonials
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </section>
                                 </div>
                             </div>
                         </div>
+
+
+
+
                     </div>
                 </section>
             </section>
@@ -257,11 +246,27 @@
                 </a>
             </div>
         </footer>
+
         <script src="js/jquery.js"></script>
+        <script src='unitegallery/themes/slider/ug-theme-slider.js' type='text/javascript'></script>
+        <script src='unitegallery/js/unitegallery.min.js' type='text/javascript'></script>
         <script src="js/bootstrap.min.js"></script>
         <script class="include" type="text/javascript" src="js/jquery.dcjqaccordion.2.7.js"></script>
         <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
         <script type="text/javascript" src="js/jquery.pulsate.min.js"></script>
         <script src="js/slidebars.min.js"></script>
+        <script type="text/javascript">
+
+            jQuery(document).ready(function () {
+
+                jQuery("#gallery").unitegallery({
+                    gallery_theme: "slider",
+                    // gallery options
+                    slider_enable_text_panel: true,
+                    slider_textpanel_always_on: false,
+                });
+            });
+
+        </script>
     </body>
 </html>

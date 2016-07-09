@@ -6,12 +6,14 @@
 package DAO;
 
 import DB.ConnectionFactory;
+import Entity.Activity;
 import Entity.Address;
 import Entity.Barangay;
 import Entity.Citizen;
 import Entity.Comment;
 import Entity.Files;
 import Entity.Location;
+import Entity.Notification;
 import Entity.Project;
 import Entity.Reply;
 import Entity.Supporter;
@@ -138,7 +140,6 @@ public class CitizenDAO {
     //Include all parts of the testimonial
     public Testimonial getTestimonial(int id) {
         Testimonial t = new Testimonial();
-        t.setId(id);
         Citizen c;
         User u;
 
@@ -150,11 +151,33 @@ public class CitizenDAO {
         ArrayList<TComments> tcomments = new ArrayList<TComments>();
         ArrayList<Supporter> supporters = new ArrayList<Supporter>();
 
-        PreparedStatement statement1, statement2, statement3, statement4, statement5, statement6, statement7;
+        PreparedStatement statement1, statement2, statement3, statement4, statement5, statement6, statement7, statement8;
 
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
+
+            //Get Testimonial Info
+            String testimonialquery = "select * from testimonial \n"
+                    + "join citizen on citizen_id = citizen.ID\n"
+                    + "join users on users_id = users.id"
+                    + " where testimonial.ID = ?";
+
+            statement = connection.prepareStatement(testimonialquery);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                u = new User(result.getInt("users.id"), result.getString("username"));
+                c = new Citizen(result.getInt("citizen.id"), result.getString("FirstName"), result.getString("lastname"), u);
+                t.setId(result.getInt("testimonial.id"));
+                t.setTitle(result.getString("title"));
+                t.setDateUploaded(result.getString("dateuploaded"));
+                t.setMessage(result.getString("message"));
+                t.setFolderName(result.getString("foldername"));
+                t.setCategory(result.getString("category"));
+                t.setStatus(result.getString("status"));
+                t.setCitizen(c);
+            }
 
             String locationQuery = ("select * from tlocation where Testimonial_ID = ?");
             statement1 = connection.prepareStatement(locationQuery);
@@ -165,6 +188,15 @@ public class CitizenDAO {
                 loc.setId(result.getInt("ID"));
                 loc.setLatitude(result.getString("latitude"));
                 loc.setLongitude(result.getString("longitude"));
+                Testimonial testi = new Testimonial();
+                testi.setId(t.getId());
+                testi.setTitle(t.getTitle());
+                testi.setDateUploaded(t.getDateUploaded());
+                testi.setMessage(t.getMessage());
+                testi.setCategory(t.getCategory());
+                testi.setCitizen(t.getCitizen());
+
+                loc.setTestimonial(testi);
                 tlocation.add(loc);
             }
             t.setTlocation(tlocation);
@@ -201,6 +233,7 @@ public class CitizenDAO {
                 r.setMessage(result.getString("Message"));
                 r.setSender(result.getString("Sender"));
                 r.setDateSent(result.getString("Datesend"));
+                r.setTestimonial_ID(t);
                 replies.add(r);
             }
             t.setReplies(replies);
@@ -218,11 +251,9 @@ public class CitizenDAO {
                 f.setStatus(filesQuery);
                 f.setUploader(filesQuery);
                 f.setDescription(filesQuery);
-                Testimonial testi = new Testimonial();
-                t.setId(id);
                 Project project = new Project();
                 project.setId(result.getString("Project_ID"));
-                f.setTestimonial(testi);
+                f.setTestimonial(t);
                 f.setProject(project);
                 files.add(f);
             }
@@ -240,9 +271,7 @@ public class CitizenDAO {
                 Citizen citizen = new Citizen();
                 citizen.setId(result.getInt("Citizen_ID"));
                 comment.setCitizen(citizen);
-                Testimonial ctestimonial = new Testimonial();
-                ctestimonial.setId(result.getInt("Testimonial_ID"));
-                comment.setTestimonial(ctestimonial);
+                comment.setTestimonial(t);
 
                 tcomments.add(comment);
             }
@@ -263,24 +292,6 @@ public class CitizenDAO {
                 supporters.add(s);
             }
             t.setSupporters(supporters);
-
-            //Get Testimonial Info
-            String testimonialquery = "select * from testimonial \n"
-                    + "join citizen on citizen_id = citizen.ID\n"
-                    + "join users on users_id = users.id"
-                    + " where testimonial.ID = ?";
-
-            statement = connection.prepareStatement(testimonialquery);
-            statement.setInt(1, id);
-            result = statement.executeQuery();
-            while (result.next()) {
-                u = new User(result.getInt("users.id"), result.getString("username"));
-                c = new Citizen(result.getInt("citizen.id"), result.getString("FirstName"), result.getString("lastname"), u);
-                t = new Testimonial(result.getString("title"), result.getString("dateuploaded"),
-                        result.getString("message"), result.getString("foldername"), result.getString("category"),
-                        result.getString("status"), c, tlocation, mainproject, referencedproject, replies, files, tcomments, supporters);
-                t.setId(result.getInt("testimonial.id"));
-            }
 
             connection.close();
         } catch (SQLException ex) {
@@ -478,7 +489,7 @@ public class CitizenDAO {
         return fl;
 
     }
-    
+
     public ArrayList<Files> getFilesWithStatus(int id, Testimonial t, String status) {
 
         ArrayList<Files> f2 = new ArrayList<Files>();
@@ -653,6 +664,76 @@ public class CitizenDAO {
             System.out.println("Error in setLocation()");
             Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    //======================== ALL NOTIFICATION AND ACTIVITY METHODS ==========================
+    public ArrayList<Activity> getActivity(User u) {
+
+        ArrayList<Activity> activities = new ArrayList<Activity>();
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from activity where users_id = ? Order by DateTime DESC";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, u.getId());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                Activity activity = new Activity();
+                activity.setId(result.getInt("activity.id"));
+                activity.setActivity(result.getString("activity.activity"));
+                activity.setDateTime(result.getString("activity.datetime"));
+                activity.setUser(u);
+                activities.add(activity);
+            }
+            connection.close();
+            return activities;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return activities;
+
+    }
+
+    public ArrayList<Notification> getNotification(User u) {
+
+        ArrayList<Notification> notification = new ArrayList<Notification>();
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from notification where users_id = ? Order by DateTime DESC";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, u.getId());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                Notification n = new Notification();
+                n.setId(result.getInt("notification.id"));
+                n.setNotification(result.getString("Notification"));
+                n.setDateTime(result.getString("notification.datetime"));
+                n.setUsers_ID(u);
+
+                notification.add(n);
+            }
+            connection.close();
+            return notification;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return notification;
+
     }
 
     //========================================  ETC ===========================================

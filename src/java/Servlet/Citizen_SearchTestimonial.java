@@ -7,7 +7,9 @@ package Servlet;
 
 import DAO.CitizenDAO;
 import Entity.Citizen;
+import Entity.TLocation;
 import Entity.Testimonial;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -43,48 +45,61 @@ public class Citizen_SearchTestimonial extends HttpServlet {
 
             CitizenDAO c = new CitizenDAO();
             Citizen citizen = (Citizen) session.getAttribute("user");
-            
-            String getSubscribedQ = "select testimonial_id as t from supporters where citizen_id = ?";
+
+            //String getSubscribedQ = "select testimonial_id as t from supporters where citizen_id = ?";
             String getAllQ = "select id as t from testimonial";
-            String getTrendingQ = "select testimonial_id as t from supporters group by testimonial_id order by count(*) desc";
-            String getMineQ = "select id as t from testimonial where citizen_id = ?";
+            //String getTrendingQ = "select testimonial_id as t from supporters group by testimonial_id order by count(*) desc";
+            //String getMineQ = "select id as t from testimonial where citizen_id = ?";
 
-            ArrayList<Integer> subscribedId = c.getTestimonials(getSubscribedQ, citizen);
+            //ArrayList<Integer> subscribedId = c.getTestimonials(getSubscribedQ, citizen);
             ArrayList<Integer> allTestId = c.getTestimonials(getAllQ, null);
-            ArrayList<Integer> trendingTestId = c.getTestimonials(getTrendingQ, null);
-            ArrayList<Integer> myTestId = c.getTestimonials(getMineQ, citizen);
+            //ArrayList<Integer> trendingTestId = c.getTestimonials(getTrendingQ, null);
+            //ArrayList<Integer> myTestId = c.getTestimonials(getMineQ, citizen);
 
-            ArrayList<Testimonial> subscribedTestimonials = new ArrayList<Testimonial>();
+            // ArrayList<Testimonial> subscribedTestimonials = new ArrayList<Testimonial>();
             ArrayList<Testimonial> allTestimonials = new ArrayList<Testimonial>();
-            ArrayList<Testimonial> trendingTestimonials = new ArrayList<Testimonial>();
-            ArrayList<Testimonial> myTestimonials = new ArrayList<Testimonial>();
-            Testimonial t;
-            
-            for (int id : subscribedId) {
-                t = c.getTestimonial(id);
-                subscribedTestimonials.add(t);
-            }
+            //ArrayList<Testimonial> trendingTestimonials = new ArrayList<Testimonial>();
+            //ArrayList<Testimonial> myTestimonials = new ArrayList<Testimonial>();
 
+            ArrayList<TLocation> allLocation = new ArrayList<TLocation>();
+            //ArrayList<TLocation> myLocation = new ArrayList<TLocation>();
+            //ArrayList<TLocation> subscribedLocation = new ArrayList<TLocation>();
+            //ArrayList<TLocation> trendingLocation = new ArrayList<TLocation>();
+
+            Testimonial t;
+
+            //Get the testimonials based on the ID
+//            for (int id : subscribedId) {
+//                t = c.getTestimonial(id);
+//                subscribedTestimonials.add(t);
+//            }
             for (int id : allTestId) {
                 t = c.getTestimonial(id);
                 allTestimonials.add(t);
             }
 
-            for (int id : trendingTestId) {
-                t = c.getTestimonial(id);
-                trendingTestimonials.add(t);
-            }
-
-            for (int id : myTestId) {
-                t = c.getTestimonial(id);
-                myTestimonials.add(t);
+//            for (int id : trendingTestId) {
+//                t = c.getTestimonial(id);
+//                trendingTestimonials.add(t);
+//            }
+//            for (int id : myTestId) {
+//                t = c.getTestimonial(id);
+//                myTestimonials.add(t);
+//            }
+            for (Testimonial testi : allTestimonials) {
+                for (TLocation l : testi.getTlocation()) {
+                    allLocation.add(l);
+                }
             }
 
             request.setAttribute("allTestimonials", allTestimonials);
-            request.setAttribute("myTestimonials", myTestimonials);
-            request.setAttribute("subscribedTestimonials", subscribedTestimonials);
-            request.setAttribute("trendingTestimonials", trendingTestimonials);
+            //request.setAttribute("myTestimonials", myTestimonials);
+            //request.setAttribute("subscribedTestimonials", subscribedTestimonials);
+            //request.setAttribute("trendingTestimonials", trendingTestimonials);
 
+            String location = new Gson().toJson(allLocation);
+            request.setAttribute("allLocation", location);
+            
             ServletContext context = getServletContext();
             String success = (String) request.getAttribute("success");
 
