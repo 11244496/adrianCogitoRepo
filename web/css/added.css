@@ -1,0 +1,51 @@
+#floating-panel {
+    position: absolute;
+    top: 10px;
+    left: 25%;
+    z-index: 5;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #999;
+    text-align: center;
+    font-family: 'Roboto','sans-serif';
+    line-height: 30px;
+    padding-left: 10px;
+}
+
+.planninglegend {
+    color:#ff3399;
+}
+.biddinglegend {
+    color:#00cc00;
+}
+.implementationlegend {
+    color:#8080ff;
+}
+
+#mainTest .id{
+    width: 3%;
+}
+
+#mainTest .title{
+    width: 15%;
+}
+
+#mainTest .date{
+    width: 13%;
+}
+
+#mainTest .message{
+    width: 30%;
+}
+
+#mainTest .uploader{
+    width: 15%;
+}
+
+#mainTest .buttons{
+    width: 7%;
+}
+
+#mainTest .btn{
+    width: 100%;
+}
