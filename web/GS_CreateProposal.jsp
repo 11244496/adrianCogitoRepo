@@ -301,7 +301,6 @@
                                                         
                                                         //Ajax Call here and change modal fields
                                                         
-                                                        
                                                         $('#viewdetails').modal();
                                                         
                                                     });
