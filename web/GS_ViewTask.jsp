@@ -201,7 +201,7 @@
                                 <span>Project Proposals</span>
                             </a>
                             <ul class="sub">
-                                <li><a  href="GS_CreateProposal.jsp">&nbsp; &nbsp; &nbsp; &nbsp; Create Proposal</a></li>
+                                <li><a  href="GS_CreateProposal">&nbsp; &nbsp; &nbsp; &nbsp; Create Proposal</a></li>
                                 <li><a  href="GS_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
                                 <li><a  href="GS_ViewImplementedProjects">&nbsp; &nbsp; Monitor Implemented Projects</a></li>
                             </ul>

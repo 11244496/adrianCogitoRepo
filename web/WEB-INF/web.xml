@@ -68,6 +68,10 @@
         <servlet-name>GS_ViewTestimonialDetails</servlet-name>
         <servlet-class>Servlet.GS_ViewTestimonialDetails</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GS_CreateProposal</servlet-name>
+        <servlet-class>Servlet.GS_CreateProposal</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -135,6 +139,10 @@
     <servlet-mapping>
         <servlet-name>GS_ViewTestimonialDetails</servlet-name>
         <url-pattern>/GS_ViewTestimonialDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_CreateProposal</servlet-name>
+        <url-pattern>/GS_CreateProposal</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

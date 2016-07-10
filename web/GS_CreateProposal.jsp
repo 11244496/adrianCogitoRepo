@@ -4,10 +4,16 @@
     Author     : User
 --%>
 
+<%@page import="Entity.Testimonial"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="Entity.Employee"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
+    <% Employee e = (Employee) session.getAttribute("user");
+        ArrayList<Testimonial> allTestimonials = (ArrayList<Testimonial>) request.getAttribute("allTestimonials");
+    %>
+
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,8 +50,6 @@
         <script src ='calendar/jquery.min.js'></script>
         <script src ='calendar/fullcalendar.js'></script>
         <script src ='calendar/scheduler.js'></script>
-
-
     </head>
 
     <body>
@@ -174,7 +178,7 @@
                                 <span>Project Proposals</span>
                             </a>
                             <ul class="sub">
-                                <li><a  href="GS_CreateProposal.jsp"  class="active">&nbsp; &nbsp; &nbsp; &nbsp; Create Proposal</a></li>
+                                <li><a  href="GS_CreateProposal"  class="active">&nbsp; &nbsp; &nbsp; &nbsp; Create Proposal</a></li>
                                 <li><a  href="GS_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
                                 <li><a  href="GS_ViewImplementedProjects">&nbsp; &nbsp; Monitor Implemented Projects</a></li>
                             </ul>
@@ -248,13 +252,15 @@
                                         <fieldset title="Testimonial" class="step" id="default-step-0">
                                             <legend></legend>
 
-                                            <div class="col-md-12">                                                    
+                                            <div class="col-md-12" id="Tview">                                                    
                                                 <section class="panel">
                                                     <header class="panel-heading">
                                                         Select a main testimonial
                                                     </header>
-                                                    <label class="panel-heading" style="font-size: 14px;">Search: <input type="text" placeholder="Search for testimonial" class="form-control" aria-controls="dynamic-table"></label>
-                                                    <table class="table table-hover" id="mainTest">
+                                                    <div>
+                                                        <input size="50" type="text" placeholder="Type to search" id="Tview-testimonial">
+                                                    </div> 
+                                                    <table class="table table-hover" id="mainTest" data-search-field="#Tview-testimonial">
                                                         <thead>
                                                             <tr>
                                                                 <th class="id">#</th>
@@ -265,43 +271,71 @@
                                                                 <th class="buttons"></th>
                                                             </tr>
                                                         </thead>
+
+
+
                                                         <tbody>
+                                                            <%for (int x = 0; x < allTestimonials.size(); x++) {%>
+
                                                             <tr>
-                                                                <td>1</td>
-                                                                <td>Lorem Ipsum</td>
-                                                                <td>Aenean auctor interdum feugiat. Ut iaculis ipsum neque, ut tempor massa vulputate at. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Cras sed libero at leo congue ullamcorper. Sed porta imperdiet rutrum</td>
-                                                                <td class="date">Jan 14, 2016</td>
-                                                                <td>rochellesisa@yahoo.com</td>
+                                                                <td><%=x + 1%></td>
+                                                                <td><%=allTestimonials.get(x).getTitle()%></td>
+                                                                <td><%=allTestimonials.get(x).getMessage()%></td>
+                                                                <td class="date"><%=allTestimonials.get(x).getDateUploaded()%></td>
+                                                                <td><%=allTestimonials.get(x).getCitizen().getUser().getUsername()%></td>
                                                                 <td>
-                                                                    <p> <button class="btn btn-info btn-sm"><i class="fa fa-check"></i> View details</button></p>
+                                                                    <p> <button id="viewDetails" type="button" class="btn btn-info btn-sm viewbutton" value="<%=allTestimonials.get(x).getId()%>"><i class="fa fa-check"></i> View details</button></p>
                                                                     <p> <button class="btn btn-success btn-sm"><i class="fa fa-check"></i> Select as main</button> </p>
                                                                 </td>
                                                             </tr>
-                                                            <tr>
-                                                                <td>2</td>
-                                                                <td>auctor interdum</td>
-                                                                <td>Ut iaculis ipsum neque, ut tempor massa vulputate at. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Cras sed libero at leo congue ullamcorper.</td>
-                                                                <td class="date">July 16, 2016</td>
-                                                                <td>phoenixmarco@whitebeard.com</td>
-                                                                <td>
-                                                                    <p> <button class="btn btn-info btn-sm"><i class="fa fa-check"></i> View details</button></p>
-                                                                    <p> <button class="btn btn-success btn-sm"><i class="fa fa-check"></i> Select as main</button> </p>
-                                                                </td>
-                                                            </tr>
+                                                            <%}%>
                                                         </tbody>
+
+
                                                     </table>
                                                 </section>
+
+                                                <script>
+                                                    $('.viewbutton').click(function () {
+                                                        
+                                                        
+                                                        //Ajax Call here and change modal fields
+                                                        
+                                                        
+                                                        $('#viewdetails').modal();
+                                                        
+                                                    });
+                                                </script>
+
+                                                <div class="modal fade" id="viewdetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                                <h4 class="modal-title">New Project Testimonial Sent</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+
+                                                                Your Testimonial for a new project has been sent. Please wait for the Local Government Unit's reply. 
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button data-dismiss="modal" class="btn btn-default" type="button">Ok</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
 
 
-                                            <div class="col-md-12" style="">
+                                            <div class="col-md-12" style="visibility: hidden">
                                                 <header class="panel-heading" style="background: #99ffd6; font-size: 13px; text-align: center;">
                                                     You have selected "Insert title of testimonial here" as your main testimonial (<u>undo</u>)
                                                 </header>
                                                 <br>
                                             </div>
-                                            <div class="col-md-12" style="">
-                                                <div class="col-md-8">
+                                            <div class="col-md-12" style="visibility: hidden">
+                                                <div class="col-md-7">
                                                     <section class="panel">
                                                         <header class="panel-heading">
                                                             Testimonials For Reference
@@ -334,7 +368,7 @@
                                                     </section>
                                                 </div>
 
-                                                <div class="col-md-4">
+                                                <div class="col-md-5">
                                                     <section class="panel pull-right">
                                                         <header class="panel-heading">
                                                             Referenced Testimonials/s
@@ -345,12 +379,16 @@
                                                                     <th>#</th>
                                                                     <th>Title</th>
                                                                     <th></th>
+                                                                    <th></th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
                                                                     <td>1</td>
                                                                     <td>Lorem Ipsum</td>
+                                                                    <td>
+                                                                        <button class="btn btn-success btn-sm"><i class="fa fa-folder"></i> Select Files</button>
+                                                                    </td>
                                                                     <td>
                                                                         <button class="btn btn-danger btn-sm"><i class="fa fa-times"></i> Remove</button>
                                                                     </td>
@@ -686,5 +724,32 @@
         <script src="js/dynamic_table_init.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"
         async defer></script> 
+
+        <script>
+                                            $.fn.searchableTable = function () {
+                                                return this.each(function () {
+                                                    var data = $(this).data(), $rows = $(this).find('tbody > tr'),
+                                                            $searchField = $(data.searchField),
+                                                            $rowsCount;
+                                                    if (data.searchRows) {
+                                                        $rowsCount = $(data.searchRows);
+                                                    }
+                                                    $searchField.keyup(function () {
+                                                        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+                                                        var $filtered = $rows.show().filter(function () {
+                                                            var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                                                            return !~text.indexOf(val);
+                                                        }).hide();
+                                                        if ($rowsCount)
+                                                            $rowsCount.text($rows.length - $filtered.length);
+                                                    })
+                                                            .trigger('keyup');
+                                                });
+                                            };
+                                            // Initialize
+                                            $('.table').searchableTable();
+        </script>
+
+
     </body>
 </html>
