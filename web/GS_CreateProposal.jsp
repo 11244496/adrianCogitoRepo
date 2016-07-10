@@ -38,6 +38,12 @@
         <link rel="stylesheet" type="text/css" href="assets/bootstrap-colorpicker/css/colorpicker.css" >
         <link rel="stylesheet" type="text/css" href="assets/bootstrap-daterangepicker/daterangepicker.css" >
         <link rel="stylesheet" type="text/css" href="css/added.css" >
+        <link href = 'calendar/fullcalendar.css' rel='stylesheet'>
+        <link href = 'calendar/scheduler.css' rel='stylesheet'>
+        <script src ='calendar/moment.min.js'></script>
+        <script src ='calendar/jquery.min.js'></script>
+        <script src ='calendar/fullcalendar.js'></script>
+        <script src ='calendar/scheduler.js'></script>
 
 
     </head>
@@ -247,7 +253,7 @@
                                                     <header class="panel-heading">
                                                         Select a main testimonial
                                                     </header>
-                                                    <label class="panel-heading" style="font-size: 14px;">Search: <input type="text" class="form-control" aria-controls="dynamic-table"></label>
+                                                    <label class="panel-heading" style="font-size: 14px;">Search: <input type="text" placeholder="Search for testimonial" class="form-control" aria-controls="dynamic-table"></label>
                                                     <table class="table table-hover" id="mainTest">
                                                         <thead>
                                                             <tr>
@@ -480,6 +486,88 @@
 
                                         <fieldset title="Program" class="step" id="default-step-3" >
                                             <legend></legend>
+
+                                            <div class="col-md-12">
+                                                <div class="col-md-3">
+                                                    <header class="panel-heading no-border">
+                                                        Works
+                                                    </header>
+
+                                                    <table class="table table-bordered table-striped table-condensed" id="powTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Works</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>
+                                                                    <button class="btn btn-white viewMaterials">Demolition Works <i class="fa fa-caret-right pull-right"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>2</td>
+                                                                <td>
+                                                                    <button class="btn btn-white viewMaterials">Earthworks <i class="fa fa-caret-right pull-right"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>3</td>
+                                                                <td>
+                                                                    <button class="btn btn-white viewMaterials">Concrete Works <i class="fa fa-caret-right pull-right"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>                                                
+                                                    </table>
+                                                    <button class="btn btn-danger btn-sm pull-right"><i class="fa fa-times"></i> Delete </button>
+                                                    <button class="btn btn-success btn-sm pull-right" style="margin-right: 5px"><i class="fa fa-plus"></i> Add </button>
+
+                                                </div>
+
+
+                                                <div class="col-md-9">
+                                                    <header class="panel-heading no-border">
+                                                        Components - Demolition Works
+                                                    </header>
+                                                    <table class="table table-bordered table-striped table-condensed">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 40%">Component</th>
+                                                                <th>Qty/Area</th>
+                                                                <th>Unit</th>
+                                                                <th>Unit Cost</th>
+                                                                <th>Amount</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Dismantling of Existing Roof & Gates (Deep Well Structure</td>
+                                                                <td>1</td>
+                                                                <td>lot</td>
+                                                                <td>15,000.50</td>
+                                                                <td>15,000.50</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Concrete Cutting</td>
+                                                                <td>84</td>
+                                                                <td>meters</td>
+                                                                <td>1,500.00</td>
+                                                                <td>126,000.00</td>
+                                                            </tr>
+                                                            <tr id="totalTR">
+                                                                <td colspan="3"></td>
+                                                                <td style="font-weight: bold;">Subtotal</td>
+                                                                <td style="font-weight: bold; border-bottom: 3px double;">141,000.50</td>
+                                                            </tr>
+                                                        </tbody>                                                
+                                                    </table>
+                                                    <button class="btn btn-danger btn-sm pull-right"><i class="fa fa-times"></i> Delete </button>
+                                                    <button class="btn btn-success btn-sm pull-right" style="margin-right: 5px"><i class="fa fa-plus"></i> Add </button>
+                                                    <br><br><br><br>
+                                                </div>
+                                            </div>
                                         </fieldset>
 
                                         <fieldset title="Overview" class="step" id="default-step-4" >

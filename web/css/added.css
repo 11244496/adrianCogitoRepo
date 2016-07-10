@@ -49,3 +49,15 @@
 #mainTest .btn{
     width: 100%;
 }
+
+#powTable .viewMaterials{
+    text-align: left;
+    margin-top: -11px;
+    margin-bottom: -11px;    
+    width: 100%;
+    border: none;
+}
+
+#totalTR {
+    background: #ccebff;
+}
