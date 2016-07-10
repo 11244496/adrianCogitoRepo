@@ -264,7 +264,6 @@
                                                                 <tr>
 
                                                                     <th style="width: 15%">Title</th>
-                                                                    <th style="width: 10%">Location</th>
                                                                     <th style="width: 25%">Description</th>
                                                                     <th style="width: 10%">Date Uploaded</th>
                                                                     <th style="width: 8%">Project Linked</th>
@@ -284,10 +283,7 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <td>
-                                                                        <a href="GS_ViewTestimonial?testId=<%=testID1%>"> <%out.print(test1.getTitle());%> </a>
-                                                                    </td>
-                                                                    <td>
-                                                                        <%out.print(test1.getLocation());%> 
+                                                                        <a href="GS_ViewTestimonialDetails?testId=<%=testID1%>"> <%out.print(test1.getTitle());%> </a>
                                                                     </td>
                                                                     <td>
                                                                         <%out.print(test1.getMessage());%> 
@@ -296,7 +292,7 @@
                                                                     <td>
                                                                         <%out.print(test1.getDateUploaded());%>
                                                                     </td>
-                                                                    <%if (allTestimonials.get(x).getProject().getId() != null) {%>
+                                                                    <%if (allTestimonials.get(x).getMainproject().size() > 0) {%>
                                                                     <td>
                                                                         Available
                                                                     </td>   
@@ -313,29 +309,24 @@
                                                                             boolean hasimage = false;
                                                                             boolean hasvideo = false;
                                                                             boolean hasdoc = false;
-                                                                            boolean isletter = false;
-                                                                            if (!test1.getCategory().equalsIgnoreCase("letter")) {
 
-                                                                                for (int a = 0; a < files.size(); a++) {
-                                                                                    if (files.get(a).getType().equalsIgnoreCase("image")) {
-                                                                                        hasimage = true;
-                                                                                    } else if (files.get(a).getType().equalsIgnoreCase("video")) {
-                                                                                        hasvideo = true;
-                                                                                    } else if (files.get(a).getType().equalsIgnoreCase("document")) {
-                                                                                        hasdoc = true;
-                                                                                    }
+                                                                            for (int a = 0; a < files.size(); a++) {
+                                                                                if (files.get(a).getType().equalsIgnoreCase("image")) {
+                                                                                    hasimage = true;
+                                                                                } else if (files.get(a).getType().equalsIgnoreCase("video")) {
+                                                                                    hasvideo = true;
+                                                                                } else if (files.get(a).getType().equalsIgnoreCase("document")) {
+                                                                                    hasdoc = true;
                                                                                 }
-
-                                                                            } else {
-                                                                                isletter = true;
-                                                                            }%>
-                                                                        <%if (hasimage == true) {%>        
+                                                                            }
+                                                                        %>
+                                                                        <%if (hasimage) {%>        
                                                                         <img  src="img/imgicon.png" width="30" height="30" alt="">
                                                                         <%}
-                                                                            if (hasvideo == true) {%>
+                                                                            if (hasvideo) {%>
                                                                         <img  src="img/vidicon.png" width="30" height="30" alt="">
                                                                         <%}
-                                                                            if (hasdoc == true) {%>
+                                                                            if (hasdoc) {%>
                                                                         <img  src="img/docicon.png" width="30" height="30" alt="">
                                                                         <%}%>
 
@@ -374,7 +365,6 @@
                                                             <tr>
 
                                                                 <th style="width: 15%">Title</th>
-                                                                <th style="width: 10%">Location</th>
                                                                 <th style="width: 25%">Description</th>
                                                                 <th style="width: 10%">Date Uploaded</th>
                                                                 <th style="width: 8%">Project Linked</th>
@@ -394,45 +384,42 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <a href="GS_ViewTestimonial?testId=<%=testID1%>"> <%out.print(test1.getTitle());%> </a>
-                                                                </td>
-                                                                <td>
-                                                                    <%out.print(test1.getLocation());%> 
+                                                                    <a href="GS_ViewTestimonialDetails?testId=<%=testID1%>"> <%out.print(test1.getTitle());%> </a>
                                                                 </td>
                                                                 <td>
                                                                     <%out.print(test1.getMessage());%> 
                                                                 </td>
-                                                                
+
                                                                 <%String color = null;
-                                                                Date d = new Date();
-                                                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                                                String startdate = sdf.format(d);
-                                                                LocalDate start = LocalDate.parse(startdate);
-                                                                
-                                                                String dateonly = allPendingTestimonials.get(x).getDateUploaded().substring(0, 10);
-                                                                LocalDate end = LocalDate.parse(dateonly);
-                                                                
-                                                                long days = ChronoUnit.DAYS.between(end,start);
-                                                                if(days < 10){
-                                                                    color = "green";
-                                                                }else if(days > 10 && days < 30){
-                                                                    color = "orange";
-                                                                }else if(days > 30){
-                                                                    color = "red";
-                                                                }
-                                                                
+                                                                    Date d = new Date();
+                                                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                                                    String startdate = sdf.format(d);
+                                                                    LocalDate start = LocalDate.parse(startdate);
+
+                                                                    String dateonly = allPendingTestimonials.get(x).getDateUploaded().substring(0, 10);
+                                                                    LocalDate end = LocalDate.parse(dateonly);
+
+                                                                    long days = ChronoUnit.DAYS.between(end, start);
+                                                                    if (days < 10) {
+                                                                        color = "green";
+                                                                    } else if (days > 10 && days < 30) {
+                                                                        color = "orange";
+                                                                    } else if (days > 30) {
+                                                                        color = "red";
+                                                                    }
+
                                                                 %>
-                                                                
+
                                                                 <td>
                                                                     <p style="color:<%=color%>">
-                                                                    <%out.print(test1.getDateUploaded());%>
+                                                                        <%out.print(test1.getDateUploaded());%>
                                                                     </p>
                                                                 </td>
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                <%if (allPendingTestimonials.get(x).getProject().getId() != null) {%>
+
+
+
+
+                                                                <%if (allPendingTestimonials.get(x).getMainproject().size() > 0) {%>
                                                                 <td>
                                                                     Available
                                                                 </td>   
@@ -450,21 +437,18 @@
                                                                         boolean hasvideo = false;
                                                                         boolean hasdoc = false;
                                                                         boolean isletter = false;
-                                                                        if (!test1.getCategory().equalsIgnoreCase("letter")) {
 
-                                                                            for (int a = 0; a < files.size(); a++) {
-                                                                                if (files.get(a).getType().equalsIgnoreCase("image")) {
-                                                                                    hasimage = true;
-                                                                                } else if (files.get(a).getType().equalsIgnoreCase("video")) {
-                                                                                    hasvideo = true;
-                                                                                } else if (files.get(a).getType().equalsIgnoreCase("document")) {
-                                                                                    hasdoc = true;
-                                                                                }
+                                                                        for (int a = 0; a < files.size(); a++) {
+                                                                            if (files.get(a).getType().equalsIgnoreCase("image")) {
+                                                                                hasimage = true;
+                                                                            } else if (files.get(a).getType().equalsIgnoreCase("video")) {
+                                                                                hasvideo = true;
+                                                                            } else if (files.get(a).getType().equalsIgnoreCase("document")) {
+                                                                                hasdoc = true;
                                                                             }
+                                                                        }
 
-                                                                        } else {
-                                                                            isletter = true;
-                                                                        }%>
+                                                                    %>
                                                                     <%if (hasimage == true) {%>        
                                                                     <img  src="img/imgicon.png" width="30" height="30" alt="">
                                                                     <%}
@@ -511,7 +495,6 @@
                                                             <tr>
 
                                                                 <th style="width: 15%">Title</th>
-                                                                <th style="width: 10%">Location</th>
                                                                 <th style="width: 25%">Description</th>
                                                                 <th style="width: 10%">Date Uploaded</th>
                                                                 <th style="width: 8%">Project Linked</th>
@@ -530,10 +513,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <a href="GS_ViewTestimonial?testId=<%=testID1%>"> <%out.print(test1.getTitle());%> </a>
-                                                                </td>
-                                                                <td>
-                                                                    <%out.print(test1.getLocation());%> 
+                                                                    <a href="GS_ViewTestimonialDetails?testId=<%=testID1%>"> <%out.print(test1.getTitle());%> </a>
                                                                 </td>
                                                                 <td>
                                                                     <%out.print(test1.getMessage());%> 
@@ -542,7 +522,7 @@
                                                                 <td>
                                                                     <%out.print(test1.getDateUploaded());%>
                                                                 </td>
-                                                                <%if (allRepliedTestimonials.get(x).getProject().getId() != null) {%>
+                                                                <%if (allRepliedTestimonials.get(x).getMainproject().size() > 0) {%>
                                                                 <td>
                                                                     Available
                                                                 </td>   
@@ -560,21 +540,18 @@
                                                                         boolean hasvideo = false;
                                                                         boolean hasdoc = false;
                                                                         boolean isletter = false;
-                                                                        if (!test1.getCategory().equalsIgnoreCase("letter")) {
 
-                                                                            for (int a = 0; a < files.size(); a++) {
-                                                                                if (files.get(a).getType().equalsIgnoreCase("image")) {
-                                                                                    hasimage = true;
-                                                                                } else if (files.get(a).getType().equalsIgnoreCase("video")) {
-                                                                                    hasvideo = true;
-                                                                                } else if (files.get(a).getType().equalsIgnoreCase("document")) {
-                                                                                    hasdoc = true;
-                                                                                }
+                                                                        for (int a = 0; a < files.size(); a++) {
+                                                                            if (files.get(a).getType().equalsIgnoreCase("image")) {
+                                                                                hasimage = true;
+                                                                            } else if (files.get(a).getType().equalsIgnoreCase("video")) {
+                                                                                hasvideo = true;
+                                                                            } else if (files.get(a).getType().equalsIgnoreCase("document")) {
+                                                                                hasdoc = true;
                                                                             }
+                                                                        }
 
-                                                                        } else {
-                                                                            isletter = true;
-                                                                        }%>
+                                                                    %>
                                                                     <%if (hasimage == true) {%>        
                                                                     <img  src="img/imgicon.png" width="30" height="30" alt="">
                                                                     <%}
@@ -614,12 +591,10 @@
 
                                                 <div class="row">
                                                     <table class="table" data-search-field="#linked-testimonial">
-
                                                         <thead>
                                                             <tr>
 
                                                                 <th style="width: 15%">Title</th>
-                                                                <th style="width: 10%">Location</th>
                                                                 <th style="width: 25%">Description</th>
                                                                 <th style="width: 10%">Date Uploaded</th>
                                                                 <th style="width: 8%">Project Linked</th>
@@ -639,10 +614,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <a href="GS_ViewTestimonial?testId=<%=testID1%>"> <%out.print(test1.getTitle());%> </a>
-                                                                </td>
-                                                                <td>
-                                                                    <%out.print(test1.getLocation());%> 
+                                                                    <a href="GS_ViewTestimonialDetails?testId=<%=testID1%>"> <%out.print(test1.getTitle());%> </a>
                                                                 </td>
                                                                 <td>
                                                                     <%out.print(test1.getMessage());%> 
@@ -651,7 +623,7 @@
                                                                 <td>
                                                                     <%out.print(test1.getDateUploaded());%>
                                                                 </td>
-                                                                <%if (allLinkedTestimonials.get(x).getProject().getId() != null) {%>
+                                                                <%if (allLinkedTestimonials.get(x).getMainproject().size() > 0) {%>
                                                                 <td>
                                                                     Available
                                                                 </td>   
@@ -669,34 +641,29 @@
                                                                         boolean hasvideo = false;
                                                                         boolean hasdoc = false;
                                                                         boolean isletter = false;
-                                                                        if (!test1.getCategory().equalsIgnoreCase("letter")) {
 
-                                                                            for (int a = 0; a < files.size(); a++) {
-                                                                                if (files.get(a).getType().equalsIgnoreCase("image")) {
-                                                                                    hasimage = true;
-                                                                                } else if (files.get(a).getType().equalsIgnoreCase("video")) {
-                                                                                    hasvideo = true;
-                                                                                } else if (files.get(a).getType().equalsIgnoreCase("document")) {
-                                                                                    hasdoc = true;
-                                                                                }
+                                                                        for (int a = 0; a < files.size(); a++) {
+                                                                            if (files.get(a).getType().equalsIgnoreCase("image")) {
+                                                                                hasimage = true;
+                                                                            } else if (files.get(a).getType().equalsIgnoreCase("video")) {
+                                                                                hasvideo = true;
+                                                                            } else if (files.get(a).getType().equalsIgnoreCase("document")) {
+                                                                                hasdoc = true;
                                                                             }
+                                                                        }
 
-                                                                        } else {
-                                                                            isletter = true;
-                                                                        }%>
-                                                                    <%if (hasimage == true) {%>        
+                                                                    %>
+                                                                    <%if (hasimage) {%>        
                                                                     <img  src="img/imgicon.png" width="30" height="30" alt="">
                                                                     <%}
-                                                                        if (hasvideo == true) {%>
+                                                                        if (hasvideo) {%>
                                                                     <img  src="img/vidicon.png" width="30" height="30" alt="">
                                                                     <%}
-                                                                        if (hasdoc == true) {%>
+                                                                        if (hasdoc) {%>
                                                                     <img  src="img/docicon.png" width="30" height="30" alt="">
                                                                     <%}%>
 
                                                                 </td>
-
-
 
                                                             </tr>    
 

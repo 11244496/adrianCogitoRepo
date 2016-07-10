@@ -56,6 +56,18 @@
         <servlet-name>Citizen_NotificationActivity</servlet-name>
         <servlet-class>Servlet.Citizen_NotificationActivity</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GS_Home</servlet-name>
+        <servlet-class>Servlet.GS_Home</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_ViewTestimonials</servlet-name>
+        <servlet-class>Servlet.GS_ViewTestimonials</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_ViewTestimonialDetails</servlet-name>
+        <servlet-class>Servlet.GS_ViewTestimonialDetails</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -111,6 +123,18 @@
     <servlet-mapping>
         <servlet-name>Citizen_NotificationActivity</servlet-name>
         <url-pattern>/Citizen_NotificationActivity</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_Home</servlet-name>
+        <url-pattern>/GS_Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_ViewTestimonials</servlet-name>
+        <url-pattern>/GS_ViewTestimonials</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_ViewTestimonialDetails</servlet-name>
+        <url-pattern>/GS_ViewTestimonialDetails</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

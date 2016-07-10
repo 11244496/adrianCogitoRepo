@@ -70,6 +70,32 @@ public class Project {
         this.contractorUser = contractorUser;
     }
 
+    public Project(String id, String name, String description, String type, String status, String foldername, Employee employee, String datesubmitted, float budget, String category, ArrayList<Location> location, ArrayList<Schedule> schedule, ArrayList<Files> files, ArrayList<PWorks> pWorks, ArrayList<Annotation> annotation, ArrayList<PComments> pComments, ArrayList<Testimonial> referredTestimonials, ArrayList<Project> referredProjects, ArrayList<Feedback> feedback, ArrayList<Project_Inspection> inspection, Contractor_User contractorUser) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.status = status;
+        this.foldername = foldername;
+        this.employee = employee;
+        this.datesubmitted = datesubmitted;
+        this.budget = budget;
+        this.category = category;
+        this.location = location;
+        this.schedule = schedule;
+        this.files = files;
+        this.pWorks = pWorks;
+        this.annotation = annotation;
+        this.pComments = pComments;
+        this.referredTestimonials = referredTestimonials;
+        this.referredProjects = referredProjects;
+        this.feedback = feedback;
+        this.inspection = inspection;
+        this.contractorUser = contractorUser;
+    }
+    
+    
+
     /**
      * @return the id
      */

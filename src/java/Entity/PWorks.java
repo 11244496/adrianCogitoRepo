@@ -15,19 +15,20 @@ public class PWorks {
     
     private int id;
     private String name;
+    private ArrayList<Component> components;
     private ArrayList<Project> project;
     
     public PWorks() {
     }
 
-    public PWorks(int id, String name, ArrayList<Project> project) {
+    public PWorks(int id, String name, ArrayList<Component> components, ArrayList<Project> project) {
         this.id = id;
         this.name = name;
+        this.components = components;
         this.project = project;
     }
 
     
-
     /**
      * @return the id
      */
@@ -68,6 +69,20 @@ public class PWorks {
      */
     public void setProject(ArrayList<Project> project) {
         this.project = project;
+    }
+
+    /**
+     * @return the components
+     */
+    public ArrayList<Component> getComponents() {
+        return components;
+    }
+
+    /**
+     * @param components the components to set
+     */
+    public void setComponents(ArrayList<Component> components) {
+        this.components = components;
     }
     
     
