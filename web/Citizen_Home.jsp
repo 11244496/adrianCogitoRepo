@@ -261,6 +261,8 @@
 
                 jQuery("#gallery").unitegallery({
                     gallery_theme: "slider",
+                    gallery_width: 750,
+                    
                     // gallery options
                     slider_enable_text_panel: true,
                     slider_textpanel_always_on: false,
