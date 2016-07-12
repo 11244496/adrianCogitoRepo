@@ -12,6 +12,10 @@
 <html lang="en">
     <% Employee e = (Employee) session.getAttribute("user");
         ArrayList<Testimonial> allTestimonials = (ArrayList<Testimonial>) request.getAttribute("allTestimonials");
+        
+        ArrayList<Testimonial> mainTestimonial = new ArrayList<Testimonial>();
+        ArrayList<Testimonial> referencedTestimonial = new ArrayList<Testimonial>();
+        
     %>
 
     <head>
@@ -50,6 +54,7 @@
         <script src ='calendar/jquery.min.js'></script>
         <script src ='calendar/fullcalendar.js'></script>
         <script src ='calendar/scheduler.js'></script>
+
     </head>
 
     <body>
@@ -259,81 +264,173 @@
                                                     </header>
                                                     <div>
                                                         <input size="50" type="text" placeholder="Type to search" id="Tview-testimonial">
-                                                    </div> 
-                                                    <table class="table table-hover" id="mainTest" data-search-field="#Tview-testimonial">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="id">#</th>
-                                                                <th class="title">Title</th>
-                                                                <th class="message">Description/Message</th>
-                                                                <th class="date">Date Uploaded</th>
-                                                                <th class="uploader">Uploader</th>
-                                                                <th class="buttons"></th>
-                                                            </tr>
-                                                        </thead>
+                                                    </div>
+                                                    <div id="TestimonialList">
+                                                        <table id="TestimonialTable" class="table table-hover" id="mainTest" data-search-field="#Tview-testimonial">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="id">#</th>
+                                                                    <th class="title">Title</th>
+                                                                    <th class="message">Description/Message</th>
+                                                                    <th class="date">Date Uploaded</th>
+                                                                    <th class="uploader">Uploader</th>
+                                                                    <th class="buttons"></th>
+                                                                </tr>
+                                                            </thead>
 
 
 
-                                                        <tbody>
-                                                            <%for (int x = 0; x < allTestimonials.size(); x++) {%>
+                                                            <tbody id="TestimonialTableBody">
+                                                                <%for (int x = 0; x < allTestimonials.size(); x++) {%>
 
-                                                            <tr>
-                                                                <td><%=x + 1%></td>
-                                                                <td><%=allTestimonials.get(x).getTitle()%></td>
-                                                                <td><%=allTestimonials.get(x).getMessage()%></td>
-                                                                <td class="date"><%=allTestimonials.get(x).getDateUploaded()%></td>
-                                                                <td><%=allTestimonials.get(x).getCitizen().getUser().getUsername()%></td>
-                                                                <td>
-                                                                    <p> <button id="viewDetails" type="button" class="btn btn-info btn-sm viewbutton" value="<%=allTestimonials.get(x).getId()%>"><i class="fa fa-check"></i> View details</button></p>
-                                                                    <p> <button class="btn btn-success btn-sm"><i class="fa fa-check"></i> Select as main</button> </p>
-                                                                </td>
-                                                            </tr>
-                                                            <%}%>
-                                                        </tbody>
+                                                                <tr>
+                                                                    <td><%=x + 1%></td>
+                                                                    <td><%=allTestimonials.get(x).getTitle()%></td>
+                                                                    <td><%=allTestimonials.get(x).getMessage()%></td>
+                                                                    <td class="date"><%=allTestimonials.get(x).getDateUploaded()%></td>
+                                                                    <td><%=allTestimonials.get(x).getCitizen().getUser().getUsername()%></td>
+                                                                    <td>
+                                                                        <p> <button id="viewDetails" type="button" class="btn btn-info btn-sm viewbutton" value="<%=allTestimonials.get(x).getId()%>"><i class="fa fa-check"></i> View details</button></p>
+                                                                        <p> <button type="button" class="btn btn-success btn-sm selectmainbtn" value="<%=allTestimonials.get(x)%><i class="fa fa-check"></i> Select as main</button> </p>
+                                                                    </td>
+                                                                </tr>
+                                                                <%}%>
+                                                            </tbody>
 
 
-                                                    </table>
+                                                        </table>
+                                                    </div>
                                                 </section>
 
                                                 <script>
                                                     $('.viewbutton').click(function () {
-                                                        
-                                                        
+                                                        $.ajax({
+                                                            type: 'post',
+                                                            url: 'AJAX_GS_ViewTestimonialDetails',
+                                                            dataType: 'json',
+                                                            data:
+                                                                    {
+                                                                        testimonialID: $(this).val()
+                                                                    },
+                                                            cache: false,
+                                                            success: function (data) {
+                                                                $('#tVideoDisplay').empty();
+                                                                $('#tImageDisplay').empty();
+                                                                $('#tDocumentUploads').empty();
+
+                                                                $('#testTitle').text("Title: " + data.title);
+                                                                $('#testDate').text("Date Uploaded: " + data.dateUploaded);
+                                                                $('#testCategory').text("Category: " + data.category);
+                                                                $('#testMessage').text("Message: " + data.message);
+
+                                                                $.each(data.files, function (i) {
+                                                                    var url = data.folderName + data.title + "/" + data.files[i].fileName;
+
+                                                                    if (data.files[i].type === "Video") {
+                                                                        $("<video width='100%' height='100%' controls><source src=\"" + url + "\" type='video/mp4'></video>").appendTo("#tVideoDisplay");
+                                                                    }
+                                                                    else if (data.files[i].type === "Image") {
+                                                                        $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#tImageDisplay");
+                                                                    }
+
+                                                                    else if (data.files[i].type === "Document") {
+                                                                        $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + data.files[i].fileName + "</a> </header>").appendTo("#tDocumentUploads");
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
                                                         //Ajax Call here and change modal fields
-                                                        
+
                                                         $('#viewdetails').modal();
-                                                        
+
                                                     });
                                                 </script>
 
                                                 <div class="modal fade" id="viewdetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-lg">
-                                                        <div class="modal-content">
+                                                        <div class="modal-content" style="">
                                                             <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                                <h4 class="modal-title">New Project Testimonial Sent</h4>
+                                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span> <span class="sr-only">close</span></button>
+                                                                <h4 id="" class="modal-title">Testimonial Details</h4>
                                                             </div>
-                                                            <div class="modal-body">
+                                                            <div id="modalBody" class="modal-body" style="overflow-y: auto;">
+                                                                <fieldset title="Description" id="abcd" class="step" id="default-step-0">
+                                                                    <header id="testTitle" class="panel-heading"></header>
+                                                                    <header id="testDate" class="panel-heading"></header>
+                                                                    <header id="testCategory" class="panel-heading"></header>
+                                                                    <header id="testMessage" class="panel-heading"></header>
+                                                                    <div id="tLocation"></div>
+                                                                    <div id="tVideoDisplay"></div>
+                                                                    <div id="tImageDisplay"></div>
+                                                                    <div id="tDocumentUploads"></div>
 
-                                                                Your Testimonial for a new project has been sent. Please wait for the Local Government Unit's reply. 
 
+                                                                </fieldset>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button data-dismiss="modal" class="btn btn-default" type="button">Ok</button>
+                                                                <button type="button" class="btn btn-default" id="closeModalB" data-dismiss="modal">Close</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </div>
 
 
-                                            <div class="col-md-12" style="visibility: hidden">
-                                                <header class="panel-heading" style="background: #99ffd6; font-size: 13px; text-align: center;">
-                                                    You have selected "Insert title of testimonial here" as your main testimonial (<u>undo</u>)
+                                            <div class="col-md-12" style="display: none" id="MainTestimonial">
+                                                <header class="panel-heading">
+                                                    Main Testimonial
                                                 </header>
-                                                <br>
+                                                <table id="MainTestimonialTable" style="background: #99ffd6;" class="table table-hover" id="mainTest" data-search-field="#Tview-testimonial">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="id">#</th>
+                                                            <th class="title">Title</th>
+                                                            <th class="message">Description/Message</th>
+                                                            <th class="date">Date Uploaded</th>
+                                                            <th class="uploader">Uploader</th>
+                                                            <th class="buttons"></th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody id="MainTestimonialTableBody">
+
+                                                    </tbody>
+
+                                                </table>
+                                                <center>
+
+                                                    <button type="button" class="btn btn-success btn-sm"><i class="fa fa-folder-o"></i> Select Files </button>
+                                                    <button type="button" class="btn btn-danger btn-sm deselectmainbtn"><i class="fa fa-times"></i> Remove as main</button>
+                                                </center>    
+
                                             </div>
-                                            <div class="col-md-12" style="visibility: hidden">
+
+                                            <script>
+                                                var tablerow;
+
+                                                $('.selectmainbtn').click(function () {
+                                                var testimonial = $(this).val();
+                                                
+                                                console.log($(this).val());
+                                                    
+                                                    
+                                                });
+
+                                                $('.deselectmainbtn').click(function () {
+                                                    tablerow = $(this).closest('tr').detach();
+                                                    $("#TestimonialTableBody").append(tablerow);
+                                                    $('.selectmainbtn').show();
+                                                    $("#MainTestimonial").hide();
+
+                                                    $("#ReferenceTestimonialList").hide();
+                                                });
+
+                                            </script>
+
+
+
+                                            <div class="col-md-12" style="display: none" id="ReferenceTestimonialList">
                                                 <div class="col-md-7">
                                                     <section class="panel">
                                                         <header class="panel-heading">

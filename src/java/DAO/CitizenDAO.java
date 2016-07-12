@@ -140,7 +140,7 @@ public class CitizenDAO {
     //Include all parts of the testimonial
     public Testimonial getTestimonial(int id) {
         Testimonial t = new Testimonial();
-        Citizen c;
+        Citizen c = null;
         User u;
 
         ArrayList<TLocation> tlocation = new ArrayList<TLocation>();
@@ -194,8 +194,10 @@ public class CitizenDAO {
                 testi.setDateUploaded(t.getDateUploaded());
                 testi.setMessage(t.getMessage());
                 testi.setCategory(t.getCategory());
+                testi.setFolderName(t.getFolderName());
                 testi.setCitizen(t.getCitizen());
-
+                testi.setStatus(t.getStatus());
+                testi.setCitizen(c);
                 loc.setTestimonial(testi);
                 tlocation.add(loc);
             }
@@ -233,7 +235,17 @@ public class CitizenDAO {
                 r.setMessage(result.getString("Message"));
                 r.setSender(result.getString("Sender"));
                 r.setDateSent(result.getString("Datesend"));
-                r.setTestimonial_ID(t);
+                Testimonial testi = new Testimonial();
+                testi.setId(t.getId());
+                testi.setTitle(t.getTitle());
+                testi.setDateUploaded(t.getDateUploaded());
+                testi.setMessage(t.getMessage());
+                testi.setCategory(t.getCategory());
+                testi.setFolderName(t.getFolderName());
+                testi.setCitizen(t.getCitizen());
+                testi.setStatus(t.getStatus());
+                testi.setCitizen(c);
+                r.setTestimonial_ID(testi);
                 replies.add(r);
             }
             t.setReplies(replies);
@@ -244,16 +256,26 @@ public class CitizenDAO {
             result = statement4.executeQuery();
             while (result.next()) {
                 Files f = new Files();
-                f.setId(id);
-                f.setFileName(filesQuery);
-                f.setDateUploaded(filesQuery);
-                f.setType(filesQuery);
-                f.setStatus(filesQuery);
-                f.setUploader(filesQuery);
-                f.setDescription(filesQuery);
+                f.setId(result.getInt("ID"));
+                f.setFileName(result.getString("FileName"));
+                f.setDateUploaded(result.getString("DateUploaded"));
+                f.setType(result.getString("Type"));
+                f.setStatus(result.getString("Status"));
+                f.setUploader(result.getString("Uploader"));
+                f.setDescription(result.getString("Description"));
                 Project project = new Project();
                 project.setId(result.getString("Project_ID"));
-                f.setTestimonial(t);
+                Testimonial testi = new Testimonial();
+                testi.setId(t.getId());
+                testi.setTitle(t.getTitle());
+                testi.setDateUploaded(t.getDateUploaded());
+                testi.setMessage(t.getMessage());
+                testi.setCategory(t.getCategory());
+                testi.setFolderName(t.getFolderName());
+                testi.setCitizen(t.getCitizen());
+                testi.setStatus(t.getStatus());
+                testi.setCitizen(c);
+                f.setTestimonial(testi);
                 f.setProject(project);
                 files.add(f);
             }
@@ -271,7 +293,17 @@ public class CitizenDAO {
                 Citizen citizen = new Citizen();
                 citizen.setId(result.getInt("Citizen_ID"));
                 comment.setCitizen(citizen);
-                comment.setTestimonial(t);
+                Testimonial testi = new Testimonial();
+                testi.setId(t.getId());
+                testi.setTitle(t.getTitle());
+                testi.setDateUploaded(t.getDateUploaded());
+                testi.setMessage(t.getMessage());
+                testi.setCategory(t.getCategory());
+                testi.setFolderName(t.getFolderName());
+                testi.setCitizen(t.getCitizen());
+                testi.setStatus(t.getStatus());
+                testi.setCitizen(c);
+                comment.setTestimonial(testi);
 
                 tcomments.add(comment);
             }
@@ -284,7 +316,17 @@ public class CitizenDAO {
             while (result.next()) {
                 Supporter s = new Supporter();
                 s.setId(result.getInt("ID"));
-                s.setTestimonial(t);
+                Testimonial testi = new Testimonial();
+                testi.setId(t.getId());
+                testi.setTitle(t.getTitle());
+                testi.setDateUploaded(t.getDateUploaded());
+                testi.setMessage(t.getMessage());
+                testi.setCategory(t.getCategory());
+                testi.setFolderName(t.getFolderName());
+                testi.setCitizen(t.getCitizen());
+                testi.setStatus(t.getStatus());
+                testi.setCitizen(c);
+                s.setTestimonial(testi);
                 Citizen cit = new Citizen();
                 cit.setId(result.getInt("Citizen_ID"));
                 s.setCitizen(cit);
