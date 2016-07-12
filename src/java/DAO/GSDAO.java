@@ -569,7 +569,7 @@ public class GSDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String insertLocationDetails = "insert into components (name, unitprice, quantity, type, unit_id (?)";
+            String insertLocationDetails = "insert into components (name, unitprice, quantity, type, unit_id, pworks_id) values (?,?,?,?,?)";
             statement = connection.prepareStatement(insertLocationDetails);
             statement.setString(1, pw.getName());
             statement.executeUpdate();
@@ -577,6 +577,28 @@ public class GSDAO {
         } catch (SQLException ex) {
             Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in inserting new program works", ex);
         }
+    }
+
+    public ArrayList<Unit> getAllUnits() {
+        ArrayList<Unit> uList = new ArrayList<>();
+        Unit u = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String insertLocationDetails = "select * from unit";
+            statement = connection.prepareStatement(insertLocationDetails);
+            result = statement.executeQuery();
+            while (result.next()){
+                u = new Unit();
+                u.setId(result.getInt("ID"));
+                u.setUnit(result.getString("Unit"));
+                uList.add(u);
+            }
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in inserting new program works", ex);
+        }
+        return uList;
     }
 
     public Project getBasicProjectDetails(String id) {

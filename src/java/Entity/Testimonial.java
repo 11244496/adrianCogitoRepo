@@ -21,7 +21,6 @@ public class Testimonial {
     private String category;
     private String status;
     private Citizen citizen;
-    private Project project;
     private ArrayList<TLocation> tlocation;
     private ArrayList<Project> mainproject;
     private ArrayList<Project> referencedproject;
@@ -266,20 +265,4 @@ public class Testimonial {
     public void setReferencedproject(ArrayList<Project> referencedproject) {
         this.referencedproject = referencedproject;
     }
-
-    /**
-     * @return the project
-     */
-    public Project getProject() {
-        return project;
-    }
-
-    /**
-     * @param project the project to set
-     */
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    
 }

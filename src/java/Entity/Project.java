@@ -23,6 +23,7 @@ public class Project {
     private String datesubmitted;
     private float budget;
     private String category;
+    private Testimonial mainTestimonial;
 
     private ArrayList<Location> location;
     private ArrayList<Schedule> schedule;
@@ -430,6 +431,20 @@ public class Project {
      */
     public void setContractorUser(Contractor_User contractorUser) {
         this.contractorUser = contractorUser;
+    }
+
+    /**
+     * @return the mainTestimonial
+     */
+    public Testimonial getMainTestimonial() {
+        return mainTestimonial;
+    }
+
+    /**
+     * @param mainTestimonial the mainTestimonial to set
+     */
+    public void setMainTestimonial(Testimonial mainTestimonial) {
+        this.mainTestimonial = mainTestimonial;
     }
     
 }
