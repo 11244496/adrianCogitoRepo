@@ -21,6 +21,11 @@ public class PWorks {
     public PWorks() {
     }
 
+    public PWorks(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public PWorks(int id, String name, ArrayList<Component> components, ArrayList<Project> project) {
         this.id = id;
         this.name = name;
