@@ -12,10 +12,6 @@
 <html lang="en">
     <% Employee e = (Employee) session.getAttribute("user");
         ArrayList<Testimonial> allTestimonials = (ArrayList<Testimonial>) request.getAttribute("allTestimonials");
-        
-        ArrayList<Testimonial> mainTestimonial = new ArrayList<Testimonial>();
-        ArrayList<Testimonial> referencedTestimonial = new ArrayList<Testimonial>();
-        
     %>
 
     <head>
@@ -260,7 +256,7 @@
                                             <div class="col-md-12" id="Tview">                                                    
                                                 <section class="panel">
                                                     <header class="panel-heading">
-                                                        Select a main testimonial
+                                                        Select testimonials
                                                     </header>
                                                     <div>
                                                         <input size="50" type="text" placeholder="Type to search" id="Tview-testimonial">
@@ -269,7 +265,6 @@
                                                         <table id="TestimonialTable" class="table table-hover" id="mainTest" data-search-field="#Tview-testimonial">
                                                             <thead>
                                                                 <tr>
-                                                                    <th class="id">#</th>
                                                                     <th class="title">Title</th>
                                                                     <th class="message">Description/Message</th>
                                                                     <th class="date">Date Uploaded</th>
@@ -284,14 +279,18 @@
                                                                 <%for (int x = 0; x < allTestimonials.size(); x++) {%>
 
                                                                 <tr>
-                                                                    <td><%=x + 1%></td>
                                                                     <td><%=allTestimonials.get(x).getTitle()%></td>
                                                                     <td><%=allTestimonials.get(x).getMessage()%></td>
                                                                     <td class="date"><%=allTestimonials.get(x).getDateUploaded()%></td>
                                                                     <td><%=allTestimonials.get(x).getCitizen().getUser().getUsername()%></td>
                                                                     <td>
-                                                                        <p> <button id="viewDetails" type="button" class="btn btn-info btn-sm viewbutton" value="<%=allTestimonials.get(x).getId()%>"><i class="fa fa-check"></i> View details</button></p>
-                                                                        <p> <button type="button" class="btn btn-success btn-sm selectmainbtn" value="<%=allTestimonials.get(x)%><i class="fa fa-check"></i> Select as main</button> </p>
+                                                                        <p> <button id="viewDetails" type="button" class="btn btn-info btn-sm viewbutton" value="<%=allTestimonials.get(x).getId()%>"> View details</button></p>
+
+                                                                        <%if (allTestimonials.get(x).getMainproject().size() == 0) {%>
+                                                                        <p> <button type="button" class="btn btn-success btn-sm selectmainbtn" value="<%=allTestimonials.get(x).getId()%>">  Select as main</button> </p>
+                                                                        <%}%>
+
+                                                                        <p> <button type="button" class="btn btn-warning btn-sm selectreferencebtn" value="<%=allTestimonials.get(x).getId()%>"> Use as reference</button> </p>
                                                                     </td>
                                                                 </tr>
                                                                 <%}%>
@@ -314,6 +313,7 @@
                                                                     },
                                                             cache: false,
                                                             success: function (data) {
+
                                                                 $('#tVideoDisplay').empty();
                                                                 $('#tImageDisplay').empty();
                                                                 $('#tDocumentUploads').empty();
@@ -377,124 +377,136 @@
                                             </div>
 
 
-                                            <div class="col-md-12" style="display: none" id="MainTestimonial">
-                                                <header class="panel-heading">
-                                                    Main Testimonial
+                                            <div class="col-md-12" style="display: none;" id="MainTestimonial">
+
+                                                <header class="panel-heading" style="background: #99ffd6; font-size: 13px; text-align: center;">
+                                                    <label id="TestiTitle"></label>
                                                 </header>
-                                                <table id="MainTestimonialTable" style="background: #99ffd6;" class="table table-hover" id="mainTest" data-search-field="#Tview-testimonial">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="id">#</th>
-                                                            <th class="title">Title</th>
-                                                            <th class="message">Description/Message</th>
-                                                            <th class="date">Date Uploaded</th>
-                                                            <th class="uploader">Uploader</th>
-                                                            <th class="buttons"></th>
-                                                        </tr>
-                                                    </thead>
 
-                                                    <tbody id="MainTestimonialTableBody">
-
-                                                    </tbody>
-
-                                                </table>
                                                 <center>
+                                                    <button type="button" class="btn btn-danger btn-sm deselectmainbtn"><i class="fa fa-times"></i> Remove as main testimonial</button>
+                                                </center>
 
-                                                    <button type="button" class="btn btn-success btn-sm"><i class="fa fa-folder-o"></i> Select Files </button>
-                                                    <button type="button" class="btn btn-danger btn-sm deselectmainbtn"><i class="fa fa-times"></i> Remove as main</button>
-                                                </center>    
+                                                <br>
 
                                             </div>
 
-                                            <script>
-                                                var tablerow;
+                                            <div class="col-md-12" style="display: none" id="ReferenceTestimonialList">
+                                                <section class="panel">
+                                                    <header class="panel-heading">
+                                                        Referenced testimonials
+                                                    </header>
+                                                    <div id="RTestimonialList">
+                                                        <table id="RTestimonialTable" class="table table-hover" id="mainTest" data-search-field="#TRview-testimonial">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="title">Title</th>
+                                                                    <th class="message">Description/Message</th>
+                                                                    <th class="date">Date Uploaded</th>
+                                                                    <th class="uploader">Uploader</th>
+                                                                    <th class="buttons"></th>
+                                                                </tr>
+                                                            </thead>
 
+
+
+                                                            <tbody id="RTestimonialTableBody">
+
+                                                            </tbody>
+
+
+                                                        </table>
+                                                    </div>
+                                                </section>
+
+                                            </div>
+
+
+                                            <script>
+                                                var mainTestimonial = [];
+                                                var referencedTestimonial = [];
+                                                var detachedMainRow;
+                                                var tablerow;
+                                                var Testimonialmarkers = [];
+
+
+                                                //Select Testimonial from Testimonial List as Main Testimonial and append labels.
                                                 $('.selectmainbtn').click(function () {
-                                                var testimonial = $(this).val();
-                                                
-                                                console.log($(this).val());
-                                                    
-                                                    
+                                                    detachedMainRow = $(this).closest('tr').detach();
+
+                                                    var testimonial = {id: $(this).val()};
+                                                    mainTestimonial.push(testimonial);
+
+                                                    $.ajax({
+                                                        type: 'post',
+                                                        url: 'AJAX_GS_SelectMainTestimonial',
+                                                        dataType: 'json',
+                                                        data: {mainTestimonial: JSON.stringify(mainTestimonial)},
+                                                        cache: false,
+                                                        success: function (data) {
+                                                            //Place the object in the Main Testimonial Div
+                                                            $("#TestiTitle").text("You have selected " + data[0].title + " as your main testimonial");
+
+                                                            //Set Testimonial Locaiton on map markers
+                                                            $.each(data[0].tlocation, function (i) {
+                                                                Testimonialmarkers.push(data[0].tlocation[i]);
+                                                            });
+                                                            initMap();
+                                                            
+                                                            
+                                                            $("#MainTestimonial").show();
+                                                            $('.selectmainbtn').hide();
+                                                        }
+                                                    });
                                                 });
 
+                                                //Remove the Selected Main Testimonial, detach and put back to testimonial list
                                                 $('.deselectmainbtn').click(function () {
-                                                    tablerow = $(this).closest('tr').detach();
-                                                    $("#TestimonialTableBody").append(tablerow);
+                                                    mainTestimonial.length = 0;
+                                                    $("#TestimonialTableBody").append(detachedMainRow);
                                                     $('.selectmainbtn').show();
                                                     $("#MainTestimonial").hide();
 
-                                                    $("#ReferenceTestimonialList").hide();
+                                                    //Map Functions
+                                                    Testimonialmarkers.length = 0;
+                                                    allPosition.length = 0;
+                                                    document.getElementById("location").value = allPosition;
+                                                    initMap();
+
+                                                });
+
+                                                //Transfer from Testi List to Referenced Table List via detach
+                                                $(document).on('click', '.selectreferencebtn', function () {
+
+                                                    $("#ReferenceTestimonialList").show();
+
+                                                    var Rtestimonial = {id: $(this).val()};
+                                                    referencedTestimonial.push(Rtestimonial);
+                                                    var Rt = $(this).closest('tr').detach();
+                                                    $("#RTestimonialTableBody").append(Rt);
+                                                    $(this).removeClass('btn btn-warning btn-sm selectreferencebtn').addClass('btn btn-danger btn-sm unselectreferencebtn');
+                                                    $(this).text("Remove");
+                                                });
+
+                                                //Transfer from Referenced Table back to Testi list
+                                                $(document).on('click', '.unselectreferencebtn', function () {
+                                                    for (var x = 0; x < referencedTestimonial.length; x++) {
+                                                        if (referencedTestimonial[x].id == $(this).val()) {
+                                                            referencedTestimonial.splice(x, 1);
+                                                        }
+                                                    }
+
+                                                    if (referencedTestimonial.length == 0) {
+                                                        $("#ReferenceTestimonialList").hide();
+                                                    }
+
+                                                    var detached = $(this).closest('tr').detach();
+                                                    $("#TestimonialTableBody").append(detached);
+                                                    $(this).removeClass('btn btn-danger btn-sm unselectreferencebtn').addClass('btn btn-warning btn-sm selectreferencebtn');
+                                                    $(this).text("Use as reference");
                                                 });
 
                                             </script>
-
-
-
-                                            <div class="col-md-12" style="display: none" id="ReferenceTestimonialList">
-                                                <div class="col-md-7">
-                                                    <section class="panel">
-                                                        <header class="panel-heading">
-                                                            Testimonials For Reference
-                                                        </header>
-                                                        <label class="panel-heading" style="font-size: 14px;">Search: <input type="text" class="form-control" aria-controls="dynamic-table"></label>
-                                                        <table class="table table-hover">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>#</th>
-                                                                    <th>Title</th>
-                                                                    <th>Description</th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>1</td>
-                                                                    <td>Lorem Ipsum</td>
-                                                                    <td>Aenean auctor interdum feugiat. Ut iaculis ipsum neque, ut tempor massa vulputate at. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Cras sed libero at leo congue ullamcorper. Sed porta imperdiet rutrum</td>
-                                                                    <td><button class="btn btn-success btn-sm"><i class="fa fa-check"></i> Add As Reference</button></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>2</td>
-                                                                    <td>auctor interdum</td>
-                                                                    <td>Ut iaculis ipsum neque, ut tempor massa vulputate at. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Cras sed libero at leo congue ullamcorper.</td>
-                                                                    <td><button class="btn btn-success btn-sm"><i class="fa fa-check"></i> Add As Reference</button></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </section>
-                                                </div>
-
-                                                <div class="col-md-5">
-                                                    <section class="panel pull-right">
-                                                        <header class="panel-heading">
-                                                            Referenced Testimonials/s
-                                                        </header>
-                                                        <table class="table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>#</th>
-                                                                    <th>Title</th>
-                                                                    <th></th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>1</td>
-                                                                    <td>Lorem Ipsum</td>
-                                                                    <td>
-                                                                        <button class="btn btn-success btn-sm"><i class="fa fa-folder"></i> Select Files</button>
-                                                                    </td>
-                                                                    <td>
-                                                                        <button class="btn btn-danger btn-sm"><i class="fa fa-times"></i> Remove</button>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </section>
-                                                </div>
-                                            </div>
-
 
                                             <br>
                                             <br><br><br><br>
@@ -818,6 +830,7 @@
         <script src="js/jquery.stepy.js"></script>
         <!--script for this page only-->
         <script src="js/dynamic_table_init.js"></script>
+        <script src="js/GS_CreateProposal.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"
         async defer></script> 
 
@@ -845,7 +858,62 @@
                                             // Initialize
                                             $('.table').searchableTable();
         </script>
+        <script>
+            var map;
+            var markers = [];
+            var allPosition = [];
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: 14.45, lng: 120.98},
+                    zoom: 14
+                });
+                google.maps.event.addListener(map, 'click', function (event) {
+                    placeMarker(event.latLng);
+                });
+                function placeMarker(location) {
+                    var marker = new google.maps.Marker({
+                        position: location,
+                        map: map
+                    });
+                    markers.push(marker);
+                    latitude = marker.position.lat();
+                    longitude = marker.position.lng();
+                    var string = latitude + "&" + longitude;
+                    allPosition.push(string);
+                    document.getElementById("location").value = allPosition;
+                }
 
+                Testimonialmarkers.forEach(function (coor) {
+                    var geocoder = new google.maps.Geocoder;
+                    var latLng = new google.maps.LatLng(coor.latitude, coor.longitude);
+                    var latitude = coor.latitude;
+                    var longitude = coor.longitude;
+
+                    var string = latitude + "&" + longitude;
+                    allPosition.push(string);
+                    document.getElementById("location").value = allPosition;
+
+                    var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map
+                    });
+                    var infowindow = new google.maps.InfoWindow;
+
+                    marker.addListener('click', function () {
+                        geocodeLatLng(geocoder, map, infowindow, latLng);
+                    });
+                });
+
+            }
+
+            function removeMarker() {
+                for (var i = 0; i < markers.length; i++) {
+                    markers[i].setMap(null);
+                }
+                markers = [];
+                allPosition = [];
+            }
+        </script>
 
     </body>
 </html>
