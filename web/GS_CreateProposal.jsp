@@ -286,7 +286,7 @@
                                                                     <td>
                                                                         <p> <button id="viewDetails" type="button" class="btn btn-info btn-sm viewbutton" value="<%=allTestimonials.get(x).getId()%>"> View details</button></p>
 
-                                                                        <%if (allTestimonials.get(x).getMainproject().size() == 0) {%>
+                                                                        <%if (allTestimonials.get(x).getMainproject().getId() == null) {%>
                                                                         <p> <button type="button" class="btn btn-success btn-sm selectmainbtn" value="<%=allTestimonials.get(x).getId()%>">  Select as main</button> </p>
                                                                         <%}%>
 

@@ -80,7 +80,7 @@ public class GSDAO {
         User u;
 
         ArrayList<TLocation> tlocation = new ArrayList<TLocation>();
-        ArrayList<Project> mainproject = new ArrayList<Project>();
+        Project mainproject = new Project();
         ArrayList<Project> referencedproject = new ArrayList<Project>();
         ArrayList<Reply> replies = new ArrayList<Reply>();
         ArrayList<Files> files = new ArrayList<Files>();
@@ -139,24 +139,22 @@ public class GSDAO {
             }
             t.setTlocation(tlocation);
 
-            String mainprojectQuery = ("select * from project_has_testimonial where Testimonial_ID = ?");
+            String mainprojectQuery = ("select * from project where Testimonial_ID = ?");
             statement2 = connection.prepareStatement(mainprojectQuery);
             statement2.setInt(1, id);
             result = statement2.executeQuery();
             while (result.next()) {
-                Project p = new Project();
-                p.setId(result.getString("Project_ID"));
-                mainproject.add(p);
+                mainproject.setId(result.getString("ID"));
             }
             t.setMainproject(mainproject);
 
-            String referencedprojectQuery = ("select * from project_has_testimonial where Testimonial_ID = ?");
+            String referencedprojectQuery = ("select * from project_has_reference where Testimonial_ID = ?");
             statement7 = connection.prepareStatement(referencedprojectQuery);
             statement7.setInt(1, id);
             result = statement7.executeQuery();
             while (result.next()) {
                 Project p = new Project();
-                p.setId(result.getString("otherProject_ID"));
+                p.setId(result.getString("Project_ID"));
                 referencedproject.add(p);
             }
             t.setReferencedproject(referencedproject);
@@ -385,15 +383,13 @@ public class GSDAO {
     }
 
     public ArrayList<Integer> getLinkedTestimonials() {
-
         ArrayList<Integer> test = new ArrayList<Integer>();
 
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
 
-            String query = "select distinct(testimonial.id) from testimonial join files on testimonial_id = testimonial.id\n"
-                    + "join project on project.id = files.project_id";
+            String query = "select * from project join testimonial on project.Testimonial_ID = testimonial.id";
 
             statement = connection.prepareStatement(query);
             result = statement.executeQuery();
@@ -411,19 +407,17 @@ public class GSDAO {
         return test;
     }
 
-    public ArrayList<Project> getMainProjectOnTestimonial(int id) {
-        ArrayList<Project> mainproject = new ArrayList<Project>();
+    public Project getMainProjectOnTestimonial(int id) {
+        Project mainproject = new Project();
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String mainprojectQuery = ("select * from project_has_testimonial where Testimonial_ID = ?");
+            String mainprojectQuery = ("select * from project where Testimonial_ID = ?");
             statement = connection.prepareStatement(mainprojectQuery);
             statement.setInt(1, id);
             result = statement.executeQuery();
             while (result.next()) {
-                Project p = new Project();
-                p.setId(result.getString("Project_ID"));
-                mainproject.add(p);
+                mainproject.setId(result.getString("ID"));
             }
 
             statement.close();
@@ -440,7 +434,7 @@ public class GSDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String referencedprojectQuery = ("select * from project_has_testimonial where Testimonial_ID = ?");
+            String referencedprojectQuery = ("select * from project_has_reference where Testimonial_ID = ?");
             statement = connection.prepareStatement(referencedprojectQuery);
             statement.setInt(1, id);
             result = statement.executeQuery();
@@ -571,7 +565,8 @@ public class GSDAO {
             connection = myFactory.getConnection();
             String insertLocationDetails = "insert into components (name, unitprice, quantity, type, unit_id, pworks_id) values (?,?,?,?,?)";
             statement = connection.prepareStatement(insertLocationDetails);
-            statement.setString(1, pw.getName());
+            //Walang PW
+            //statement.setString(1, pw.getName());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException ex) {
@@ -588,7 +583,7 @@ public class GSDAO {
             String insertLocationDetails = "select * from unit";
             statement = connection.prepareStatement(insertLocationDetails);
             result = statement.executeQuery();
-            while (result.next()){
+            while (result.next()) {
                 u = new Unit();
                 u.setId(result.getInt("ID"));
                 u.setUnit(result.getString("Unit"));

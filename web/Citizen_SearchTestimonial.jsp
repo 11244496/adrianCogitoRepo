@@ -259,7 +259,7 @@
                                                                     <%out.print(split[0]);%>
                                                                 </td>
 
-                                                                <%if (!(test1.getMainproject().isEmpty())) {%>
+                                                                <%if (test1.getMainproject().getId() != null) {%>
                                                                 <td>
                                                                     Available
                                                                 </td>   

@@ -22,7 +22,7 @@ public class Testimonial {
     private String status;
     private Citizen citizen;
     private ArrayList<TLocation> tlocation;
-    private ArrayList<Project> mainproject;
+    private Project mainproject;
     private ArrayList<Project> referencedproject;
     private ArrayList<Reply> replies;
     private ArrayList<Files> files;
@@ -45,7 +45,7 @@ public class Testimonial {
     }
     
     
-    public Testimonial(String title, String dateUploaded, String message, String folderName, String category, String status, Citizen citizen, ArrayList<TLocation> tlocation, ArrayList<Project> mainproject,ArrayList<Project> referencedproject, ArrayList<Reply> replies, ArrayList<Files> files, ArrayList<TComments> tcomments, ArrayList<Supporter> supporters) {
+    public Testimonial(String title, String dateUploaded, String message, String folderName, String category, String status, Citizen citizen, ArrayList<TLocation> tlocation, Project mainproject,ArrayList<Project> referencedproject, ArrayList<Reply> replies, ArrayList<Files> files, ArrayList<TComments> tcomments, ArrayList<Supporter> supporters) {
         this.title = title;
         this.dateUploaded = dateUploaded;
         this.message = message;
@@ -238,19 +238,6 @@ public class Testimonial {
         this.supporters = supporters;
     }
 
-    /**
-     * @return the mainproject
-     */
-    public ArrayList<Project> getMainproject() {
-        return mainproject;
-    }
-
-    /**
-     * @param mainproject the mainproject to set
-     */
-    public void setMainproject(ArrayList<Project> mainproject) {
-        this.mainproject = mainproject;
-    }
 
     /**
      * @return the referencedproject
@@ -265,4 +252,20 @@ public class Testimonial {
     public void setReferencedproject(ArrayList<Project> referencedproject) {
         this.referencedproject = referencedproject;
     }
+
+    /**
+     * @return the mainproject
+     */
+    public Project getMainproject() {
+        return mainproject;
+    }
+
+    /**
+     * @param mainproject the mainproject to set
+     */
+    public void setMainproject(Project mainproject) {
+        this.mainproject = mainproject;
+    }
+
+    
 }

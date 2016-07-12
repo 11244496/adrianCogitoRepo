@@ -291,10 +291,8 @@
 
                                 <h5 class="bold">Main Project</h5>
                                 <%
-                                    if (testimonial.getMainproject().size() > 0) {
-                                        for (int a = 0; a < testimonial.getMainproject().size(); a++) {
-                                            System.out.println(testimonial.getMainproject().get(a).getName());
-                                        }
+                                    if (testimonial.getMainproject().getId() != null) {
+                                            System.out.println(testimonial.getMainproject().getName());
                                     } else {
                                 %>
                                 <p>No main project yet.</p>

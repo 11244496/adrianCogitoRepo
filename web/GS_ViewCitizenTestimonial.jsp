@@ -292,7 +292,7 @@
                                                                     <td>
                                                                         <%out.print(test1.getDateUploaded());%>
                                                                     </td>
-                                                                    <%if (allTestimonials.get(x).getMainproject().size() > 0) {%>
+                                                                    <%if (allTestimonials.get(x).getMainproject().getId() != null) {%>
                                                                     <td>
                                                                         Available
                                                                     </td>   
@@ -419,7 +419,7 @@
 
 
 
-                                                                <%if (allPendingTestimonials.get(x).getMainproject().size() > 0) {%>
+                                                                <%if (allPendingTestimonials.get(x).getMainproject().getId() != null) {%>
                                                                 <td>
                                                                     Available
                                                                 </td>   
@@ -522,7 +522,7 @@
                                                                 <td>
                                                                     <%out.print(test1.getDateUploaded());%>
                                                                 </td>
-                                                                <%if (allRepliedTestimonials.get(x).getMainproject().size() > 0) {%>
+                                                                <%if (allRepliedTestimonials.get(x).getMainproject().getId() != null) {%>
                                                                 <td>
                                                                     Available
                                                                 </td>   
@@ -623,7 +623,7 @@
                                                                 <td>
                                                                     <%out.print(test1.getDateUploaded());%>
                                                                 </td>
-                                                                <%if (allLinkedTestimonials.get(x).getMainproject().size() > 0) {%>
+                                                                <%if (allLinkedTestimonials.get(x).getMainproject().getId() != null) {%>
                                                                 <td>
                                                                     Available
                                                                 </td>   

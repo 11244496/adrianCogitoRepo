@@ -144,7 +144,7 @@ public class CitizenDAO {
         User u;
 
         ArrayList<TLocation> tlocation = new ArrayList<TLocation>();
-        ArrayList<Project> mainproject = new ArrayList<Project>();
+        Project mainproject = new Project();
         ArrayList<Project> referencedproject = new ArrayList<Project>();
         ArrayList<Reply> replies = new ArrayList<Reply>();
         ArrayList<Files> files = new ArrayList<Files>();
@@ -203,24 +203,22 @@ public class CitizenDAO {
             }
             t.setTlocation(tlocation);
 
-            String mainprojectQuery = ("select * from project_has_testimonial where Testimonial_ID = ?");
+            String mainprojectQuery = ("select * from project where Testimonial_ID = ?");
             statement2 = connection.prepareStatement(mainprojectQuery);
             statement2.setInt(1, id);
             result = statement2.executeQuery();
             while (result.next()) {
-                Project p = new Project();
-                p.setId(result.getString("Project_ID"));
-                mainproject.add(p);
+                mainproject.setId(result.getString("ID"));
             }
             t.setMainproject(mainproject);
 
-            String referencedprojectQuery = ("select * from project_has_testimonial where Testimonial_ID = ?");
+            String referencedprojectQuery = ("select * from project_has_reference where Testimonial_ID = ?");
             statement7 = connection.prepareStatement(referencedprojectQuery);
             statement7.setInt(1, id);
             result = statement7.executeQuery();
             while (result.next()) {
                 Project p = new Project();
-                p.setId(result.getString("otherProject_ID"));
+                p.setId(result.getString("Project_ID"));
                 referencedproject.add(p);
             }
             t.setReferencedproject(referencedproject);
@@ -369,13 +367,9 @@ public class CitizenDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "select count(*) c from project_has_testimonial\n"
-                    + "join testimonial on testimonial_id = testimonial.id\n"
-                    + "where citizen_id = ? and project_id = ?";
+            String query = "select count(*) as c from testimonial where testimonial.id not in (select testimonial_id from project)";
 
             statement = connection.prepareStatement(query);
-            statement.setInt(1, c.getId());
-            statement.setInt(2, 0);
             result = statement.executeQuery();
             while (result.next()) {
                 unlinkedtesti = result.getInt("c");

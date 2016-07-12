@@ -14,19 +14,17 @@ public class Component {
     private String name;
     private float unitPrice;
     private int quantity;
-    private String type;
     private Unit unit;
     private PWorks pworks;
     
     public Component() {
     }
 
-    public Component(int id, String name, float unitPrice, int quantity, String type, Unit unit, PWorks pworks) {
+    public Component(int id, String name, float unitPrice, int quantity, Unit unit, PWorks pworks) {
         this.id = id;
         this.name = name;
         this.unitPrice = unitPrice;
         this.quantity = quantity;
-        this.type = type;
         this.unit = unit;
         this.pworks = pworks;
     }
@@ -85,20 +83,6 @@ public class Component {
      */
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    /**
-     * @return the type
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * @param type the type to set
-     */
-    public void setType(String type) {
-        this.type = type;
     }
 
     /**
