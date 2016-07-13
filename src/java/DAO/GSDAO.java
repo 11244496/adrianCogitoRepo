@@ -497,11 +497,11 @@ public class GSDAO {
 
     public void insertProjectDetails(Project p) {
         try {
-            String insertProjectDetails = "insert into project (name, description, type, status, foldername, datesubmitted, category, employee_id) values (?,?,?,?,?,now(),?,?)";
+            String insertProjectDetails = "insert into project (id, name, description, status, foldername, datesubmitted, category, employee_id) values (?,?,?,?,?,now(),?,?)";
             statement = connection.prepareStatement(insertProjectDetails);
-            statement.setString(1, p.getName());
-            statement.setString(2, p.getDescription());
-            statement.setString(3, p.getType());
+            statement.setString(1, p.getId());
+            statement.setString(2, p.getName());
+            statement.setString(3, p.getDescription());
             statement.setString(4, p.getStatus());
             statement.setString(5, p.getFoldername());
             statement.setString(6, p.getCategory());
@@ -549,8 +549,8 @@ public class GSDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String insertLocationDetails = "insert into pworks (name) values (?)";
-            statement = connection.prepareStatement(insertLocationDetails);
+            String query = "insert into pworks (name) values (?)";
+            statement = connection.prepareStatement(query);
             statement.setString(1, pw.getName());
             statement.executeUpdate();
             statement.close();
@@ -563,14 +563,17 @@ public class GSDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String insertLocationDetails = "insert into components (name, unitprice, quantity, type, unit_id, pworks_id) values (?,?,?,?,?)";
-            statement = connection.prepareStatement(insertLocationDetails);
-            //Walang PW
-            //statement.setString(1, pw.getName());
+            String query = "insert into components (name, unitprice, quantity, unit_id, pworks_id) values (?,?,?,?,?)";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, c.getName());
+            statement.setFloat(2, c.getUnitPrice());
+            statement.setInt(3, c.getQuantity());
+            statement.setInt(4, c.getUnit().getId());
+            statement.setInt(5, c.getPworks().getId());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in inserting new program works", ex);
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in inserting components", ex);
         }
     }
 
@@ -580,8 +583,8 @@ public class GSDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String insertLocationDetails = "select * from unit";
-            statement = connection.prepareStatement(insertLocationDetails);
+            String query = "select * from unit";
+            statement = connection.prepareStatement(query);
             result = statement.executeQuery();
             while (result.next()) {
                 u = new Unit();
@@ -594,6 +597,36 @@ public class GSDAO {
             Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in inserting new program works", ex);
         }
         return uList;
+    }
+
+    public void insertReferencedTestimonials(Testimonial ref, Project main) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into project_has_reference (testimonial_id, project_id) values (?,?)";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, ref.getId());
+            statement.setString(2, main.getId());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in inserting new program works", ex);
+        }
+    }
+
+    public void insertReferencedProjects(Project ref, Project main) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into project_has_reference (otherProject_ID, project_id) values (?,?)";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, ref.getId());
+            statement.setString(2, main.getId());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in inserting referenced projects", ex);
+        }
     }
 
     public Project getBasicProjectDetails(String id) {
