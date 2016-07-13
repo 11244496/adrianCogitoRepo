@@ -27,7 +27,6 @@ $(document).on("change", "#subcategory", function () {
         document.getElementById('OtherSub').style.display = 'none';
 });
 
-
 $(document).on("change", "#subcategory", function () {
     if ($('#subcategory').val() != "Others") {
         $.ajax({
@@ -44,79 +43,20 @@ $(document).on("change", "#subcategory", function () {
     }
 });
 
-function drawTable(data) {
-    for (var i = 0; i < data.length; i++) {
-
-        var tableID = "general";
-        var table = document.getElementById(tableID);
-        var rowCount = table.rows.length;
-
-        var row = table.insertRow(-1);
-        var cell1 = row.insertCell(-1);
-        var cell2 = row.insertCell(-1);
-        var cell3 = row.insertCell(-1);
-        var cell4 = row.insertCell(-1);
-        var cell5 = row.insertCell(-1);
-
-
-        var material = document.createElement('input');
-        material.type = "text";
-        material.name = "material";
-        material.value = data[i].name;
-        material.style.width = "100%";
-        material.style.height = "100%";
-        material.style.border = "none";
-        material.setAttribute("readOnly", "true");
-
-        var percentage = document.createElement('input');
-        percentage.type = "text";
-        percentage.name = "percentage";
-        percentage.style.width = "100%";
-        percentage.style.height = "100%";
-        percentage.style.border = "none";
-
-        var unitprice = document.createElement('input');
-        unitprice.type = "text";
-        unitprice.name = "unitprice";
-        unitprice.value = data[i].unitprice;
-        unitprice.style.width = "100%";
-        unitprice.style.height = "100%";
-        unitprice.style.border = "none";
-        unitprice.class = "unitprice";
-        unitprice.setAttribute("readOnly", "true");
-
-        var quantity = document.createElement('input');
-        quantity.value = data[i].quantity;
-        quantity.type = "text";
-        quantity.name = "quantity";
-        quantity.style.width = "100%";
-        quantity.style.height = "100%";
-        quantity.style.border = "none";
-        quantity.class = "quantity";
-
-        var unit = document.createElement('input');
-        unit.type = "text";
-        unit.name = "unit";
-        unit.value = data[i].unit.unit;
-        unit.style.width = "100%";
-        unit.style.height = "100%";
-        unit.style.border = "none";
-        unit.setAttribute("readOnly", "true");
-
-
-        cell1.appendChild(material);
-        cell2.appendChild(percentage);
-        cell3.appendChild(quantity);
-        cell4.appendChild(unit);
-        cell5.appendChild(unitprice);
-
-        materialstable.push(material);
-        materialstable.push(percentage);
-        materialstable.push(quantity);
-        materialstable.push(unit);
-        materialstable.push(unitprice);
-    }
-}
+$('#maincategory').change(function(){
+    $.ajax({
+        type: 'GET',
+        url: 'AJAX_GS_GenerateProjectID',
+        dataType: 'json',
+        data: {
+            category: $('#maincategory').val()
+        },
+        success: function (id){
+            $('#projectID').val(id);
+            console.log(id);
+        }
+    });
+});
 
 $(document).on("change", "#keywords", function () {
     $.ajax({
