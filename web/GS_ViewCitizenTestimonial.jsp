@@ -231,8 +231,8 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#pending" data-toggle="tab">
-                                                Pending
+                                            <a href="#unanswered" data-toggle="tab">
+                                                Unanswered Testimonials
                                             </a>
                                         </li>
                                         <li class="">
@@ -351,15 +351,15 @@
 
                                         </div>
 
-                                        <div class="tab-pane" id="pending">
+                                        <div class="tab-pane" id="unanswered">
                                             <div>
-                                                <input size="30" type="text" placeholder="Type to search" id="pending-testimonial">
+                                                <input size="30" type="text" placeholder="Type to search" id="unanswered-testimonial">
                                             </div> 
                                             <div class="directory-info-row">
 
 
                                                 <div class="row">
-                                                    <table class="table" data-search-field="#pending-testimonial">
+                                                    <table class="table" data-search-field="#unanswered-testimonial">
 
                                                         <thead>
                                                             <tr>
@@ -415,9 +415,6 @@
                                                                         <%out.print(test1.getDateUploaded());%>
                                                                     </p>
                                                                 </td>
-
-
-
 
                                                                 <%if (allPendingTestimonials.get(x).getMainproject().getId() != null) {%>
                                                                 <td>

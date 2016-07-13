@@ -34,15 +34,11 @@
         <!-- Bootstrap core CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/bootstrap-reset.css" rel="stylesheet">
-        <!--external css-->
-        <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-
-        <!--right slidebar-->
-        <link href="css/slidebars.css" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
         <link href="css/style.css" rel="stylesheet">
-        <link href="css/style-responsive.css" rel="stylesheet" />
+        <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="assets/gritter/css/jquery.gritter.css" />
+        <link href="unitegallery/css/unite-gallery.css" rel="stylesheet" >
+        <link href="unitegallery/themes/default/ug-theme-default.css" rel="stylesheet">
         <style>
             #textar{
                 background: white;
@@ -471,20 +467,13 @@
             <script src="unitegallery/themes/default/ug-theme-default.js"></script>
             <script type="text/javascript">
 
-                            jQuery(document).ready(function () {
+                                jQuery(document).ready(function () {
 
-                                jQuery("#gallery").unitegallery();
+                                    jQuery("#gallery").unitegallery();
 
-                            });
+                                });
 
             </script>
-
-
-            <!-- js placed at the end of the document so the pages load faster -->
-            <script src="js/respond.min.js" ></script>
-
-            <!--common script for all pages-->
-            <script src="js/common-scripts.js"></script>
 
         </section>
 
