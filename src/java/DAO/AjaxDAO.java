@@ -7,6 +7,7 @@ package DAO;
 
 import DB.ConnectionFactory;
 import Entity.Project;
+import Entity.Schedule;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,15 +30,15 @@ public class AjaxDAO {
     ResultSet result;
     ConnectionFactory myFactory;
 
-    public String createProjectID(String category){
+    public String createProjectID(String category) {
         ArrayList<String> idList = getProjectIDsPerCategory(category);
         String id = generateNewIfExisting(category);
-        while (idList.contains(id)){
+        while (idList.contains(id)) {
             id = generateNewIfExisting(category);
         }
         return id;
     }
-    
+
     public ArrayList<String> getProjectIDsPerCategory(String category) {
         Collection<String> idList = new ArrayList<>();
         try {
@@ -64,7 +65,7 @@ public class AjaxDAO {
         String id = "";
         LocalDate ld = LocalDate.now();
         String month = ld.getMonth().getValue() + "";
-        String year = ("" + ld.getYear()).substring(2,4);
+        String year = ("" + ld.getYear()).substring(2, 4);
 
         switch (category) {
             case "Maintenance": {
@@ -79,12 +80,12 @@ public class AjaxDAO {
                 id += "HO";
             }
         }
-        
+
         if (ld.getMonth().getValue() < 10) {
             month = "0" + month;
         }
-        id += month + year + num;    
-        
+        id += month + year + num;
+
         return id;
     }
 

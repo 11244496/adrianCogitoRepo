@@ -5,26 +5,27 @@
  */
 package Servlet;
 
-import DAO.GSDAO;
-import DAO.OCPDDAO;
-import Entity.Project;
+import DAO.ActivityDAO;
+import DAO.AjaxDAO;
+import DAO.NotificationDAO;
+import Entity.Activity;
+import Entity.Employee;
+import Entity.Notification;
 import Entity.Schedule;
-import Entity.Testimonial;
+import Entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author RoAnn
  */
-public class OCPD_Home extends HttpServlet {
+public class AJAX_OCPD_confirmschedule extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,32 +39,52 @@ public class OCPD_Home extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            GSDAO gsdao = new GSDAO();
-            OCPDDAO odao = new OCPDDAO();
+            Employee e = (Employee) session.getAttribute("user");
+            AjaxDAO adao = new AjaxDAO();
+            NotificationDAO ndao = new NotificationDAO();
+            Notification n = null;
+            ActivityDAO actdao = new ActivityDAO();
+            int schedID = Integer.parseInt(request.getParameter("scheduleID"));
+            Schedule s = adao.getSchedule(schedID);
 
-            ArrayList<Schedule> unconfirmedMeeting = gsdao.getAllMeetings("Unconfirmed");
-            ArrayList<Project> unconfirmedMProjects = new ArrayList<>();
-            OCPDDAO oc = new OCPDDAO();
-                for (int x = 0; x < unconfirmedMeeting.size(); x++) {
-                    unconfirmedMProjects.add(odao.getBasicProjectDetails(unconfirmedMeeting.get(x).getProjectID()));
-                    unconfirmedMeeting.get(x).setTasks(oc.getAgenda(unconfirmedMeeting.get(x)));
-                
+            adao.setMeetingDone(schedID, "Pending");
+            String dept = "";
+            if (e.getDepartment().equalsIgnoreCase("Engineering")) {
+                dept = "GS";
+                for (User u : ndao.getEmployeePerDept("OCPD")) {
+                    n = new Notification();
+                    n.setNotification("Meeting on " + s.getStartdate() + " " + s.getTime() + " has been confirmed.");
+                    n.setUsers_ID(u);
+                    ndao.addNotification(n);
+                }
+                actdao.addActivity(new Activity(0,
+                        e.getFirstName() + " " + e.getLastName() + " confirmed the meeting on " + s.getStartdate(),
+                        null, e.getUser()));
+
+            } else if (e.getDepartment().equalsIgnoreCase("OCPD")) {
+                dept = "OCPD";
+                for (User u : ndao.getEmployeePerDept("GS")) {
+                    n = new Notification();
+                    n.setNotification("Meeting on " + s.getStartdate() + " " + s.getTime() + " has been confirmed.");
+                    n.setUsers_ID(u);
+                    ndao.addNotification(n);
+                }
+                actdao.addActivity(new Activity(0,
+                        e.getFirstName() + " " + e.getLastName() + " confirmed the meeting on " + s.getStartdate(),
+                        null, e.getUser()));
+
             }
 
-            //Get Counts
-
-            request.setAttribute("unconfirmedMeeting", unconfirmedMeeting);
-            request.setAttribute("unconfirmedMProjects", unconfirmedMProjects);
-
-            ServletContext context = getServletContext();
-            RequestDispatcher dispatch = context.getRequestDispatcher("/OCPD_Home.jsp");
-            dispatch.forward(request, response);
-
+            adao.changeDept(s, dept);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
         }
     }
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

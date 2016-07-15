@@ -18,6 +18,7 @@ import Entity.PlanningDocument;
 import Entity.Project;
 import Entity.Project_Inspection;
 import Entity.Schedule;
+import Entity.Task;
 import Entity.Testimonial;
 import Entity.User;
 import java.sql.Connection;
@@ -358,5 +359,29 @@ public class OCPDDAO {
         }
         return AllProjectID;
     }
+    
+    //=============================ALL SCHEDULE AND TASK RELATED CODES======================================
 
+    public ArrayList<Task> getAgenda(Schedule s) {
+        ArrayList<Task> tList = new ArrayList<>();
+        Task t;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select Description from task where schedule_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, s.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                t = new Task();
+                t.setDescription(result.getString("Description"));
+                tList.add(t);
+            }
+            connection.close();
+            return tList;
+        } catch (SQLException ex) {
+            Logger.getLogger(OCPDDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return tList;
+    }
 }
