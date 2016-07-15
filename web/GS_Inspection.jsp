@@ -225,6 +225,12 @@
                                 <span>View Accomplishment Report</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="GS_NotificationActivity">
+                                <i class="fa fa-book"></i>
+                                <span>Notification and Activity</span>
+                            </a>
+                        </li>
 
 
                     </ul>
@@ -257,7 +263,7 @@
                             </style>
 
                             <form action="GS_UpdateTask" method="POST">
-                                
+
                                 <input type="hidden" name="projID" value="<%=project.getId()%>">
 
                                 <table class="tg">
@@ -285,9 +291,9 @@
                                         <th class="tg-031e"  style='text-align: center;'><%out.print(implementationschedule.get(x).getTasks().get(y).getStartDate());%></th>
                                         <th class="tg-031e"  style='text-align: center;'><%out.print(implementationschedule.get(x).getTasks().get(y).getEndDate());%></th>
                                         <th class="tg-031e" style='text-align: center;'>
-                                            <%if(implementationschedule.get(x).getTasks().get(y).getStatus().equalsIgnoreCase("Pending")){%>
+                                            <%if (implementationschedule.get(x).getTasks().get(y).getStatus().equalsIgnoreCase("Pending")) {%>
                                             <input type="checkbox" class="scheduleID" name="taskID" value="<%=implementationschedule.get(x).getTasks().get(y).getId()%>">Finished
-                                            <%}else{%>
+                                            <%} else {%>
                                             <input type="checkbox" class="scheduleID" checked name="taskID" value="<%=implementationschedule.get(x).getTasks().get(y).getId()%>">Finished
                                             <%}%>
                                         </th>

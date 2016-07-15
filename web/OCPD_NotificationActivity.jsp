@@ -1,19 +1,14 @@
-<%-- 
-    Document   : GS_Home
-    Created on : 09 2, 15, 8:50:49 AM
-    Author     : User
---%>
-
-<%@page import="Entity.Project_Progress"%>
-<%@page import="Entity.Material"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="Entity.Project"%>
 <%@page import="Entity.Employee"%>
+<%@page import="Entity.Notification"%>
+<%@page import="Entity.Activity"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="Entity.Citizen"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%Employee e = (Employee) session.getAttribute("user");%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
@@ -21,50 +16,44 @@
         <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
         <link rel="shortcut icon" href="img/favicon.png">
 
-        <title>Template</title>
+
+        <title>Activity and Notification</title>
 
         <!-- Bootstrap core CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/bootstrap-reset.css" rel="stylesheet">
-        <!--external css-->
-        <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" >
-
-        <!--right slidebar-->
-        <link href="css/slidebars.css" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
         <link href="css/style.css" rel="stylesheet">
-        <link href="css/style-responsive.css" rel="stylesheet" >
+        <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="assets/gritter/css/jquery.gritter.css" />
 
-        <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
-        <!--[if lt IE 9]>
-          <script src="js/html5shiv.js"></script>
-          <script src="js/respond.min.js"></script>
-        <![endif]-->
+        <style>
+            table.table {
+                display: table;
+                width: 100%;
+            }
+            table.table thead, table.table tbody {
+                float: left;
+                width: 100%;
+            }
+            table.table tbody {
+                overflow: auto;
+                height: 200px;
+                display: inline-block;
+            }
+            table.table tr {
+                width: 100%;
+                display: table;
+                text-align: left;
+            }
+            table.table th, table.table td {
+                width: 33%;
+                display: inline-block;
+                overflow: auto;
+            }
 
-        <!--        <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
-                            <script>
-        
-                       $(function () {
-                    var $value = $('#value');
-                    var $input = $('#quantity');
-                    $input.on('keydown', function () {
-                    setTimeout(function () {
-                    $value.html($input.val());
-                    }, 0);
-                    });
-                    });   
-                            </script>
-                 <meta charset="utf-8">           -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>      
-        <style type="text/css">
-            .tg  {border-collapse:collapse;border-spacing:0; margin-left: 2cm;}
-            .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 20px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
-            .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 20px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
-            .tg .tg-s6z2{text-align:center}
-            .tg .tg-baqh{text-align:center;vertical-align:top}
-            .tg .tg-yw4l{vertical-align:top}
-        </style>    
+        </style>
+
+
     </head>
 
     <body>
@@ -103,8 +92,7 @@
                                 -->
                             </ul>
                         </li>
-
-                        <!-- inbox dropdown end -->
+                        <!-- settings end -->
                         <!-- notification dropdown start-->
                         <li id="header_notification_bar" class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -147,7 +135,7 @@
                         <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <img alt="" src="img/avatar1_small.jpg">
-                                <span class="username">Hello <b><u><%out.print(e.getFirstName());%></u></b>!</span>
+                                <span class="username">Hello <b><u><%=e.getFirstName()%></u></b>!</span>
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu extended logout">
@@ -159,198 +147,190 @@
                             </ul>
                         </li>
 
-                        <!-- user login dropdown end -->
-                        <li class="sb-toggle-right">
-                            <i class="fa  fa-align-right"></i>
-                        </li>
                     </ul>
                 </div>
             </header>
             <!--header end-->
-            <!--sidebar start-->
             <aside>
                 <div id="sidebar"  class="nav-collapse ">
                     <!-- sidebar menu start-->
                     <ul class="sidebar-menu" id="nav-accordion">
                         <li>
-                            <a href="GS_Home">
+                            <a href="OCPD_Home">
                                 <i class="fa fa-dashboard"></i>
                                 <span>Home</span>
                             </a>
                         </li>
 
+
                         <li>
-                            <a href="GS_ViewTestimonials">
-                                <i class="fa fa-dashboard"></i>
-                                <span>View Citizen Testimonials</span>
+                            <a href="OCPD_ViewPlanningDocument">
+                                <i class="fa fa-book"></i>
+                                <span>CLUP and CDP</span>
                             </a>
-                        </li>	
+                        </li>
 
                         <!--multi level menu start-->
                         <li class="sub-menu">
-                            <a href="javascript:;">
+                            <a href="javascript:;" >
                                 <i class="fa fa-tasks"></i>
                                 <span>Project Proposals</span>
                             </a>
                             <ul class="sub">
-                                <li><a  href="GS_CreateProposal">&nbsp; &nbsp; &nbsp; &nbsp; Create Proposal</a></li>
-                                <li><a  href="GS_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
-                                <li><a  href="GS_ViewImplementedProjects">&nbsp; &nbsp; Monitor Implemented Projects</a></li>
+                                <li><a  href="OCPD_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
+                                <li class="sub-menu">
+                                    <a  href="">&nbsp; &nbsp; &nbsp; &nbsp; Monitor Projects</a>
+                                    <ul class="sub">
+                                        <li><a  href="OCPD_Timeline.jsp">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Timeline</a></li>
+                                        <li class="sub-menu">
+                                            <a  href="OCPD_ViewProjectStatus">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Project Status</a>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
-                        </li>
-                        <li>
-                            <a href="GS_ScheduleChange">
-                                <i class="fa fa-dashboard"></i>
-                                <span>Schedule Change Requests</span>
-                            </a>
                         </li>
                         <!--multi level menu end-->
                         <li>
-                            <a href="GS_DisplayCDPCLUP">
-                                <i class="fa fa-book"></i>
-                                <span>View CLUP and CDP</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="GS_ViewAR.jsp">
-                                <i class="fa fa-book"></i>
-                                <span>View Accomplishment Report</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="GS_NotificationActivity">
+                            <a href="OCPD_NotificationActivity" class="active">
                                 <i class="fa fa-book"></i>
                                 <span>Notification and Activity</span>
                             </a>
                         </li>
 
-
                     </ul>
                     <!-- sidebar menu end-->
                 </div>
             </aside>
-            <!--sidebar end-->
-
+            <!--main content start-->
 
             <%
 
-                ArrayList<Project_Progress> pp = (ArrayList<Project_Progress>) request.getAttribute("project_progress");
+                ArrayList<Activity> activities = (ArrayList<Activity>) request.getAttribute("alist");
+
+                ArrayList<Notification> notification = (ArrayList<Notification>) request.getAttribute("nlist");
 
             %>
 
 
-
-            <!--main content start-->
-            <section id="main-content" >
-
-
-
+            <section id="main-content">
                 <section class="wrapper site-min-height">
-                    <section class="panel">				
+                    <!-- page start-->
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Notifications and Activity
+                        </header>
+                        <br>
+                        <div class="panel-body">
+                            <div class="">
+                                <section class="panel">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Notification</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%                                                for (int x = 0; x < notification.size(); x++) {
+
+                                            %>
+
+                                            <tr>
+                                                <td><%out.print(notification.get(x).getNotification());%></td>
+                                                <td><%out.print(notification.get(x).getDateTime().substring(0, 10));%></td>
+                                                <td><%out.print(notification.get(x).getDateTime().substring(11, 19));%></td>
+                                            </tr>
+                                            <%                                                }
+
+                                            %>
+                                        </tbody>
+                                    </table>
+                                </section>
+                            </div>
+
+
+
+
+                        </div>
+
+
                         <div class="panel-body">
 
-                            <label>Progress Report</label>      
+                            <div class="">
+                                <section class="panel">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Activity</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <%                                                for (int x = 0; x < activities.size(); x++) {
+
+                                            %>
+
+                                            <tr>
+                                                <td><%out.print(activities.get(x).getActivity());%></td>
+                                                <td><%out.print(activities.get(x).getDateTime().substring(0, 10));%></td>
+                                                <td><%out.print(activities.get(x).getDateTime().substring(11, 19));%></td>
+                                            </tr>
+                                            <%                                                }
+
+                                            %>
+
+
+                                        </tbody>
+                                    </table>
+                                </section>
+                            </div>                
 
 
                         </div>
 
 
-
-                        <div class="panel-body"  style="overflow: scroll;">
-
-
-
-
-                            <%//                                for(int y = 0; y < pp.size();y++){
-
-                            %>
-                            <table class="tg">
-
-                                <tr>
-                                    <th class="tg-s6z2" colspan="3">Payment </th>
-
-                                </tr>
-                                <tr>
-                                    <td class="tg-baqh">Quantity</td>
-                                    <td class="tg-baqh">Project %</td>
-                                    <td class="tg-baqh">Value of Work</td>
-
-
-                                </tr>
-                                <%                                        for (int x = 0; x < pp.size(); x++) {
-
-                                %>
-                                <tr>
-
-                                    <td><%out.println(pp.get(x).getQuantity());%></td>
-                                    <td><%out.println(pp.get(x).getProject_percentage());%></td>
-                                    <td><%out.println(pp.get(x).getValue_of_work());%></td>
-
-                                </tr>
-                                <%
-
-                                    }
-                                %>
-
-                            </table>
-
-
-
-
-
-
-
-
-
-                        </div>
-
-
-
-
-                        <!-- page end-->
                     </section>
+
+
+                    <!-- page end-->
                 </section>
-                <!--main content end-->
-
-                <!-- Right Slidebar start -->
-                <div class="sb-slidebar sb-right sb-style-overlay">
-                    <h5 class="side-title"> Pending Tasks</h5>
-                </div>
-
             </section>
+            <!--main content end-->
         </section>
-        <!--                                        <script>
-                                                 
-                             $('input').keyup(function(){ // run anytime the value changes
-        
-                                    var firstValue = parseFloat($('#quantity').val()) || 0; // get value of field
-                                    var secondValue = parseFloat($('#percentage').val()) || 0; // convert it to a float
-        
-         
-                                    $('#value').html(firstValue * secondValue); // output it
-                                    });
-                                                
-                                                    
-                                                    
-                                                    
-                        
-                                                </script>    
-        -->
-
-
+        <!--footer start-->
+        <footer class="site-footer">
+            <div class="text-center">
+                2016 &copy; KAYA
+                <a href="#" class="go-top">
+                    <i class="fa fa-angle-up"></i>
+                </a>
+            </div>
+        </footer>
+        <!--footer end-->
         <!-- js placed at the end of the document so the pages load faster -->
-
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script class="include" type="text/javascript" src="js/jquery.dcjqaccordion.2.7.js"></script>
         <script src="js/jquery.scrollTo.min.js"></script>
         <script src="js/slidebars.min.js"></script>
         <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+        <script type="text/javascript" src="assets/gritter/js/jquery.gritter.js"></script>
         <script src="js/respond.min.js" ></script>
+        <script type="text/javascript" src="js/jquery.pulsate.min.js"></script>
+
+        <!--right slidebar-->
+        <script src="js/slidebars.min.js"></script>
 
         <!--common script for all pages-->
         <script src="js/common-scripts.js"></script>
+
+        <!--script for this page only-->
+        <script src="js/gritter.js" type="text/javascript"></script>
+        <script src="js/pulstate.js" type="text/javascript"></script>
     </body>
 </html>
-

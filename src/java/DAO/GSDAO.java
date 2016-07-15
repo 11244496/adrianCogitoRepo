@@ -17,6 +17,7 @@ import Entity.Location;
 import Entity.Material;
 import Entity.PComments;
 import Entity.PWorks;
+import Entity.PlanningDocument;
 import Entity.Project;
 import Entity.Project_Inspection;
 import Entity.Reply;
@@ -720,6 +721,44 @@ public class GSDAO {
             Logger.getLogger(OCPDDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return tList;
+    }
+
+    //===============================ALL CODES ON DOCUMENTS================================================
+    public ArrayList<PlanningDocument> getDocuments() {
+        ArrayList<PlanningDocument> documents = new ArrayList<>();
+        PlanningDocument d;
+        Employee e;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = ("select * from planningdocument");
+
+            statement = connection.prepareStatement(query);
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                d = new PlanningDocument();
+                e = new Employee();
+                e.setId(result.getInt("Employee_ID"));
+                d.setId(result.getInt("ID"));
+                d.setType(result.getString("Type"));
+                d.setDateUploaded(result.getString("DateUploaded"));
+                d.setUrl(result.getString("URL"));
+                d.setYear(result.getInt("Year"));
+                d.setName(result.getString("Name"));
+                d.setEmployee(e);
+                documents.add(d);
+            }
+            connection.close();
+
+            return documents;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+
     }
 
     //===============================ALL COUNT CODES=======================================================

@@ -11,8 +11,8 @@
 
 
     <% Employee e = (Employee) session.getAttribute("user");
-       ArrayList<Schedule> schedule = (ArrayList<Schedule>) request.getAttribute("allsched"); 
-        
+        ArrayList<Schedule> schedule = (ArrayList<Schedule>) request.getAttribute("allsched");
+
     %>
 
 
@@ -194,6 +194,12 @@
                                 <span>View Accomplishment Report</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="GS_NotificationActivity">
+                                <i class="fa fa-book"></i>
+                                <span>Notification and Activity</span>
+                            </a>
+                        </li>
 
 
                     </ul>
@@ -211,172 +217,162 @@
                         </header>
                         <div class="panel-body">
 
-<%
+                            <%
 
-                                   long total = 0; 
+                                long total = 0;
 
 
-%>
+                            %>
                             <table class="table table-hover p-table">
                                 <thead>
                                     <tr>
                                         <td>
-                                         Schedule   
+                                            Schedule   
                                         </td>    
                                         <td>
-                                         Target End date  
+                                            Target End date  
                                         </td>
                                         <td>
-                                         Actual End date  
+                                            Actual End date  
                                         </td>
                                         <td>
-                                         Remarks
+                                            Remarks
                                         </td>
                                         <td>
-                                         Days  
+                                            Days  
                                         </td>
                                     </tr>    
                                 </thead>
                                 <tbody>
-                                    <%
-                                    
-                                    for(int x =0; x < schedule.size();x++){
-                                   
-                                          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                              Date convertedCurrentDate1 = sdf.parse(schedule.get(x).getEnddate());
-                                              String date1 = sdf.format(convertedCurrentDate1);
-                                              
-                                              String date2 = "";
-                                              long diffDays = 0;
-                                              
-                                              if(schedule.get(x).getActualenddate() != null){
-                                              Date convertedCurrentDate2 = sdf.parse(schedule.get(x).getActualenddate());
-                                              date2 = sdf.format(convertedCurrentDate2);
-                                              
-                                              
-                                              long diff = Math.abs(convertedCurrentDate1.getTime() - convertedCurrentDate2.getTime());
-                                               diffDays = diff / (24 * 60 * 60 * 1000);
-                                              
-                                               total += diffDays;
-                                              }
-                                              
-                                              
-                                        
-                                        
+                                    <%                                        for (int x = 0; x < schedule.size(); x++) {
+
+                                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                            Date convertedCurrentDate1 = sdf.parse(schedule.get(x).getEnddate());
+                                            String date1 = sdf.format(convertedCurrentDate1);
+
+                                            String date2 = "";
+                                            long diffDays = 0;
+
+                                            if (schedule.get(x).getActualenddate() != null) {
+                                                Date convertedCurrentDate2 = sdf.parse(schedule.get(x).getActualenddate());
+                                                date2 = sdf.format(convertedCurrentDate2);
+
+                                                long diff = Math.abs(convertedCurrentDate1.getTime() - convertedCurrentDate2.getTime());
+                                                diffDays = diff / (24 * 60 * 60 * 1000);
+
+                                                total += diffDays;
+                                            }
+
                                     %>
                                     <tr>
-                                       <td>
-                                         <%out.print(schedule.get(x).getEvent());%>   
+                                        <td>
+                                            <%out.print(schedule.get(x).getEvent());%>   
                                         </td>    
                                         <td>
-                                         <%out.print(schedule.get(x).getEnddate());%>   
+                                            <%out.print(schedule.get(x).getEnddate());%>   
                                         </td>
-                                        
+
                                         <%
-                                        if(schedule.get(x).getActualenddate() != null){
+                                            if (schedule.get(x).getActualenddate() != null) {
                                         %>
-                                        
+
                                         <td>
-                                         <%out.print(schedule.get(x).getActualenddate());%>   
+                                            <%out.print(schedule.get(x).getActualenddate());%>   
                                         </td>
-                                        
+
                                         <%
                                         } else {
-                                        
+
                                         %>
-                                        
+
                                         <td>
-                                         <%out.print(schedule.get(x).getEnddate());%>   
+                                            <%out.print(schedule.get(x).getEnddate());%>   
                                         </td>
-                                        
-                                        
+
+
                                         <%
-                                        
-                                        }
+
+                                            }
                                         %>
-                                        
+
                                         <%
-                                        if(diffDays > 0){
+                                            if (diffDays > 0) {
                                         %>
                                         <td>
                                             <font color="blue"> Ahead </font>
                                         </td>
                                         <%
-                                        }
-                                        
-                                        if(diffDays == 0){
+                                            }
+
+                                            if (diffDays == 0) {
                                         %>
                                         <td>
                                             <font color="green"> On-time </font>
                                         </td>
                                         <%
-                                        }
-                                        if(diffDays < 0 ){
+                                            }
+                                            if (diffDays < 0) {
                                         %>
-                                        
+
                                         <td>
                                             <font color="red"> Delayed </font>
                                         </td>
-                                        
+
                                         <%
-                                        }
+                                            }
                                         %>
-                                        
+
                                         <%
-                                        if(diffDays > 0 || diffDays < 0){
+                                            if (diffDays > 0 || diffDays < 0) {
                                         %>
                                         <td>
-                                         <%out.print(diffDays);%> 
+                                            <%out.print(diffDays);%> 
                                         </td> 
                                         <%
-                                        }
-                                        
-                                        
+                                            }
+
+
                                         %>
-                                       
+
                                     </tr>  
-                                    <%
-                                    }
-                                    
+                                    <%                                        }
+
                                     %>
-                                    
+
                                     <tr>
-                                        <%if(total > 0){ %>
+                                        <%if (total > 0) { %>
                                         <td>
                                             <h3>Status: Project is ahead <%out.print(total);%> days</h3>
                                         </td>
-                                        
+
                                         <%
-                                        }
-                                        else if(total < 0){ 
+                                        } else if (total < 0) {
                                         %>
-                                        
+
                                         <td>
                                             <h3>Status: Project is delayed <%out.print(total);%> days</h3>
                                         </td>
-                                        
+
                                         <%
-                                        }
-                                        else {
+                                        } else {
                                         %>
-                                        
+
                                         <td>
                                             <h3>Status: Project on schedule</h3>
                                         </td>
-                                        
+
                                         <%
-                                        
-                                        }
+                                            }
                                         %>
-                                        
+
                                     <tr>    
-                                    
-                                    
+
+
                                 </tbody>
-                                
+
                             </table>    
-                            
-                            
+
+
 
 
                         </div>
@@ -400,7 +396,7 @@
             </div>
         </footer>
 
-         
+
 
         <!--footer end-->
         <!-- js placed at the end of the document so the pages load faster -->

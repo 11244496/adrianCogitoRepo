@@ -220,15 +220,9 @@
                     </li>
                     <!--multi level menu end-->
                     <li>
-                        <a href="OCPD_NotificationList">
+                        <a href="OCPD_NotificationActivity">
                             <i class="fa fa-book"></i>
-                            <span>Notifications</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="OCPD_ActivityList">
-                            <i class="fa fa-book"></i>
-                            <span>Department Activity Log</span>
+                            <span>Notification and Activity</span>
                         </a>
                     </li>
 

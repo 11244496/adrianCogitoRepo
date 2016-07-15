@@ -228,24 +228,30 @@
                             </a>
                         </li>
 
+                        <li>
+                            <a href="GS_NotificationActivity">
+                                <i class="fa fa-book"></i>
+                                <span>Notification and Activity</span>
+                            </a>
+                        </li>
 
                     </ul>
                     <!-- sidebar menu end-->
                 </div>
             </aside>
-    
+
             <section id="main-content">
                 <section class="wrapper site-min-height">
                     <section class="panel">
-                    <!-- page start-->
+                        <!-- page start-->
 
-                    <%
+                        <%
 
-                        ArrayList<PlanningDocument> documents = (ArrayList<PlanningDocument>) request.getAttribute("documents");
+                            ArrayList<PlanningDocument> documents = (ArrayList<PlanningDocument>) request.getAttribute("documents");
 
-                    %>
+                        %>
 
-                    <h3>CDP and CLUP</h3>
+                        <h3>CDP and CLUP</h3>
                         <br>
                         <h4>&nbsp;&nbsp;&nbsp; 2016</h4>
                         <br>
@@ -269,29 +275,29 @@
                                 String URL = documents.get(x).getUrl();
                                 String Title = documents.get(x).getName();
                         %>
-                        
+
                         <form name="UploadRevision" action="OCPD_UploadRevisedDocument" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="Document_ID" value="<%=documents.get(x).getId()%>">    
-                        <article class="media" style="padding-left: 60px">
-                            <a class="pull-left thumb p-thumb">
-                                <img src="img/product1.jpg">
-                            </a>
-                            <div class="media-body">
-                                <%=displayType%> (<%=type%>)
-                                <p></p>
+                            <article class="media" style="padding-left: 60px">
+                                <a class="pull-left thumb p-thumb">
+                                    <img src="img/product1.jpg">
+                                </a>
+                                <div class="media-body">
+                                    <%=displayType%> (<%=type%>)
+                                    <p></p>
 
-                                File Name: <%=Title%>
-                                <p></p>
-                                <p>Date Posted: <%=dateUploaded2%></p>
-                            </div>
+                                    File Name: <%=Title%>
+                                    <p></p>
+                                    <p>Date Posted: <%=dateUploaded2%></p>
+                                </div>
 
-                        </article>
-                        
-                        <a href="<%=URL%>" target="_blank"><button type="button" class="btn btn-success" style="margin-left: 60px; width: 100px; margin-top: -5px;"><i class="fa fa-eye"></i> View </button> </a>
-                        <button type="button" class="btn btn-info "style="width: 150px; margin-top: -5px;" data-toggle="modal" href="#updateModal"><i class="fa fa-refresh"></i> Upload Revision</button>
-                        <a href="<%=URL%>" download><button type="button" class="btn btn-white">
-                            <i class="fa fa-download"></i>
-                        </button></a>
+                            </article>
+
+                            <a href="<%=URL%>" target="_blank"><button type="button" class="btn btn-success" style="margin-left: 60px; width: 100px; margin-top: -5px;"><i class="fa fa-eye"></i> View </button> </a>
+                            <button type="button" class="btn btn-info "style="width: 150px; margin-top: -5px;" data-toggle="modal" href="#updateModal"><i class="fa fa-refresh"></i> Upload Revision</button>
+                            <a href="<%=URL%>" download><button type="button" class="btn btn-white">
+                                    <i class="fa fa-download"></i>
+                                </button></a>
                         </form>
 
                         <%}%>
@@ -339,7 +345,7 @@
                 </div>
             </div>           
             <!--main content end-->
-           
+
             <!--main content end-->
 
             <!-- Right Slidebar start -->
@@ -409,5 +415,5 @@
 
         <!--common script for all pages-->
         <script src="js/common-scripts.js"></script>
-          </body>
+    </body>
 </html>

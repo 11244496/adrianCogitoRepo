@@ -217,15 +217,9 @@
                         </li>
                         <!--multi level menu end-->
                         <li>
-                            <a href="OCPD_NotificationList">
+                            <a href="OCPD_NotificationActivity">
                                 <i class="fa fa-book"></i>
-                                <span>Notifications</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="OCPD_ActivityList">
-                                <i class="fa fa-book"></i>
-                                <span>Department Activity Log</span>
+                                <span>Notification and Activity</span>
                             </a>
                         </li>
 
@@ -238,64 +232,67 @@
                 <section class="wrapper site-min-height">
                     <section class="panel">
                         <!-- page start-->
+                        <div class="row">
 
-                        <%
+                            <div class="col-md-12">
+                                <%
 
-                            ArrayList<PlanningDocument> documents = (ArrayList<PlanningDocument>) request.getAttribute("documents");
+                                    ArrayList<PlanningDocument> documents = (ArrayList<PlanningDocument>) request.getAttribute("documents");
 
-                        %>
+                                %>
 
-                        <h3>CDP and CLUP <button type="button" data-toggle="modal" class="btn btn-success " style="margin-left: 70%;" href="#uploadModal"><i class="fa fa-cloud-upload"></i> Upload</button></h3>
-                        <br>
-                        <h4>&nbsp;&nbsp;&nbsp; 2016</h4>
-                        <br>
+                                <h3> CDP and CLUP <button type="button" data-toggle="modal" class="btn btn-success " style="margin-left: 70%;" href="#uploadModal"><i class="fa fa-cloud-upload"></i> Upload</button></h3>
+                                <br>
+                                <h4>&nbsp;&nbsp;&nbsp; 2016</h4>
+                                <br>
 
-                        <%  for (int x = 0; x < documents.size(); x++) {
+                                <%  for (int x = 0; x < documents.size(); x++) {
 
-                                String type = documents.get(x).getType();
-                                String displayType = null;
-                                if (type.equalsIgnoreCase("CLUP")) {
-                                    displayType = "Comprehensive Land Use Plan";
-                                } else {
-                                    displayType = "Comprehensive Development Plan";
-                                }
+                                        String type = documents.get(x).getType();
+                                        String displayType = null;
+                                        if (type.equalsIgnoreCase("CLUP")) {
+                                            displayType = "Comprehensive Land Use Plan";
+                                        } else {
+                                            displayType = "Comprehensive Development Plan";
+                                        }
 
-                                String dateUploaded = documents.get(x).getDateUploaded();
-                                String[] date = dateUploaded.split("-");
-                                String[] months = {"January", "February", "March", "April",
-                                    "May", "June", "July", "August", "September", "October",
-                                    "November", "December",};
-                                String dateUploaded2 = months[Integer.parseInt(date[1]) - 1] + " " + date[2] + " " + date[0];
-                                String URL = documents.get(x).getUrl();
-                                String Title = documents.get(x).getName();
-                        %>
+                                        String dateUploaded = documents.get(x).getDateUploaded();
+                                        String[] date = dateUploaded.split("-");
+                                        String[] months = {"January", "February", "March", "April",
+                                            "May", "June", "July", "August", "September", "October",
+                                            "November", "December",};
+                                        String dateUploaded2 = months[Integer.parseInt(date[1]) - 1] + " " + date[2] + " " + date[0];
+                                        String URL = documents.get(x).getUrl();
+                                        String Title = documents.get(x).getName();
+                                %>
 
-                        <form name="UploadRevision" action="OCPD_UploadRevisedDocument" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="Document_ID" value="<%=documents.get(x).getId()%>">    
-                            <article class="media" style="padding-left: 60px">
-                                <a class="pull-left thumb p-thumb">
-                                    <img src="img/product1.jpg">
-                                </a>
-                                <div class="media-body">
-                                    <%=displayType%> (<%=type%>)
-                                    <p></p>
+                                <form name="UploadRevision" action="OCPD_UploadRevisedDocument" method="POST" enctype="multipart/form-data">
+                                    <input type="hidden" name="Document_ID" value="<%=documents.get(x).getId()%>">    
+                                    <article class="media" style="padding-left: 60px">
+                                        <a class="pull-left thumb p-thumb">
+                                            <img src="img/product1.jpg">
+                                        </a>
+                                        <div class="media-body">
+                                            <%=displayType%> (<%=type%>)
+                                            <p></p>
 
-                                    File Name: <%=Title%>
-                                    <p></p>
-                                    <p>Date Posted: <%=dateUploaded2%></p>
-                                </div>
+                                            File Name: <%=Title%>
+                                            <p></p>
+                                            <p>Date Posted: <%=dateUploaded2%></p>
+                                        </div>
 
-                            </article>
+                                    </article>
 
-                            <a href="<%=URL%>" target="_blank"><button type="button" class="btn btn-success" style="margin-left: 60px; width: 100px; margin-top: -5px;"><i class="fa fa-eye"></i> View </button> </a>
-                            <button type="button" class="btn btn-info "style="width: 150px; margin-top: -5px;" data-toggle="modal" href="#updateModal"><i class="fa fa-refresh"></i> Upload Revision</button>
-                            <a href="<%=URL%>" download><button type="button" class="btn btn-white">
-                                    <i class="fa fa-download"></i>
-                                </button></a>
-                        </form>
+                                    <a href="<%=URL%>" target="_blank"><button type="button" class="btn btn-success" style="margin-left: 60px; width: 100px; margin-top: -5px;"><i class="fa fa-eye"></i> View </button> </a>
+                                    <button type="button" class="btn btn-info "style="width: 150px; margin-top: -5px;" data-toggle="modal" href="#updateModal"><i class="fa fa-refresh"></i> Upload Revision</button>
+                                    <a href="<%=URL%>" download><button type="button" class="btn btn-white">
+                                            <i class="fa fa-download"></i>
+                                        </button></a>
+                                </form>
 
-                        <%}%>
-
+                                <%}%>
+                            </div>
+                        </div>
                         <!-- page end-->
                     </section>
                 </section>

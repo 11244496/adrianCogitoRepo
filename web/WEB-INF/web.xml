@@ -88,6 +88,30 @@
         <servlet-name>AJAX_GS_GenerateProjectID</servlet-name>
         <servlet-class>Servlet.AjaxServlet.AJAX_GS_GenerateProjectID</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OCPD_Home</servlet-name>
+        <servlet-class>Servlet.OCPD_Home</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OCPD_NotificationActivity</servlet-name>
+        <servlet-class>Servlet.OCPD_NotificationActivity</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_NotificationActivity</servlet-name>
+        <servlet-class>Servlet.GS_NotificationActivity</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OCPD_ViewPlanningDocument</servlet-name>
+        <servlet-class>Servlet.OCPD_ViewPlanningDocument</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OCPD_UploadCDPCLUP</servlet-name>
+        <servlet-class>Servlet.OCPD_UploadCDPCLUP</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_DisplayCDPCLUP</servlet-name>
+        <servlet-class>Servlet.GS_DisplayCDPCLUP</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -175,6 +199,30 @@
     <servlet-mapping>
         <servlet-name>AJAX_GS_GenerateProjectID</servlet-name>
         <url-pattern>/AJAX_GS_GenerateProjectID</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_Home</servlet-name>
+        <url-pattern>/OCPD_Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_NotificationActivity</servlet-name>
+        <url-pattern>/OCPD_NotificationActivity</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_NotificationActivity</servlet-name>
+        <url-pattern>/GS_NotificationActivity</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_ViewPlanningDocument</servlet-name>
+        <url-pattern>/OCPD_ViewPlanningDocument</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_UploadCDPCLUP</servlet-name>
+        <url-pattern>/OCPD_UploadCDPCLUP</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_DisplayCDPCLUP</servlet-name>
+        <url-pattern>/GS_DisplayCDPCLUP</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -204,6 +204,12 @@
                                 <span>View Accomplishment Report</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="GS_NotificationActivity">
+                                <i class="fa fa-book"></i>
+                                <span>Notification and Activity</span>
+                            </a>
+                        </li>
 
 
                     </ul>
@@ -452,8 +458,8 @@
                                                                 Testimonialmarkers.push(data[0].tlocation[i]);
                                                             });
                                                             initMap();
-                                                            
-                                                            
+
+
                                                             $("#MainTestimonial").show();
                                                             $('.selectmainbtn').hide();
                                                         }

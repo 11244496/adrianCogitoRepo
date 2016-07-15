@@ -16,7 +16,7 @@ public class PWorks {
     private int id;
     private String name;
     private ArrayList<Component> components;
-    private ArrayList<Project> project;
+    private Project project;
     
     public PWorks() {
     }
@@ -26,7 +26,7 @@ public class PWorks {
         this.name = name;
     }
 
-    public PWorks(int id, String name, ArrayList<Component> components, ArrayList<Project> project) {
+    public PWorks(int id, String name, ArrayList<Component> components, Project project) {
         this.id = id;
         this.name = name;
         this.components = components;
@@ -62,19 +62,14 @@ public class PWorks {
         this.name = name;
     }
 
-    /**
-     * @return the project
-     */
-    public ArrayList<Project> getProject() {
+    public Project getProject() {
         return project;
     }
 
-    /**
-     * @param project the project to set
-     */
-    public void setProject(ArrayList<Project> project) {
+    public void setProject(Project project) {
         this.project = project;
     }
+
 
     /**
      * @return the components
