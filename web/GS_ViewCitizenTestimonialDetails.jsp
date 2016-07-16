@@ -13,6 +13,12 @@
 <%Testimonial testimonial = (Testimonial) session.getAttribute("openTestimonial");%>
 <%Employee e = (Employee) session.getAttribute("user");%>
 <%ArrayList<Reply> rList = testimonial.getReplies();%>
+<%boolean hasNoReply = (Boolean) session.getAttribute("hasNoReply");
+    Reply r = new Reply();
+    if (!hasNoReply) {
+        r = (Reply) session.getAttribute("reply");
+    }
+%>
 <%
     ArrayList<Files> image = (ArrayList<Files>) session.getAttribute("openImage");
     ArrayList<Files> video = (ArrayList<Files>) session.getAttribute("openVideo");
@@ -226,8 +232,15 @@
 
                                 <header class="panel-heading" style="width: 30%">
                                     <p>Testimonial Details</p>
-
+                                    <div style="float: next; width: 100%">
+                                        <%if (hasNoReply) {%>
+                                        <a class="btn btn-info btn-sm" data-toggle="modal" href="#gsReplyModal"><i class="fa fa-envelope"></i> Write a reply</a>
+                                        <%} else {%>
+                                        <a class="btn btn-info btn-sm" data-toggle="modal" href="#gsViewReplyModal"><i class="fa fa-envelope"></i> View Reply</a>
+                                        <%}%>
+                                    </div>
                                 </header>
+
                             </section>   
                         </div>
                     </div>
@@ -366,42 +379,89 @@
 
                         <br><br>
                     </div>
-                    <% if (rList.size() >= 1) {%>
-                    <% for (Reply r : rList) {%>
-                    <section class="panel">
-                        <header class="panel-heading">
-                            Reply
-                        </header>
-                        <br>
-                        <div class="panel-body">
-                            <div class="form-group">
-
-                                <label class="col-sm-2 col-sm-2 control-label">Sender: </label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" readonly style="background: white; border:0px;"  name="subject" value="<%=r.getSender()%>">
-                                    <br>
-                                </div>
-                                <label class="col-sm-2 col-sm-2 control-label">Date Sent: </label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" readonly style="background: white; border:0px;"  name="subject" value="<%=r.getDateSent()%>">
-                                    <br>
-                                </div>
-                                <label class="col-sm-2 col-sm-2 control-label">Message </label>
-                                <div class="col-sm-10">
-                                    <textarea class="wysihtml5 form-control" rows="7" name="content" readonly style="resize: none; background: white; border:0px; "><%=r.getMessage()%></textarea>
-                                </div>
-
-                            </div>
-                        </div>
-                    </section>
-                    <%}%>
-                    <%}%>
                     <center>
                         <button type="button" onclick="history.go(-1)" class="btn btn-info" >Back</button>                                    
                     </center> 
                 </section>
             </section>
 
+
+            <div class="modal fade " id="gsReplyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Write a Reply</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="GS_ReplyToTestimonial">
+                                <input type="hidden" name="testIdR" value="<%=testimonial.getId()%>">
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-2"> To: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" name="toR" readonly value="<%=testimonial.getCitizen().getFirstName() + " " + testimonial.getCitizen().getLastName()%>">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-2"> From: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" name="fromR" readonly value="<%=e.getFirstName() + " " + e.getLastName()%>">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-2"> Message: </label>
+                                    <div class="col-md-8">
+                                        <textarea class="form-control" name="messageR"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <center>
+                                        <button data-dismiss="modal" class="btn btn-info" type="button">Cancel</button>
+                                        <button class="btn btn-success" type="submit">Send</button>
+                                    </center>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%if (!hasNoReply) {%>
+            <div class="modal fade " id="gsViewReplyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">View Reply</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group col-md-12">
+                                <label class="col-md-2"> To: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="toR" readonly value="<%=testimonial.getCitizen().getUser().getUsername()%>">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="col-md-2"> From: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="fromR" readonly value="<%=r.getSender().getUsername()%>">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="col-md-2"> Message: </label>
+                                <div class="col-md-8">
+                                    <textarea class="form-control" name="messageR" readonly><%=r.getMessage()%>></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <center>
+                                    <button data-dismiss="modal" class="btn btn-info" type="button">Close</button>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%}%>
 
             <!--main content end-->
             <!--footer start-->

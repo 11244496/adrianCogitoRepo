@@ -7,6 +7,13 @@ package Servlet;
 
 import DAO.CitizenDAO;
 import DAO.GSDAO;
+import DAO.LoginDAO;
+import DAO.NotificationDAO;
+import Entity.Citizen;
+import Entity.Employee;
+import Entity.Files;
+import Entity.Notification;
+import Entity.Reply;
 import Entity.Testimonial;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -22,9 +29,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author AdrianKyle
+ * @author RoAnn
  */
-public class GS_CreateProposal extends HttpServlet {
+public class GS_ReplyToTestimonial extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,35 +45,54 @@ public class GS_CreateProposal extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
-        try {
+        try (PrintWriter out = response.getWriter()) {
+
+            int id = Integer.parseInt(request.getParameter("testIdR"));
+            Employee e = (Employee) session.getAttribute("user");
+
             GSDAO gs = new GSDAO();
-            CitizenDAO c = new CitizenDAO();
+            Reply r = new Reply();
+            r.setMessage(request.getParameter("messageR"));
+            r.setSender(e.getUser());
+            r.setTestimonial(gs.getTestimonial(id));
+            gs.replyToTestimonial(r);
 
-            //Get All Testimonials
-            ArrayList<Testimonial> allTestimonials = gs.getAllTestimonials();
-            for (int x = 0; x < allTestimonials.size(); x++) {
-                allTestimonials.get(x).setFiles(c.getFilesWithStatus(allTestimonials.get(x).getId(),allTestimonials.get(x), "Approved"));
-                allTestimonials.get(x).setMainproject(gs.getMainProjectOnTestimonial(allTestimonials.get(x).getId()));
-                allTestimonials.get(x).setReferencedproject(gs.getReferenceProjectOnTestimonial(allTestimonials.get(x).getId()));
+            CitizenDAO ctdao = new CitizenDAO();
+
+            Testimonial t = gs.getTestimonial(id);
+
+            ArrayList<Files> i = ctdao.getFiles(id, t, "Image");
+            ArrayList<Files> v = ctdao.getFiles(id, t, "Video");
+            ArrayList<Files> d = ctdao.getFiles(id, t, "Document");
+
+            int supporter = ctdao.getnumberofsubscribers(t);
+
+            String location = new Gson().toJson(t.getTlocation());
+            session.setAttribute("location", location);
+
+            session.setAttribute("openTestimonial", t);
+            session.setAttribute("openImage", i);
+            session.setAttribute("openVideo", v);
+            session.setAttribute("openDocument", d);
+            session.setAttribute("hasNoReply", gs.hasNoReply(t));
+            if (!gs.hasNoReply(t)){
+                session.setAttribute("reply", gs.getReply(t));
             }
+            request.setAttribute("supporters", Integer.toString(supporter));
+            t.setStatus("Read");
+            gs.changeTestiStatus(t);
 
-            //Request set attributes testimonials
-            request.setAttribute("allTestimonials", allTestimonials);
-            request.setAttribute("works", new Gson().toJson(gs.getWorks()));
-            
             ServletContext context = getServletContext();
-
-            RequestDispatcher dispatch = context.getRequestDispatcher("/GS_CreateProposal.jsp");
+            RequestDispatcher dispatch;
+            dispatch = context.getRequestDispatcher("/GS_ViewCitizenTestimonialDetails.jsp");
             dispatch.forward(request, response);
 
-        } finally {
-            out.close();
         }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *

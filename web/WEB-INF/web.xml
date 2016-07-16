@@ -88,6 +88,14 @@
         <servlet-name>AJAX_GS_GenerateProjectID</servlet-name>
         <servlet-class>Servlet.AjaxServlet.AJAX_GS_GenerateProjectID</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Citizen_CommentOnTestimonial</servlet-name>
+        <servlet-class>Servlet.Citizen_CommentOnTestimonial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_ReplyToTestimonial</servlet-name>
+        <servlet-class>Servlet.GS_ReplyToTestimonial</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -175,6 +183,14 @@
     <servlet-mapping>
         <servlet-name>AJAX_GS_GenerateProjectID</servlet-name>
         <url-pattern>/AJAX_GS_GenerateProjectID</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_CommentOnTestimonial</servlet-name>
+        <url-pattern>/Citizen_CommentOnTestimonial</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_ReplyToTestimonial</servlet-name>
+        <url-pattern>/GS_ReplyToTestimonial</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

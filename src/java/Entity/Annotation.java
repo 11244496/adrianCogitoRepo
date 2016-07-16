@@ -11,93 +11,139 @@ package Entity;
  */
 public class Annotation {
     private int id;
-    private String description;
-    private String materials;
-    private String upload;
-    private String date;
-    private String status;
+    private String testimonials;
+    private String projects;
+    private String details;
+    private String program;
     private String general;
+    private String status;
+    private String date;
     private Project project;
+
+    public Annotation() {
+    }
     
     public String getGeneral() {
         return general;
     }
 
-    public void setGeneral(String general) {
-        this.general = general;
-    }
-
-    public Annotation(int id, String description, String materials, String upload, String date, String status, String general, Project project) {
-        this.id = id;
-        this.description = description;
-        this.materials = materials;
-        this.upload = upload;
-        this.date = date;
-        this.status = status;
-        this.general = general;
-        this.project = project;
-    }
-
-
-    public Annotation() {
-    }
-
+    /**
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(int id) {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    /**
+     * @return the testimonials
+     */
+    public String getTestimonials() {
+        return testimonials;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    /**
+     * @param testimonials the testimonials to set
+     */
+    public void setTestimonials(String testimonials) {
+        this.testimonials = testimonials;
     }
 
-    public String getMaterials() {
-        return materials;
+    /**
+     * @return the projects
+     */
+    public String getProjects() {
+        return projects;
     }
 
-    public void setMaterials(String materials) {
-        this.materials = materials;
+    /**
+     * @param projects the projects to set
+     */
+    public void setProjects(String projects) {
+        this.projects = projects;
     }
 
-
-    public String getUpload() {
-        return upload;
+    /**
+     * @return the details
+     */
+    public String getDetails() {
+        return details;
     }
 
-    public void setUpload(String upload) {
-        this.upload = upload;
+    /**
+     * @param details the details to set
+     */
+    public void setDetails(String details) {
+        this.details = details;
     }
 
-    public String getDate() {
-        return date;
+    /**
+     * @return the program
+     */
+    public String getProgram() {
+        return program;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    /**
+     * @param program the program to set
+     */
+    public void setProgram(String program) {
+        this.program = program;
     }
 
+    /**
+     * @param general the general to set
+     */
+    public void setGeneral(String general) {
+        this.general = general;
+    }
+
+    /**
+     * @return the status
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * @param status the status to set
+     */
     public void setStatus(String status) {
         this.status = status;
     }
 
+    /**
+     * @return the date
+     */
+    public String getDate() {
+        return date;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    /**
+     * @return the project
+     */
     public Project getProject() {
         return project;
     }
 
+    /**
+     * @param project the project to set
+     */
     public void setProject(Project project) {
         this.project = project;
     }
-    
-    
+
 }

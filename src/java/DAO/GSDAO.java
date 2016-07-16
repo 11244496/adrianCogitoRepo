@@ -15,6 +15,7 @@ import Entity.Feedback;
 import Entity.Files;
 import Entity.Location;
 import Entity.Material;
+import Entity.Meeting;
 import Entity.PComments;
 import Entity.PWorks;
 import Entity.Project;
@@ -34,6 +35,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -167,8 +169,10 @@ public class GSDAO {
                 Reply r = new Reply();
                 r.setId(result.getInt("ID"));
                 r.setMessage(result.getString("Message"));
-                r.setSender(result.getString("Sender"));
-                r.setDateSent(result.getString("Datesend"));
+                User user = new User();
+                user.setUsername(result.getString("Sender"));
+                r.setSender(user);
+                r.setDateSent(result.getString("Datesent"));
                 Testimonial testi = new Testimonial();
                 testi.setId(t.getId());
                 testi.setTitle(t.getTitle());
@@ -179,7 +183,7 @@ public class GSDAO {
                 testi.setCitizen(t.getCitizen());
                 testi.setStatus(t.getStatus());
                 testi.setCitizen(c);
-                r.setTestimonial_ID(testi);
+                r.setTestimonial(testi);
                 replies.add(r);
             }
             t.setReplies(replies);
@@ -470,6 +474,28 @@ public class GSDAO {
 
     }
 
+    public boolean hasNoReply(Testimonial t) {
+        boolean b = true;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select count(*) c from reply where testimonial_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, t.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                if (result.getInt("c")>0){
+                    b = false;
+                }
+            }
+            statement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return b;
+    }
+
     //================================ALL CODES ON PROJECT PROPOSALS===============================================
     public void createNewProject(Project p) {
         try {
@@ -577,6 +603,20 @@ public class GSDAO {
         }
     }
 
+    public void insertUnit(Unit u) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into unit (name) values (?)";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, u.getUnit());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in inserting components", ex);
+        }
+    }
+
     public ArrayList<Unit> getAllUnits() {
         ArrayList<Unit> uList = new ArrayList<>();
         Unit u = null;
@@ -629,6 +669,21 @@ public class GSDAO {
         }
     }
 
+    public void insertWorksPerProject(PWorks pw, Project p) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into project_has_pworks (project_id, pworks_id) values (?,?)";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, pw.getId());
+            statement.setString(2, p.getId());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in inserting referenced projects", ex);
+        }
+    }
+
     public Project getBasicProjectDetails(String id) {
         Project p = new Project();
         Employee e;
@@ -662,6 +717,26 @@ public class GSDAO {
             Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return p;
+    }
+
+    public ArrayList<PWorks> getWorks() {
+        Collection<PWorks> wList = new ArrayList<>();
+        PWorks works = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String detailsQuery = "select * from pworks";
+            statement = connection.prepareStatement(detailsQuery);
+            result = statement.executeQuery();
+            while (result.next()) {
+                works = new PWorks(result.getInt("ID"), result.getString("Name"));
+                wList.add(works);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList(wList);
     }
 
     //================================ALL CODES ON MEETINGS========================================================
@@ -745,4 +820,114 @@ public class GSDAO {
         return PPCount;
     }
 
+    public void rescheduleMeeting(Schedule s) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "update meeting set startdate = ?, enddate = ?, status = ?, time = ? where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, s.getStartdate());
+            statement.setString(2, s.getEnddate());
+            statement.setString(3, s.getStatus());
+            statement.setString(4, s.getTime());
+            statement.setInt(5, s.getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in rescheduling meeting", ex);
+        }
+    }
+
+    public void updateMeetingStatus(Schedule s, String status) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "update meeting set status = ? where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, status);
+            statement.setInt(2, s.getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in updating meeting status", ex);
+        }
+    }
+
+    public void editProposal() {
+
+    }
+
+    public void replyToTestimonial(Reply r) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into reply (message, sender, datesent, testimonial_id) values (?,?,now(),?)";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, r.getMessage());
+            statement.setString(2, r.getSender().getUsername());
+            statement.setInt(3, r.getTestimonial().getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in updating meeting status", ex);
+        }
+    }
+    public Reply getReply(Testimonial t) {
+        Reply r = null;
+        Employee e;
+        User u;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select message, firstname, lastname, username, datesent from reply join users on sender = username join employee on users.id = users_id where testimonial_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, t.getId());
+            result = statement.executeQuery();
+            while (result.next()){
+                r = new Reply();
+                r.setDateSent(result.getString("datesent"));
+                r.setMessage(result.getString("message"));
+                u = new User();
+                e = new Employee();
+                u.setUsername(result.getString("username"));
+                e.setFirstName(result.getString("firstname"));
+                e.setLastName(result.getString("lastname"));
+                e.setUser(u);
+                r.setSender(u);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting reply", ex);
+        }
+        return r;
+    }
+
+    public Annotation getAnnotations(Project p, String status) {
+        Annotation a = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from annotation where project_id = ? and status = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, a.getProject().getId());
+            statement.setString(2, status);
+            result = statement.executeQuery();
+            while (result.next()) {
+                a = new Annotation();
+                a.setId(result.getInt("ID"));
+                a.setTestimonials(result.getString("Testimonials"));
+                a.setProjects(result.getString("Projects"));
+                a.setDetails(result.getString("Details"));
+                a.setProgram(result.getString("Program"));
+                a.setGeneral(result.getString("General"));
+                a.setStatus(status);
+                a.setDate(result.getString("Date"));
+                a.setProject(p);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting annotations", ex);
+        }
+        return a;
+    }
 }

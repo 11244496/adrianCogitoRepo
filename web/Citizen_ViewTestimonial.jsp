@@ -14,6 +14,11 @@
 <%Citizen c = (Citizen) session.getAttribute("user");%>
 <%
     Testimonial testimonial = (Testimonial) session.getAttribute("openTestimonial");
+    boolean hasNoReply = (Boolean) session.getAttribute("hasNoReply");
+    Reply r = new Reply();
+    if (!hasNoReply) {
+        r = (Reply) session.getAttribute("reply");
+    }
     ArrayList<Reply> rList = testimonial.getReplies();
 
     ArrayList<Files> image = (ArrayList<Files>) session.getAttribute("openImage");
@@ -181,7 +186,9 @@
                                 <form action="Citizen_ViewPendingFiles">
                                     <button type="submit" class="btn btn-info btn-sm" >View submitted files</button>
                                 </form>
-
+                                <%}%>
+                                <%if (!hasNoReply) {%>
+                                <a class="btn btn-info btn-sm" data-toggle="modal" href="#gsViewReplyModal"><i class="fa fa-envelope"></i> View Reply</a>
                                 <%}%>
                                 <%}%>
                             </div>
@@ -247,6 +254,10 @@
                                     </ul>
 
                                 </div>    
+                                <br>
+                                <center>
+                                    <button type="button" onclick="history.go(-1)" class="btn btn-info" >Back</button>                                    
+                                </center> 
                             </div>
                         </section>
                     </div>
@@ -292,7 +303,7 @@
                                 <h5 class="bold">Main Project</h5>
                                 <%
                                     if (testimonial.getMainproject().getId() != null) {
-                                            System.out.println(testimonial.getMainproject().getName());
+                                        System.out.println(testimonial.getMainproject().getName());
                                     } else {
                                 %>
                                 <p>No main project yet.</p>
@@ -319,46 +330,70 @@
                     </div>
 
                     <br>
-
-
-                    <br><br>
                 </div>
-                <% if (rList.size() >= 1) {%>
-                <% for (Reply r : rList) {%>
-                <section class="panel">
-                    <header class="panel-heading">
-                        Reply
-                    </header>
-                    <br>
-                    <div class="panel-body">
-                        <div class="form-group">
-
-                            <label class="col-sm-2 col-sm-2 control-label">Sender: </label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" readonly style="background: white; border:0px;"  name="subject" value="<%=r.getSender()%>">
-                                <br>
-                            </div>
-                            <label class="col-sm-2 col-sm-2 control-label">Date Sent: </label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" readonly style="background: white; border:0px;"  name="subject" value="<%=r.getDateSent()%>">
-                                <br>
-                            </div>
-                            <label class="col-sm-2 col-sm-2 control-label">Message </label>
-                            <div class="col-sm-10">
-                                <textarea class="wysihtml5 form-control" rows="7" name="content" readonly style="resize: none; background: white; border:0px; "><%=r.getMessage()%></textarea>
-                            </div>
-
-                        </div>
-                    </div>
-                </section>
-                <%}%>
-                <%}%>
-                <center>
-                    <button type="button" onclick="history.go(-1)" class="btn btn-info" >Back</button>                                    
-                </center> 
             </section>
         </section>
 
+        <section id="main-content">
+            <section class="wrapper site-min-height">
+                <div class="row">
+                    <div class="col-md-12">
+                        <section class="panel">
+                            <header class="panel-heading" style="width: 30%">
+                                <p>Comments</p>
+                            </header>
+
+                            <div class="col-md-4">
+                                <label class="col-md-2"> Write a comment</label>
+                            </div>
+                            <div class="col-md-8">
+                                <textarea class="form-control"></textarea>
+                            </div>
+
+
+                        </section>   
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <%if (!hasNoReply) {%>
+        <div class="modal fade " id="gsViewReplyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">View Reply</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-2"> To: </label>
+                            <div class="col-md-8">
+                                <input class="form-control" name="toR" readonly value="<%=testimonial.getCitizen().getUser().getUsername()%>">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-2"> From: </label>
+                            <div class="col-md-8">
+                                <input class="form-control" name="fromR" readonly value="<%=r.getSender().getUsername()%>">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-2"> Message: </label>
+                            <div class="col-md-8">
+                                <textarea class="form-control" name="messageR" readonly><%=r.getMessage()%>></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <center>
+                                <button data-dismiss="modal" class="btn btn-info" type="button">Close</button>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%}%>
 
         <!--main content end-->
         <!--footer start-->
@@ -372,50 +407,50 @@
         </footer>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"async defer></script>
         <script>
-                        var map;
-                        var markers = <%=session.getAttribute("location")%>;
-                        function initMap() {
+                                        var map;
+                                        var markers = <%=session.getAttribute("location")%>;
+                                        function initMap() {
 
-                            map = new google.maps.Map(document.getElementById('map'), {
-                                center: {lat: 14.45, lng: 120.98},
-                                zoom: 14
-                            });
+                                            map = new google.maps.Map(document.getElementById('map'), {
+                                                center: {lat: 14.45, lng: 120.98},
+                                                zoom: 14
+                                            });
 
-                            markers.forEach(function (coor) {
-                                var geocoder = new google.maps.Geocoder;
-                                var latLng = new google.maps.LatLng(coor.latitude, coor.longitude);
-                                var marker = new google.maps.Marker({
-                                    position: latLng,
-                                    map: map
-                                });
-                                var infowindow = new google.maps.InfoWindow;
+                                            markers.forEach(function (coor) {
+                                                var geocoder = new google.maps.Geocoder;
+                                                var latLng = new google.maps.LatLng(coor.latitude, coor.longitude);
+                                                var marker = new google.maps.Marker({
+                                                    position: latLng,
+                                                    map: map
+                                                });
+                                                var infowindow = new google.maps.InfoWindow;
 
-                                marker.addListener('click', function () {
-                                    geocodeLatLng(geocoder, map, infowindow, latLng);
-                                });
-                            });
+                                                marker.addListener('click', function () {
+                                                    geocodeLatLng(geocoder, map, infowindow, latLng);
+                                                });
+                                            });
 
-                        }
+                                        }
 
-                        function geocodeLatLng(geocoder, map, infowindow, latLng) {
-                            var latlng = latLng;
-                            geocoder.geocode({'location': latlng}, function (results, status) {
-                                if (status === google.maps.GeocoderStatus.OK) {
-                                    if (results[0]) {
-                                        var marker = new google.maps.Marker({
-                                            position: latlng,
-                                            map: map
-                                        });
-                                        infowindow.setContent(results[0].formatted_address);
-                                        infowindow.open(map, marker);
-                                    } else {
-                                        window.alert('No results found');
-                                    }
-                                } else {
-                                    window.alert('Geocoder failed due to: ' + status);
-                                }
-                            });
-                        }
+                                        function geocodeLatLng(geocoder, map, infowindow, latLng) {
+                                            var latlng = latLng;
+                                            geocoder.geocode({'location': latlng}, function (results, status) {
+                                                if (status === google.maps.GeocoderStatus.OK) {
+                                                    if (results[0]) {
+                                                        var marker = new google.maps.Marker({
+                                                            position: latlng,
+                                                            map: map
+                                                        });
+                                                        infowindow.setContent(results[0].formatted_address);
+                                                        infowindow.open(map, marker);
+                                                    } else {
+                                                        window.alert('No results found');
+                                                    }
+                                                } else {
+                                                    window.alert('Geocoder failed due to: ' + status);
+                                                }
+                                            });
+                                        }
         </script>
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
@@ -428,11 +463,11 @@
         <script src="unitegallery/themes/default/ug-theme-default.js"></script>
         <script type="text/javascript">
 
-                        jQuery(document).ready(function () {
+                                        jQuery(document).ready(function () {
 
-                            jQuery("#gallery").unitegallery();
+                                            jQuery("#gallery").unitegallery();
 
-                        });
+                                        });
 
         </script>
     </body>

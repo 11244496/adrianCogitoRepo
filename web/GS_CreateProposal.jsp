@@ -4,6 +4,7 @@
     Author     : User
 --%>
 
+<%@page import="Entity.PWorks"%>
 <%@page import="Entity.Testimonial"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="Entity.Employee"%>
@@ -50,6 +51,8 @@
         <script src ='calendar/jquery.min.js'></script>
         <script src ='calendar/fullcalendar.js'></script>
         <script src ='calendar/scheduler.js'></script>
+        <script>var worksList = <%=request.getAttribute("works")%>
+        </script>
 
     </head>
 
@@ -452,8 +455,8 @@
                                                                 Testimonialmarkers.push(data[0].tlocation[i]);
                                                             });
                                                             initMap();
-                                                            
-                                                            
+
+
                                                             $("#MainTestimonial").show();
                                                             $('.selectmainbtn').hide();
                                                         }
@@ -586,30 +589,14 @@
                                             <div class="form-group">
                                                 <label class="col-sm-2 col-sm-2 control-label">Category</label>
                                                 <div class="col-sm-10" id="maincategorydiv">
-                                                    <select name="category" id="maincategory">
+                                                    <select name="category" id="maincategory" class="form-control m-bot15">
                                                         <option value="">Select Category</option>
                                                         <option value="Vertical">Vertical</option>
                                                         <option value="Horizontal">Horizontal</option>
                                                         <option value="Maintenance">Maintenance</option>
                                                     </select>
                                                 </div>
-
                                             </div>
-
-
-                                            <div class="form-group">
-                                                <label class="col-sm-2 col-sm-2 control-label">Sub-Category</label>
-                                                <div class="col-sm-10" id="subcategorydiv">
-
-                                                    <select name="subcategory" id="subcategory">
-                                                        <option value="">Select Category</option>
-                                                    </select>
-
-                                                    <input id="OtherSub" type="text" name="OtherSubCategory" placeholder="Input New Sub Category" style="display: none; width: 200px">
-
-                                                </div>
-                                            </div>
-
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label">Location</label>
                                                 <div class="col-lg-10">
@@ -665,10 +652,17 @@
                                                                     <button class="btn btn-white viewMaterials">Concrete Works <i class="fa fa-caret-right pull-right"></i></button>
                                                                 </td>
                                                             </tr>
-                                                        </tbody>                                                
+                                                        </tbody> 
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td colspan="2">
+                                                                    <button class="btn btn-danger btn-sm pull-right" type="button" onclick="delBtn(this)"><i class="fa fa-times"></i> Delete </button>
+                                                                    <button class="btn btn-success btn-sm pull-right" style="margin-right: 5px" onclick="addRowForWorks()" type="button"><i class="fa fa-plus"></i> Add </button>
+
+                                                                </td>
+                                                            </tr>
+                                                        </tfoot>
                                                     </table>
-                                                    <button class="btn btn-danger btn-sm pull-right"><i class="fa fa-times"></i> Delete </button>
-                                                    <button class="btn btn-success btn-sm pull-right" style="margin-right: 5px"><i class="fa fa-plus"></i> Add </button>
 
                                                 </div>
 
@@ -709,7 +703,7 @@
                                                             </tr>
                                                         </tbody>                                                
                                                     </table>
-                                                    <button class="btn btn-danger btn-sm pull-right"><i class="fa fa-times"></i> Delete </button>
+                                                    <button class="btn btn-danger btn-sm pull-right" onclick="delBtn(this)"><i class="fa fa-times"></i> Delete </button>
                                                     <button class="btn btn-success btn-sm pull-right" style="margin-right: 5px"><i class="fa fa-plus"></i> Add </button>
                                                     <br><br><br><br>
                                                 </div>

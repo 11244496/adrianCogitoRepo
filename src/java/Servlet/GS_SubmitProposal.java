@@ -6,10 +6,13 @@
 package Servlet;
 
 import DAO.GSDAO;
+import Entity.Component;
 import Entity.Employee;
 import Entity.Location;
+import Entity.PWorks;
 import Entity.Project;
 import Entity.TLocation;
+import Entity.Unit;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -37,29 +40,25 @@ public class GS_SubmitProposal extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    GSDAO gs = new GSDAO();
+    HttpServletRequest request;
+    
+    protected void processRequest(HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         Employee e = (Employee) session.getAttribute("user");
-        GSDAO gs = new GSDAO();
-        
-        try {
-            
-            Project mainProject = projectDetails(request, e);
-            
-            gs.insertProjectDetails(mainProject);
-            for (Location l : mainProject.getLocation()){
-                gs.insertLocationDetails(l);
-            }
 
+        try {
+            Project mainProject = projectDetails(e);
+            gs.createNewProject(mainProject);
         } catch (Exception ex) {
             Logger.getLogger(GS_SubmitProposal.class.getName()).log(Level.SEVERE, "Error in submit proposal servlet", ex);
         }
     }
 
-    private Project projectDetails(HttpServletRequest request, Employee e) {
+    private Project projectDetails(Employee e) {
         Project p = new Project();
         p.setId(request.getParameter("projectid"));
         p.setName(request.getParameter("projectname"));
@@ -68,10 +67,10 @@ public class GS_SubmitProposal extends HttpServlet {
         p.setFoldername("Foldername");
         p.setCategory(request.getParameter("category"));
         p.setEmployee(e);
-        
+
         String[] loc = request.getParameter("hiddenlocation").split(",");
         setProjectLocation(loc, p);
-        
+
         return p;
     }
 
@@ -99,6 +98,129 @@ public class GS_SubmitProposal extends HttpServlet {
         p.setLocation(locList);
     }
 
+    private ArrayList<PWorks> getWorks() {
+        ArrayList<PWorks> worksList = new ArrayList<>();
+        String[] works = request.getParameterValues("works");
+        PWorks pw = null;
+
+        ArrayList<PWorks> existingWorks = gs.getExistingPWorks();
+        boolean isExisting = false;
+
+        for (String w : works) {
+            pw = new PWorks();
+            pw.setName(w);
+            for (PWorks w2 : existingWorks) {
+                if (w2.getName().equalsIgnoreCase(pw.getName())) {
+                    isExisting = true;
+                }
+            }
+
+            if (!isExisting) {
+                gs.insertNewPWorks(pw);
+                isExisting = false;
+            }
+        }
+
+        existingWorks = gs.getExistingPWorks();
+
+        for (PWorks w : existingWorks) {
+            pw = new PWorks();
+            pw.setId(w.getId());
+            pw.setName(w.getName());
+
+            for (String w2 : works) {
+                if (w2.equalsIgnoreCase(pw.getName())) {
+                    worksList.add(pw);
+                }
+            }
+        }
+        return worksList;
+    }
+
+    private void setPWorks(Project p) {
+        ArrayList<PWorks> worksList = getWorks();
+
+        for (PWorks pw : worksList) {
+            setComponentsForPOW(pw);
+        }
+
+        p.setpWorks(worksList);
+    }
+
+    private void setComponentsForPOW(PWorks p) {
+        ArrayList<Component> cList = new ArrayList<>();
+        String[] components = request.getParameterValues(p.getName() + "Components");
+        String[] qtyArea = request.getParameterValues(p.getName() + "Quantity");
+        int[] qty = new int[qtyArea.length];
+        Component c = null;
+
+        for (String s : qtyArea) {
+            int x = 0;
+            qty[x] = Integer.parseInt(s);
+            x++;
+        }
+
+        ArrayList<Unit> units = getUnits();
+        String[] unitCost = request.getParameterValues(p.getName() + "UnitCost");
+        float[] cost = new float[unitCost.length];
+
+        for (String s : unitCost) {
+            int x = 0;
+            cost[x] = Float.parseFloat(s);
+            x++;
+        }
+
+        for (int x = 0; x < components.length; x++) {
+            c = new Component();
+            c.setName(components[x]);
+            c.setQuantity(qty[x]);
+            c.setUnit(units.get(x));
+            c.setUnitPrice(cost[x]);
+            c.setPworks(p);
+            cList.add(c);
+        }
+        p.setComponents(cList);
+    }
+
+    private ArrayList<Unit> getUnits(){
+        ArrayList<Unit> existingList = gs.getAllUnits();
+        ArrayList<Unit> uList = new ArrayList<>();
+        String[] unitsFromJsp = request.getParameterValues("unit");
+        boolean isExisting = false;
+        Unit u = null;
+        
+        for (String un : unitsFromJsp){
+            u = new Unit(0, un);
+            for (Unit unit : existingList){
+                if (u.getUnit().equalsIgnoreCase(unit.getUnit())){
+                    isExisting = false;
+                }
+            }
+            
+            if (!isExisting){
+                gs.insertUnit(u);
+                isExisting = true;
+            }
+        }
+        
+        existingList = gs.getAllUnits();
+        
+        for (Unit unit : existingList){
+            u = new Unit(unit.getId(), unit.getUnit());
+            for (String foo : unitsFromJsp){
+                if (foo.equalsIgnoreCase(u.getUnit())){
+                    uList.add(u);
+                }
+            }
+        }
+                
+        return uList;
+    }
+    
+    
+    
+    
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -109,9 +231,10 @@ public class GS_SubmitProposal extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processRequest(response);
     }
 
     /**
@@ -125,7 +248,7 @@ public class GS_SubmitProposal extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processRequest(response);
     }
 
     /**
