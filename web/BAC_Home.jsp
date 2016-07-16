@@ -433,7 +433,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <header class="panel-heading">
-                                                            <h3>Projects with released invitation to bid</h3>
+                                                            <h3>Projects with awarded contractors</h3>
 
                                                         </header><br>
 

@@ -29,7 +29,7 @@ public class Project {
     private ArrayList<Schedule> schedule;
     private ArrayList<Files> files;
     private ArrayList<PWorks> pWorks;
-    private ArrayList<Annotation> annotation;
+    private Annotation annotation;
     private ArrayList<PComments> pComments;
     private ArrayList<Testimonial> referredTestimonials;
     private ArrayList<Project> referredProjects;
@@ -46,7 +46,7 @@ public class Project {
     public Project() {
     }
 
-    public Project(String id, String name, String description, String type, String status, String foldername, Employee employee, String datesubmitted, float budget, String category, ArrayList<Location> location, ArrayList<Schedule> schedule, ArrayList<Files> files, ArrayList<PWorks> pWorks, ArrayList<Annotation> annotation, ArrayList<PComments> pComments, ArrayList<Testimonial> referredTestimonials, ArrayList<Project> referredProjects, ArrayList<Feedback> feedback, ArrayList<Project_Inspection> inspection, Contractor contractor, Contractor_User contractorUser) {
+    public Project(String id, String name, String description, String type, String status, String foldername, Employee employee, String datesubmitted, float budget, String category, ArrayList<Location> location, ArrayList<Schedule> schedule, ArrayList<Files> files, ArrayList<PWorks> pWorks, Annotation annotation, ArrayList<PComments> pComments, ArrayList<Testimonial> referredTestimonials, ArrayList<Project> referredProjects, ArrayList<Feedback> feedback, ArrayList<Project_Inspection> inspection, Contractor contractor, Contractor_User contractorUser) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -71,7 +71,7 @@ public class Project {
         this.contractorUser = contractorUser;
     }
 
-    public Project(String id, String name, String description, String type, String status, String foldername, Employee employee, String datesubmitted, float budget, String category, ArrayList<Location> location, ArrayList<Schedule> schedule, ArrayList<Files> files, ArrayList<PWorks> pWorks, ArrayList<Annotation> annotation, ArrayList<PComments> pComments, ArrayList<Testimonial> referredTestimonials, ArrayList<Project> referredProjects, ArrayList<Feedback> feedback, ArrayList<Project_Inspection> inspection, Contractor_User contractorUser) {
+    public Project(String id, String name, String description, String type, String status, String foldername, Employee employee, String datesubmitted, float budget, String category, ArrayList<Location> location, ArrayList<Schedule> schedule, ArrayList<Files> files, ArrayList<PWorks> pWorks, Annotation annotation, ArrayList<PComments> pComments, ArrayList<Testimonial> referredTestimonials, ArrayList<Project> referredProjects, ArrayList<Feedback> feedback, ArrayList<Project_Inspection> inspection, Contractor_User contractorUser) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -293,20 +293,15 @@ public class Project {
         this.pWorks = pWorks;
     }
 
-    /**
-     * @return the annotation
-     */
-    public ArrayList<Annotation> getAnnotation() {
+    public Annotation getAnnotation() {
         return annotation;
     }
 
-    /**
-     * @param annotation the annotation to set
-     */
-    public void setAnnotation(ArrayList<Annotation> annotation) {
+    public void setAnnotation(Annotation annotation) {
         this.annotation = annotation;
     }
 
+    
     /**
      * @return the pComments
      */

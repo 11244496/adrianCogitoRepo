@@ -45,6 +45,20 @@ public class Schedule {
         this.tasks = tasks;
         this.project = project;
     }
+    
+    public Schedule(int id, String event, String startdate, String enddate, String status, String dept, String time, String stage, String projectID, String actualenddate, String remarks) {
+        this.id = id;
+        this.event = event;
+        this.startdate = startdate;
+        this.enddate = enddate;
+        this.status = status;
+        this.dept = dept;
+        this.time = time;
+        this.stage = stage;
+        this.projectID = projectID;
+        this.actualenddate = actualenddate;
+        this.remarks = remarks;
+    }
 
 
     public String getTime() {

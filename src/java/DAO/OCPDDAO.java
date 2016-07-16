@@ -7,6 +7,7 @@ package DAO;
 
 import DB.ConnectionFactory;
 import Entity.Annotation;
+import Entity.Component;
 import Entity.Contractor_User;
 import Entity.Employee;
 import Entity.Feedback;
@@ -20,6 +21,7 @@ import Entity.Project_Inspection;
 import Entity.Schedule;
 import Entity.Task;
 import Entity.Testimonial;
+import Entity.Unit;
 import Entity.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -304,6 +306,31 @@ public class OCPDDAO {
 
                 projectPWorks.add(pw);
             }
+
+            //Set Components of each Pworks
+            for (PWorks pworks : projectPWorks) {
+                ArrayList<Component> componentList = new ArrayList<Component>();
+                String query = ("select * from components join unit on Unit_ID = unit.id where ProjectHasPWorks_PworksID = ? and ProjectHasPWorks_ProjectID = ?");
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setInt(1, pworks.getId());
+                statement.setString(2, project.getId());
+                result = statement.executeQuery();
+                while (result.next()) {
+                    Component component = new Component();
+                    component.setId(result.getInt("ID"));
+                    component.setName(result.getString("Name"));
+                    component.setUnitPrice(result.getFloat("UnitPrice"));
+                    component.setQuantity(result.getInt("Quantity"));
+                    Unit unit = new Unit();
+                    unit.setId(result.getInt("unit.id"));
+                    unit.setUnit(result.getString("unit.Unit"));
+                    component.setUnit(unit);
+                    component.setPworks(pworks);
+                    componentList.add(component);
+                }
+                pworks.setComponents(componentList);
+            }
+
             project.setpWorks(projectPWorks);
 
             //Referenced Testimonial
@@ -359,9 +386,8 @@ public class OCPDDAO {
         }
         return AllProjectID;
     }
-    
-    //=============================ALL SCHEDULE AND TASK RELATED CODES======================================
 
+    //=============================ALL SCHEDULE AND TASK RELATED CODES======================================
     public ArrayList<Task> getAgenda(Schedule s) {
         ArrayList<Task> tList = new ArrayList<>();
         Task t;
@@ -383,5 +409,141 @@ public class OCPDDAO {
             Logger.getLogger(OCPDDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return tList;
+    }
+
+    public int getMeetingID(Project p) {
+        int x = 0;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select max(schedule.id) as id from schedule\n"
+                    + "join project on project_id = project.ID\n"
+                    + "where event = ? and schedule.Status = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, "Meeting with OCPD");
+            statement.setString(2, "Unconfirmed");
+            result = statement.executeQuery();
+            while (result.next()) {
+                x = result.getInt("id");
+            }
+            connection.close();
+            return x;
+        } catch (SQLException ex) {
+            Logger.getLogger(OCPDDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return x;
+    }
+
+    public double getPercentage(Project p) {
+
+        PreparedStatement statement2;
+        double Percentage = 0;
+        try {
+            double AllSchedule = 0;
+            double DoneSchedule = 0;
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String getpending = "Select Count(*) as count from schedule where Project_ID = ? and Status = ? and Event != ?";
+            statement = connection.prepareStatement(getpending);
+            statement.setString(1, p.getId());
+            statement.setString(2, "Pending");
+            statement.setString(3, "Meeting with OCPD");
+
+            result = statement.executeQuery();
+            while (result.next()) {
+                AllSchedule = result.getInt("count");
+            }
+            statement.close();
+
+            String getdone = "Select Count(*) as countdone from schedule where Project_ID = ? and Status = ? and Event != ?";
+            statement2 = connection.prepareStatement(getdone);
+            statement2.setString(1, p.getId());
+            statement2.setString(2, "Done");
+            statement2.setString(3, "Meeting with OCPD");
+            result = statement2.executeQuery();
+            while (result.next()) {
+                DoneSchedule = result.getInt("countdone");
+            }
+            statement2.close();
+
+            connection.close();
+
+            Percentage = (DoneSchedule / AllSchedule) * 100;
+
+            return Percentage;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Percentage;
+    }
+
+    public Schedule getMeeting(Project p, String status) {
+        Schedule s = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from schedule where event = ? and project_id = ? and status = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, "Meeting with OCPD");
+            statement.setString(2, p.getId());
+            statement.setString(3, status);
+            result = statement.executeQuery();
+            while (result.next()) {
+                s = new Schedule(result.getInt("ID"), result.getString("Event"), result.getString("StartDate"),
+                        result.getString("Enddate"), status, result.getString("Department"),result.getString("Time"),result.getString("Stage"),result.getString("Project_ID"),result.getString("ActualEndDate"),result.getString("remarks"));
+            }
+            connection.close();
+            return s;
+        } catch (SQLException ex) {
+            Logger.getLogger(OCPDDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return s;
+    }
+
+    //=======================================ALL ANNOTATION CODES=========================================
+    public Annotation getAnnotation(Project p, String status) {
+        Annotation a = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from annotations where project_id = ? and status = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            statement.setString(2, "Pending");
+            result = statement.executeQuery();
+            while (result.next()) {
+                a = new Annotation(result.getInt("ID"), result.getString("Description"), result.getString("Materials"),
+                        result.getString("Upload"), result.getString("Date"), status, result.getString("general"), p);
+            }
+            connection.close();
+            return a;
+        } catch (SQLException ex) {
+            Logger.getLogger(OCPDDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return a;
+    }
+
+    //=======================================UTILITY CODES================================================
+    public float getCost(Project p) {
+        float cost = 0;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String getID = "select sum(components.quantity*components.unitprice) as cost from components join project_has_pworks on project_has_pworks.PWorks_ID = components.ProjectHasPWorks_PworksID and project_has_pworks.Project_ID = components.ProjectHasPWorks_ProjectID where components.ProjectHasPWorks_ProjectID = ?";
+            statement = connection.prepareStatement(getID);
+            statement.setString(1, p.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                cost = result.getFloat("cost");
+            }
+
+            statement.close();
+            connection.close();
+            return cost;
+        } catch (SQLException ex) {
+            Logger.getLogger(OCPDDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cost;
     }
 }

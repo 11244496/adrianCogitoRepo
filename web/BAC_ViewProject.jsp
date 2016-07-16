@@ -4,6 +4,7 @@
     Author     : RoAnn
 --%>
 
+<%@page import="Entity.PWorks"%>
 <%@page import="Entity.Testimonial"%>
 <%@page import="Entity.Files"%>
 <%@page import="Entity.Schedule"%>
@@ -17,7 +18,7 @@
 <%Employee bac = (Employee) session.getAttribute("user");%>
 <%Project p = (Project) session.getAttribute("projectInfo");%>
 <%float cost = (Float) session.getAttribute("cost");%>
-<%ArrayList<Material> materials = p.getMaterials();%>
+<%ArrayList<PWorks> pworks = p.getpWorks();%>
 <%ArrayList<Schedule> schedule = p.getSchedule();%>
 <%ArrayList<Files> files = p.getFiles();%>
 <%ArrayList<Testimonial> tList = (ArrayList<Testimonial>) session.getAttribute("testimonials");%>
@@ -41,12 +42,6 @@
         <!-- Custom styles for this template -->
         <link href="css/style.css" rel="stylesheet">
         <link href="css/style-responsive.css" rel="stylesheet">
-        <link href = 'calendar/fullcalendar.css' rel='stylesheet'>
-        <link href = 'calendar/scheduler.css' rel='stylesheet'>
-        <script src ='calendar/moment.min.js'></script>
-        <script src ='calendar/jquery.min.js'></script>
-        <script src ='calendar/fullcalendar.js'></script>
-        <script src ='calendar/scheduler.js'></script>
         <style>
             .DocumentList2
             {
@@ -187,10 +182,7 @@
 
                     <header class="panel-heading">
                         View Project
-                        <span class="pull-right">
-                        <a class="btn btn-info btn-sm" href="BAC_ProjectCalendar.jsp">Update Schedule</a>
-                        </span>
-                        <% if (!hasITB) {%>
+                        <%if(!hasITB){%>
                         <span class="pull-right">
                             <a class="btn btn-success btn-sm" data-toggle="modal" href="#uploadModal"><i class="fa  fa-upload"></i> Upload Invitation to Bid</a>
                         </span>
@@ -226,7 +218,7 @@
 
                                                 <div>
                                                     <p><span class="bold">Category </span>:</p>
-                                                    <p><%=p.getType()%>&nbsp;-&nbsp;<%=p.getCategory().getSubCategory()%></p>
+                                                    <p><%=p.getType()%>&nbsp;-&nbsp;<%=p.getCategory()%></p>
                                                 </div><br>
                                                 <div>
                                                     <p><span class="bold">Date Submitted</span> :</p>
@@ -295,69 +287,61 @@
                                     <section class="panel">
                                         <div class="panel-body">
                                             <table class="table" style="width:100%; text-align: center">
+                                                <%for (int x = 0; x < pworks.size(); x++) {%>
+
                                                 <tr>
-                                                    <th><center>Item Description</center></th>
-                                                <th><center>% of Total</center></th>
+                                                    <th colspan="6"><%=pworks.get(x).getName()%></th>
+                                                </tr>
+                                                <tr>
+                                                    <th><center>Name</center></th>
                                                 <th><center>Quantity</center></th>
                                                 <th><center>Unit</center></th>
                                                 <th><center>Unit Price</center></th>
                                                 <th><center>Total</center></th>
                                                 </tr>
-                                                <% for (Material m : materials) {%>
+                                                <%for (int y = 0; y < pworks.get(x).getComponents().size(); y++) {%>
                                                 <tr>
-                                                    <td><%=m.getName()%></td>
-                                                    <td><%=m.getPercentage()%></td>
-                                                    <td><%=m.getQuantity()%></td>
-                                                    <td><%=m.getUnit().getUnit()%></td>
-                                                    <td><%=m.getUnitprice()%></td>
-                                                    <td><%=m.getUnitprice() * m.getQuantity()%></td>
+                                                    <td><%=pworks.get(x).getComponents().get(y).getName()%></td>
+                                                    <td><%=pworks.get(x).getComponents().get(y).getQuantity()%></td>
+                                                    <td><%=pworks.get(x).getComponents().get(y).getUnit().getUnit()%></td>
+                                                    <td><%=pworks.get(x).getComponents().get(y).getUnitPrice()%></td>
+                                                    <td><%=pworks.get(x).getComponents().get(y).getUnitPrice() * pworks.get(x).getComponents().get(y).getQuantity()%></td>
                                                 </tr>
+
+
                                                 <%}%>
+
+                                                <%}%>
+
+                                            </table>
+                                            <br> 
+                                            <table class="table" style="width:100%; text-align: center">    
                                                 <tr>
-                                                    <td>Total cost: </td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td colspan="4">Total cost: </td>
                                                     <td>PHP <%=df.format(cost)%></td>
                                                 </tr>
 
                                                 <tr>
-                                                    <td colspan="5">Indirect Cost 17% of Total Cost: </td>
+                                                    <td colspan="4">Indirect Cost 17% of Total Cost: </td>
                                                     <td>PHP <%=df.format(cost * 0.17)%></td>
                                                 </tr>
 
                                                 <tr>
-                                                    <td colspan="5">Tax 5% of Total Cost + Indirect Cost: </td>
+                                                    <td colspan="4">Tax 5% of Total Cost + Indirect Cost: </td>
                                                     <td>PHP <%=df.format((cost * 0.17) * .05)%></td>
                                                 </tr>
 
                                                 <tr>
-                                                    <td colspan="5">Estimated cost: </td>
+                                                    <td colspan="4">Estimated cost: </td>
                                                     <td>PHP <%=df.format(cost + (cost * 0.17) + ((cost * 0.17) * .05))%></td>
                                                 </tr>
+
                                             </table>
                                         </div>
                                     </section>
                                 </div>
                             </section>                                                 
                         </div>
-
-                        <!------------------------------------------------------SCHEDULE------------------------------------------>
-
-                        <section class="panel">
-                            <div class="bio-graph-heading project-heading">
-                                <strong>Schedule</strong>
-                            </div>
-                            <div class="panel-body bio-graph-info">
-                                <i class="fa fa-square editablelegend"></i>  Editable Events
-                                <i class="fa fa-square uneditablelegend" style="margin-left: 7px"></i>  Un-editable Events
-                                <div id='calendar' style="height: 100%; width: 100%"></div>
-                            </div>
-                            <br><center>
-                                <a class="btn btn-success" href="BAC_ProjectCalendar.jsp">Update Schedule</a></center>
-                            <br>
-                        </section>
 
                         <!------------------------------------------------------UPLOADS------------------------------------------>
                         <section class="panel">
@@ -604,7 +588,7 @@
             }
 
         </script>
-        <!--<script src="js/jquery.js"></script>-->
+        <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script class="include" type="text/javascript" src="js/jquery.dcjqaccordion.2.7.js"></script>
         <script src="js/jquery.scrollTo.min.js"></script>
@@ -614,51 +598,6 @@
 
         <!--common script for all pages-->
         <script src="js/common-scripts.js"></script>
-        <script>
-            var cal = <%=session.getAttribute("calendar")%>;
-            $('document').ready(function () {
-
-                $('#calendar').fullCalendar({
-                    defaultView: 'month',
-                    schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-                    header: {
-                        left: '',
-                        center: 'title',
-                        right: 'today prev,next'
-                    }
-                });
-                inputActivities(cal);
-
-            });
-
-            function inputActivities(sched) {
-                $('#calendar').fullCalendar('removeEvents');
-                $.each(sched, function (i) {
-                    var color;
-                    if (sched[i].dept === "GS")
-                        color = '#ff6666';
-                    else if (sched[i].dept === "OCPD")
-                        color = '#ff6666';
-                    else if (sched[i].dept === "BAC")
-                        color = '#00ffaa';
-                    var my_events = {
-                        events: [
-                            {
-                                title: sched[i].event,
-                                start: sched[i].startdate,
-                                end: sched[i].enddate,
-                                dept: sched[i].dept,
-                                stage: sched[i].stage,
-                                color: color
-                            }
-                        ]
-                    };
-
-                    $('#calendar').fullCalendar('addEventSource', my_events);
-                });
-            }
-
-        </script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"async defer></script>
 
         <script>
