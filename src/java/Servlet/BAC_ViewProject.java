@@ -58,19 +58,6 @@ public class BAC_ViewProject extends HttpServlet {
             ArrayList<Location> projectLocation = project.getLocation();
             String location = new Gson().toJson(projectLocation);
             session.setAttribute("location", location);
-
-            ArrayList<Schedule> sList = project.getSchedule();
-            String startdate = "";
-            for (Schedule s : sList) {
-                if (s.getStage().equalsIgnoreCase("Implementation")) {
-                    startdate = s.getStartdate();
-                    break;
-                }
-            }
-            session.setAttribute("startdate", startdate);
-
-            String sList2 = new Gson().toJson(sList);
-            session.setAttribute("calendar", sList2);
             session.setAttribute("project", project);
             session.setAttribute("cost", oc.getCost(project));
 

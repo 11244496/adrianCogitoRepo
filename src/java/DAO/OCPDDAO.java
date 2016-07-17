@@ -181,6 +181,9 @@ public class OCPDDAO {
                 project.setEmployee(e);
                 project.setCategory(result.getString("Category"));
                 project.setBudget(result.getFloat("budget"));
+                Testimonial t = new Testimonial();
+                t.setId(result.getInt("Testimonial_ID"));
+                project.setMainTestimonial(t);
             }
 
             //Location
