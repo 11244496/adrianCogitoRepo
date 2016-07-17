@@ -120,16 +120,6 @@ $('#maincategory').change(function () {
     });
 });
 
-
-function delBtn(btn) {
-    switch(btn.id){
-        case ("#addWorks"):{
-                
-        }
-        case 
-    }
-}
-
 function myCreateFunction() {
     var table = document.getElementById("costtable");
     var row = table.insertRow(-1);

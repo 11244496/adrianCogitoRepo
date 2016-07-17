@@ -87,16 +87,6 @@ public class BAC_ViewProject extends HttpServlet {
                 tm.setFiles(fList);
             }
             session.setAttribute("testimonials", tList);
-
-            Schedule meeting = null;
-            ArrayList<Task> agenda = null;
-            if (project.getStatus().equalsIgnoreCase("on-hold")) {
-                project.setAnnotation(oc.getAnnotation(project, "Pending"));
-                meeting = oc.getMeeting(project, "Pending");
-                agenda = oc.getAgenda(meeting);
-            }
-            session.setAttribute("meeting", meeting);
-            session.setAttribute("agenda", agenda);
             session.setAttribute("Cost", oc.getCost(project));
 
             //Set new arraylist of proposal files

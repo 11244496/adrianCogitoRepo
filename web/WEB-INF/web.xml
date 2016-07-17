@@ -229,7 +229,6 @@
         <url-pattern>/AJAX_GS_GenerateProjectID</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-
         <servlet-name>OCPD_Home</servlet-name>
         <url-pattern>/OCPD_Home</url-pattern>
     </servlet-mapping>
@@ -272,16 +271,15 @@
     <servlet-mapping>
         <servlet-name>BAC_UploadInvitationToBid</servlet-name>
         <url-pattern>/BAC_UploadInvitationToBid</url-pattern>
-    </servlet-mapping>    
-        
-    <servlet-mapping>    
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>Citizen_CommentOnTestimonial</servlet-name>
         <url-pattern>/Citizen_CommentOnTestimonial</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GS_ReplyToTestimonial</servlet-name>
         <url-pattern>/GS_ReplyToTestimonial</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>    
     <session-config>
         <session-timeout>
             30

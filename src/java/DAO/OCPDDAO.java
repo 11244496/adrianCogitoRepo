@@ -103,6 +103,21 @@ public class OCPDDAO {
     }
 
     //===============================ALL PROJECT RELATED CODES================================================
+    public void changeProjectStatus(Project p, String status) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "update project set status = ? where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, status);
+            statement.setString(1, p.getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in updating project status", ex);
+        }
+    }
+
     public Project getBasicProjectDetails(String id) {
         Project p = new Project();
         Employee e;
@@ -391,6 +406,58 @@ public class OCPDDAO {
     }
 
     //=============================ALL SCHEDULE AND TASK RELATED CODES======================================
+    public void setMeeting(Schedule s) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into meeting (event, startdate, enddate, status, time, project_id) values (?,?,?,?,?,?)";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, s.getEvent());
+            statement.setString(2, s.getStartdate());
+            statement.setString(3, s.getEnddate());
+            statement.setString(4, s.getStatus());
+            statement.setString(5, s.getTime());
+            statement.setString(5, s.getProject().getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting meeting", ex);
+        }
+    }
+
+    public void rescheduleMeeting(Schedule s) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "update meeting set startdate = ?, enddate = ?, status = ?, time = ? where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, s.getStartdate());
+            statement.setString(2, s.getEnddate());
+            statement.setString(3, s.getStatus());
+            statement.setString(4, s.getTime());
+            statement.setInt(5, s.getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in rescheduling meeting", ex);
+        }
+    }
+
+    public void updateMeetingStatus(Schedule s, String status) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "update meeting set status = ? where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, status);
+            statement.setInt(2, s.getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in updating meeting status", ex);
+        }
+    }
+
     public ArrayList<Task> getAgenda(Schedule s) {
         ArrayList<Task> tList = new ArrayList<>();
         Task t;
@@ -494,7 +561,7 @@ public class OCPDDAO {
             result = statement.executeQuery();
             while (result.next()) {
                 s = new Schedule(result.getInt("ID"), result.getString("Event"), result.getString("StartDate"),
-                        result.getString("Enddate"), status, result.getString("Department"),result.getString("Time"),result.getString("Stage"),result.getString("Project_ID"),result.getString("ActualEndDate"),result.getString("remarks"));
+                        result.getString("Enddate"), status, result.getString("Department"), result.getString("Time"), result.getString("Stage"), result.getString("Project_ID"), result.getString("ActualEndDate"), result.getString("remarks"));
             }
             connection.close();
             return s;
@@ -505,24 +572,52 @@ public class OCPDDAO {
     }
 
     //=======================================ALL ANNOTATION CODES=========================================
-    public Annotation getAnnotation(Project p, String status) {
+    public void setAnnotations(Annotation a) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into annotations (testimonials, projects, details, program, general, status, date, project_id) values (?,?,?,?,?,?,?,?)";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, a.getTestimonials());
+            statement.setString(2, a.getProjects());
+            statement.setString(3, a.getDetails());
+            statement.setString(4, a.getProgram());
+            statement.setString(5, a.getGeneral());
+            statement.setString(6, a.getStatus());
+            statement.setString(7, a.getDate());
+            statement.setString(8, a.getProject().getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting annotations", ex);
+        }
+    }
+
+    public Annotation getAnnotations(Project p, String status) {
         Annotation a = null;
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "select * from annotations where project_id = ? and status = ?";
+            String query = "select * from annotation where project_id = ? and status = ?";
             statement = connection.prepareStatement(query);
-            statement.setString(1, p.getId());
-            statement.setString(2, "Pending");
+            statement.setString(1, a.getProject().getId());
+            statement.setString(2, status);
             result = statement.executeQuery();
             while (result.next()) {
-                a = new Annotation(result.getInt("ID"), result.getString("Description"), result.getString("Materials"),
-                        result.getString("Upload"), result.getString("Date"), status, result.getString("general"), p);
+                a = new Annotation();
+                a.setId(result.getInt("ID"));
+                a.setTestimonials(result.getString("Testimonials"));
+                a.setProjects(result.getString("Projects"));
+                a.setDetails(result.getString("Details"));
+                a.setProgram(result.getString("Program"));
+                a.setGeneral(result.getString("General"));
+                a.setStatus(status);
+                a.setDate(result.getString("Date"));
+                a.setProject(p);
             }
             connection.close();
-            return a;
         } catch (SQLException ex) {
-            Logger.getLogger(OCPDDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting annotations", ex);
         }
         return a;
     }
@@ -548,5 +643,20 @@ public class OCPDDAO {
             Logger.getLogger(OCPDDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return cost;
+    }
+
+    public void setBudget(Project p) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "update project set budget = ? where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setFloat(1, p.getBudget());
+            statement.setString(2, p.getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting budget", ex);
+        }
     }
 }
