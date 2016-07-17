@@ -11,6 +11,7 @@ import Entity.Address;
 import Entity.Barangay;
 import Entity.Citizen;
 import Entity.Comment;
+import Entity.Employee;
 import Entity.Files;
 import Entity.Location;
 import Entity.Notification;
@@ -231,8 +232,10 @@ public class CitizenDAO {
                 Reply r = new Reply();
                 r.setId(result.getInt("ID"));
                 r.setMessage(result.getString("Message"));
-                r.setSender(result.getString("Sender"));
-                r.setDateSent(result.getString("Datesend"));
+                User user = new User();
+                user.setUsername(result.getString("Sender"));
+                r.setSender(user);
+                r.setDateSent(result.getString("Datesent"));
                 Testimonial testi = new Testimonial();
                 testi.setId(t.getId());
                 testi.setTitle(t.getTitle());
@@ -243,7 +246,7 @@ public class CitizenDAO {
                 testi.setCitizen(t.getCitizen());
                 testi.setStatus(t.getStatus());
                 testi.setCitizen(c);
-                r.setTestimonial_ID(testi);
+                r.setTestimonial(testi);
                 replies.add(r);
             }
             t.setReplies(replies);
@@ -339,6 +342,58 @@ public class CitizenDAO {
             Logger.getLogger(DAO.ActivityDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return t;
+    }
+
+    public boolean hasNoReply(Testimonial t) {
+        boolean b = true;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select count(*) c from reply where testimonial_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, t.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                if (result.getInt("c") > 0) {
+                    b = false;
+                }
+            }
+            statement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return b;
+    }
+
+    public Reply getReply(Testimonial t) {
+        Reply r = null;
+        Employee e;
+        User u;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select message, firstname, lastname, username, datesent from reply join users on sender = username join employee on users.id = users_id where testimonial_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, t.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                r = new Reply();
+                r.setDateSent(result.getString("datesent"));
+                r.setMessage(result.getString("message"));
+                u = new User();
+                e = new Employee();
+                u.setUsername(result.getString("username"));
+                e.setFirstName(result.getString("firstname"));
+                e.setLastName(result.getString("lastname"));
+                e.setUser(u);
+                r.setSender(u);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.CitizenDAO.class.getName()).log(Level.SEVERE, "Error in getting reply", ex);
+        }
+        return r;
     }
 
     public int gettestimonialcount(Citizen c) {
@@ -821,4 +876,6 @@ public class CitizenDAO {
         return false;
     }
 
+    public void commentOnTestimonial() {
+    }
 }

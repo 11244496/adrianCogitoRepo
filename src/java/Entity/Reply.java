@@ -13,19 +13,19 @@ public class Reply {
     
     private int id;
     private String message;
-    private String sender;
+    private User sender;
     private String dateSent;
     
-    private Testimonial testimonial_ID;
+    private Testimonial testimonial;
 
     public Reply() {
     }
 
-    public Reply(int id, String message, String sender, Testimonial testimonial_ID, String dateSent) {
+    public Reply(int id, String message, User sender, Testimonial testimonial_, String dateSent) {
         this.id = id;
         this.message = message;
         this.sender = sender;
-        this.testimonial_ID = testimonial_ID;
+        this.testimonial = testimonial;
         this.dateSent = dateSent;
     }
 
@@ -45,20 +45,20 @@ public class Reply {
         this.message = message;
     }
 
-    public String getSender() {
+    public User getSender() {
         return sender;
     }
 
-    public void setSender(String sender) {
+    public void setSender(User sender) {
         this.sender = sender;
     }
 
-    public Testimonial getTestimonial_ID() {
-        return testimonial_ID;
+    public Testimonial getTestimonial() {
+        return testimonial;
     }
 
-    public void setTestimonial_ID(Testimonial testimonial_ID) {
-        this.testimonial_ID = testimonial_ID;
+    public void setTestimonial(Testimonial testimonial) {
+        this.testimonial = testimonial;
     }
 
     public String getDateSent() {

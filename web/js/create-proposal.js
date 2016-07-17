@@ -8,6 +8,7 @@ var tasksFinal = [];
 var schedulevalue = [];
 var taskValue = [];
 
+var powNumber = 1;
 
 
 $(function () {
@@ -20,260 +21,63 @@ $(function () {
     });
 });
 
-$(document).on("change", "#subcategory", function () {
-    if ($('#subcategory').val() == "Others") {
-        document.getElementById('OtherSub').style.display = 'block';
-    } else
-        document.getElementById('OtherSub').style.display = 'none';
-});
-
-$(document).on("change", "#subcategory", function () {
-    if ($('#subcategory').val() != "Others") {
-        $.ajax({
-            type: 'POST',
-            url: 'getmaterialtable',
-            dataType: 'json',
-            data: {subcategory: $('#subcategory').val(), maincategory: $('#maincategory').val()},
-            cache: false,
-            success: function (material) {
-                $("#generalbody").empty();
-                drawTable(material);
-            }
-        });
-    }
-});
-
-$('#maincategory').change(function(){
-    $.ajax({
-        type: 'GET',
-        url: 'AJAX_GS_GenerateProjectID',
-        dataType: 'json',
-        data: {
-            category: $('#maincategory').val()
-        },
-        success: function (id){
-            $('#projectID').val(id);
-            console.log(id);
-        }
-    });
-});
-
-$(document).on("change", "#keywords", function () {
-    $.ajax({
-        type: 'POST',
-        url: 'gettestimonialdropdown',
-        dataType: 'json',
-        data: {keywords: $('#keywords').val()},
-        cache: false,
-        success: function (testimonial) {
-            $("#citizentestimonial").empty();
-            $("#citizentestimonial").append($("<option></option>").text("Select Option"));
-            $.each(testimonial, function (i) {
-                $("#citizentestimonial").append(
-                        $("<option></option>")
-                        .text(testimonial[i].title)
-                        .val(testimonial[i].id)
-                        )
-                        ;
-            });
-        }
-    });
-    return false;
-});
-
-$(document).on("change", "#citizentestimonial", function () {
-    $.ajax({
-        type: 'POST',
-        url: 'gettestimonialtable',
-        dataType: 'json',
-        data: {testimonialid: $('#citizentestimonial').val()},
-        cache: false,
-        success: function (files) {
-            $("#testimonialbody").empty();
-            drawTableC(files);
-        }
-    });
-});
-
-function drawRowC(files) {
-    var row = $("<tr />");
-    $("#testimonialbody").append(row);
-    row.append($("<td> <input type='checkbox' class='filetid' name='filetid' value='" + files.id + "'> </td>"));
-    row.append($("<td>" + files.fileName + "</td>"));
-    row.append($("<td>" + files.dateUploaded + "</td>"));
-    row.append($("<button type='button' value=" + files.id + " class = 'btn btn-info btn-sm' onclick='getTestimonial(" + files.id + ")'>View Testimonial</button>"));
-}
-
-function getTestimonial(id) {
-    $.ajax({
-        type: 'POST',
-        url: 'gettestimonial',
-        dataType: 'json',
-        data: {testId: id},
-        cache: false,
-        success: function (f) {
-            $('#fDisplay').empty();
-            var url = f.testimonial.folderName + "/" + f.fileName;
-            if (f.type === "Video") {
-                $("<div data-p=\"144.50\"><video><source src=" + url + " type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
-
-            }
-            else if (f.type === "Image") {
-                $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#fDisplay");
-
-            }
-
-            else if (f.type === "Document") {
-                $("#docH").remove();
-                $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#abcd");
-            }
-            $('#testTitle').text("Title: " + f.testimonial.title);
-            $('#testDate').text("Date Uploaded: " + f.testimonial.dateUploaded);
-            $('#testLoc').text("Location Details: " + f.testimonial.location + " + " + f.testimonial.locationdetails);
-            $('#testDesc').text("Description: " + f.testimonial.message);
-            $('#testModal').modal();
-        }
-    });
-}
-;
-
-function drawTableC(data) {
-    for (var i = 0; i < data.length; i++) {
-        drawRowC(data[i]);
-    }
-}
-
-function addRowGeneral() {
+function addRowForWorks() {
     //debugger;
-    var tableID = "general";
-    var table = document.getElementById(tableID);
+
+    var table = document.getElementById("powTable");
     var rowCount = table.rows.length;
-
-
     var row = table.insertRow(-1);
     var cell1 = row.insertCell(-1);
     var cell2 = row.insertCell(-1);
-    var cell3 = row.insertCell(-1);
-    var cell4 = row.insertCell(-1);
-    var cell5 = row.insertCell(-1);
+
+    var sel = document.createElement('select')
+    sel.setAttribute("id", "worksSelect-" + powNumber);
+    sel.setAttribute("class", "worksSelect");
+    sel.setAttribute("name", "works");
+    var ok = document.createElement('button');
+    sel.setAttribute("id", "worksOk-" + powNumber)
+
+    var button = document.createElement('button');
+    button.setAttribute("id", "worksButton-" + powNumber);
+    button.setAttribute("class", "worksSelect");
+    button.setAttribute("name", "works");
+    
+    $(button).hide();
+    
+    $(sel).change(function () {
+        $(sel).hide();
+        $(button).show();
+    });
+    
+    $(button).dblclick(function(){
+       $(button).hide();
+       $(sel).show();
+    });
+    
+    var t = document.createTextNode(powNumber);
+
+    var option2 = document.createElement("option");
+    option2.setAttribute('hidden', true);
+    option2.text = 'Select Works';
+    sel.appendChild(option2);
 
 
-    var material = document.createElement('input');
-    material.type = "text";
-    material.name = "material";
-    material.style.width = "100%";
-    material.style.height = "100%";
-    material.style.border = "none";
-
-    var percentage = document.createElement('input');
-    percentage.type = "text";
-    percentage.name = "percentage";
-    percentage.style.width = "100%";
-    percentage.style.height = "100%";
-    percentage.style.border = "none";
-
-    var unitprice = document.createElement('input');
-    unitprice.type = "text";
-    unitprice.name = "unitprice";
-    unitprice.style.width = "100%";
-    unitprice.style.height = "100%";
-    unitprice.style.border = "none";
-    unitprice.class = "unitprice";
-
-    var quantity = document.createElement('input');
-    quantity.type = "text";
-    quantity.name = "quantity";
-    quantity.style.width = "100%";
-    quantity.style.height = "100%";
-    quantity.style.border = "none";
-    quantity.class = "quantity";
-
-    var array = ["N/A", "pcs", "kg", "ft", "lbs", "cm", "lot", "cu.m", "sq.m"];
-    var unit = document.createElement("select");
-    unit.setAttribute("id", "myunitSelect");
-    unit.name = "unit";
-
-    for (var i = 0; i < array.length; i++) {
+    for (var i = 0; i < worksList.length; i++) {
         var option = document.createElement("option");
-        option.setAttribute("value", array[i]);
-        option.text = array[i];
-        unit.appendChild(option);
+        option.setAttribute("value", worksList[i].id);
+        option.text = worksList[i].name;
+        sel.appendChild(option);
     }
-    unit.style.width = "100%";
-    unit.style.height = "100%";
-    unit.style.border = "none";
 
-    cell1.appendChild(material);
-    cell2.appendChild(percentage);
-    cell3.appendChild(quantity);
-    cell4.appendChild(unit);
-    cell5.appendChild(unitprice);
+    var option = document.createElement("option");
+    option.setAttribute("value", "new");
+    option.text = "New...";
+    sel.appendChild(option);
 
-    //set the components into material array
-    materialstable.push(material);
-    materialstable.push(percentage);
-    materialstable.push(quantity);
-    materialstable.push(unit);
-    materialstable.push(unitprice);
-}
-
-
-//Add Function for total Here
-//$(document).on("change", $('input.unitprice[class="unitprice"],input.quantity[class="quantity"]'), function () {
-//});
-
-
-function addRowPW() {                 //debugger;
-    var tableID = "programworks";
-    var table = document.getElementById(tableID);
-    var rowCount = table.rows.length;
-
-
-    var row = table.insertRow(-1);
-    var cell1 = row.insertCell(-1);
-    var cell2 = row.insertCell(-1);
-    var cell3 = row.insertCell(-1);
-
-    var component = document.createElement('input');
-    component.id = "componentid";
-    component.type = "text";
-    component.name = "component";
-    component.style.width = "100%";
-    component.style.height = "100%";
-    component.style.border = "none";
-    tableinput.push(component);
-
-
-    var duration = document.createElement('input');
-    duration.id = "durationid";
-    duration.type = "text";
-    duration.name = "duration";
-    duration.style.width = "100%";
-    duration.style.height = "100%";
-    duration.style.border = "none";
-    tableinput.push(duration);
-
-
-    var unit = document.createElement('select');
-    var arr = ["Day/s", "Week/s", "Month/s"];
-    unit.name = "powUnit";
-    unit.id = "unitid";
-    unit.style.width = "100%";
-    unit.style.height = "100%";
-    unit.style.border = "none";
-    for (var i = 0; i < arr.length; i++) {
-        var option = document.createElement("option");
-        option.value = arr[i];
-        option.text = arr[i];
-        unit.appendChild(option);
-    }
-    tableinput.push(unit);
-
-    document.getElementById("PWsave").disabled = true;
-
-    cell1.appendChild(component);
-    cell2.appendChild(duration);
-    cell3.appendChild(unit);
+    cell1.appendChild(t);
+    cell2.appendChild(sel);
+    cell2.appendChild(button);
+    powNumber++;
 
 }
 
@@ -299,12 +103,31 @@ $(document).ready(function () {
             alert("Submitted!");
         }
     });
-
 });
 
+$('#maincategory').change(function () {
+    $.ajax({
+        type: 'GET',
+        url: 'AJAX_GS_GenerateProjectID',
+        dataType: 'json',
+        data: {
+            category: $('#maincategory').val()
+        },
+        success: function (id) {
+            $('#projectID').val(id);
+            console.log(id);
+        }
+    });
+});
+
+
 function delBtn(btn) {
-    var row = btn.parentNode.parentNode;
-    row.parentNode.removeChild(row);
+    switch(btn.id){
+        case ("#addWorks"):{
+                
+        }
+        case 
+    }
 }
 
 function myCreateFunction() {
@@ -620,106 +443,106 @@ function deleteTask(button) {
     viewTasks();
 }
 
-function saveDraft() {
-    var location;
-    var details;
-    var materials;
-    var schedule;
-    var upload;
-    $.ajax({
-        type: 'POST',
-        url: 'saveasdraft',
-        dataType: 'json',
-        data: {details: details, location: location, materials: materials,
-            schedule: schedule, upload: upload},
-        cache: false,
-        success: function (sched) {
-            //servlet that redirects to list of projects
-        }
-    });
-
-}
-
-function submitProposal() {
-
-    while (0 < materialstable.length) {
-
-        var material = {
-            material: materialstable[materialstable.length - 5].value,
-            percentage: materialstable[materialstable.length - 4].value,
-            quantity: materialstable[materialstable.length - 3].value,
-            unit: materialstable[materialstable.length - 2].value,
-            unitprice: materialstable[materialstable.length - 1].value
-        };
-        materialvalues.push(material);
-        materialstable.pop();
-        materialstable.pop();
-        materialstable.pop();
-        materialstable.pop();
-        materialstable.pop();
-    }
-
-    while (0 < tableinput.length) {
-
-        var component = {
-            component: tableinput[tableinput.length - 3].value,
-            duration: tableinput[tableinput.length - 2].value,
-            unit: tableinput[tableinput.length - 1].value
-        };
-        componentvalues.push(component);
-        tableinput.pop();
-        tableinput.pop();
-        tableinput.pop();
-    }
-
-
-    for (x = 0; x < tasksFinal.length; x++) {
-
-        var task = {
-            Activity: tasksFinal[x][0],
-            Task: tasksFinal[x][1],
-            Description: tasksFinal[x][2],
-            StartDate: tasksFinal[x][3],
-            EndDate: tasksFinal[x][4],
-            PersonInCharge: tasksFinal[x][5],
-            Status: tasksFinal[x][6],
-            Index: tasksFinal[x][7]
-        };
-        taskValue.push(task);
-    }
-
-    var subcategory;
-
-    if ($('#subcategory').val() == "Others") {
-        subcategory = $('#OtherSub').val();
-    } else
-        subcategory = $('#subcategory').val();
-
-    var files = $('input[type="checkbox"].filetid:checked').map(function () {
-        return $(this).val();
-    }).toArray();
-    $.ajax({
-        type: 'post',
-        url: 'GS_SubmitProposal',
-        dataType: 'json',
-        data:
-                {
-                    projectid: $('#projectID').val(),
-                    projectname: $('#projectname').val(),
-                    projectdescription: $('#projectdescription').val(),
-                    category: $('#maincategory').val(),
-                    subcategory: subcategory,
-                    hiddenlocation: $('#location').val(),
-                    materialvalues: JSON.stringify(materialvalues),
-                    componentvalues: JSON.stringify(componentvalues),
-                    eventvalues: JSON.stringify(schedulevalue),
-                    tfilevalues: JSON.stringify(files),
-                    actionI: $('#actionI').val()
-                },
-        cache: false,
-        success: function (data) {
-            alert("Project has been submitted");
-            window.location = data.url;
-        }
-    });
-}
+//function saveDraft() {
+//    var location;
+//    var details;
+//    var materials;
+//    var schedule;
+//    var upload;
+//    $.ajax({
+//        type: 'POST',
+//        url: 'saveasdraft',
+//        dataType: 'json',
+//        data: {details: details, location: location, materials: materials,
+//            schedule: schedule, upload: upload},
+//        cache: false,
+//        success: function (sched) {
+//            //servlet that redirects to list of projects
+//        }
+//    });
+//
+//}
+//
+//function submitProposal() {
+//
+//    while (0 < materialstable.length) {
+//
+//        var material = {
+//            material: materialstable[materialstable.length - 5].value,
+//            percentage: materialstable[materialstable.length - 4].value,
+//            quantity: materialstable[materialstable.length - 3].value,
+//            unit: materialstable[materialstable.length - 2].value,
+//            unitprice: materialstable[materialstable.length - 1].value
+//        };
+//        materialvalues.push(material);
+//        materialstable.pop();
+//        materialstable.pop();
+//        materialstable.pop();
+//        materialstable.pop();
+//        materialstable.pop();
+//    }
+//
+//    while (0 < tableinput.length) {
+//
+//        var component = {
+//            component: tableinput[tableinput.length - 3].value,
+//            duration: tableinput[tableinput.length - 2].value,
+//            unit: tableinput[tableinput.length - 1].value
+//        };
+//        componentvalues.push(component);
+//        tableinput.pop();
+//        tableinput.pop();
+//        tableinput.pop();
+//    }
+//
+//
+//    for (x = 0; x < tasksFinal.length; x++) {
+//
+//        var task = {
+//            Activity: tasksFinal[x][0],
+//            Task: tasksFinal[x][1],
+//            Description: tasksFinal[x][2],
+//            StartDate: tasksFinal[x][3],
+//            EndDate: tasksFinal[x][4],
+//            PersonInCharge: tasksFinal[x][5],
+//            Status: tasksFinal[x][6],
+//            Index: tasksFinal[x][7]
+//        };
+//        taskValue.push(task);
+//    }
+//
+//    var subcategory;
+//
+//    if ($('#subcategory').val() == "Others") {
+//        subcategory = $('#OtherSub').val();
+//    } else
+//        subcategory = $('#subcategory').val();
+//
+//    var files = $('input[type="checkbox"].filetid:checked').map(function () {
+//        return $(this).val();
+//    }).toArray();
+//    $.ajax({
+//        type: 'post',
+//        url: 'GS_SubmitProposal',
+//        dataType: 'json',
+//        data:
+//                {
+//                    projectid: $('#projectID').val(),
+//                    projectname: $('#projectname').val(),
+//                    projectdescription: $('#projectdescription').val(),
+//                    category: $('#maincategory').val(),
+//                    subcategory: subcategory,
+//                    hiddenlocation: $('#location').val(),
+//                    materialvalues: JSON.stringify(materialvalues),
+//                    componentvalues: JSON.stringify(componentvalues),
+//                    eventvalues: JSON.stringify(schedulevalue),
+//                    tfilevalues: JSON.stringify(files),
+//                    actionI: $('#actionI').val()
+//                },
+//        cache: false,
+//        success: function (data) {
+//            alert("Project has been submitted");
+//            window.location = data.url;
+//        }
+//    });
+//}
