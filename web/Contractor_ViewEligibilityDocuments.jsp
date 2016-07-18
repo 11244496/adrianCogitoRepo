@@ -408,10 +408,9 @@
 
         <script>
             function getFile(docid) {
-                console.log(docid);
                 $.ajax({
                     type: 'POST',
-                    url: 'geteligibilityfile',
+                    url: 'AJAX_Contractor_geteligibilityfile',
                     dataType: 'json',
                     cache: false,
                     data: {documentID: docid},
@@ -434,7 +433,7 @@
                 console.log(docid);
                 $.ajax({
                     type: 'POST',
-                    url: 'geteligibilityfile',
+                    url: 'AJAX_Contractor_geteligibilityfile',
                     dataType: 'json',
                     cache: false,
                     data: {documentID: docid},
@@ -455,7 +454,7 @@
                 console.log(docid);
                 $.ajax({
                     type: 'POST',
-                    url: 'geteligibilityfile',
+                    url: 'AJAX_Contractor_geteligibilityfile',
                     dataType: 'json',
                     cache: false,
                     data: {documentID: docid},

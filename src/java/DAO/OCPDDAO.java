@@ -404,6 +404,27 @@ public class OCPDDAO {
         }
         return AllProjectID;
     }
+    
+    public void changeProjStatus(String s, Project p) {
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "UPDATE project SET Status = ? WHERE ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, s);
+            statement.setString(2, p.getId());
+            statement.executeUpdate();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(OCPDDAO.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
 
     //=============================ALL SCHEDULE AND TASK RELATED CODES======================================
     public void setMeeting(Schedule s) {

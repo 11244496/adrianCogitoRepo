@@ -395,7 +395,7 @@
             $('#negotiatedB').click(function () {
                 $.ajax({
                     type: 'post',
-                    url: 'generateidlecontractors',
+                    url: 'AJAX_BAC_generateidlecontractors',
                     dataType: 'json',
                     cache: false,
                     success: function (data) {
@@ -414,7 +414,7 @@
 
                 $.ajax({
                     type: 'post',
-                    url: 'BAC_SendBidInvitation',
+                    url: 'AJAX_BAC_SendBidInvitation',
                     dataType: 'json',
                     data: {itbId: $('#itbId').val(), projId: $('#projId').val(), messageN: $('#messageN').val(), contractor: JSON.stringify(arr)},
                     cache: false,

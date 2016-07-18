@@ -6,8 +6,11 @@
 package DAO;
 
 import DB.ConnectionFactory;
+import Entity.Bid_Notices;
 import Entity.Contractor;
+import Entity.Contractor_Has_Project;
 import Entity.Contractor_User;
+import Entity.Eligibility_Document;
 import Entity.InvitationToBid;
 import Entity.Project;
 import java.sql.Connection;
@@ -179,6 +182,72 @@ public class BACDAO {
         return projects;
     }
 
+    public ArrayList<Project> getAllProjects(String status, Contractor contractor) {
+        ArrayList<Project> projects = new ArrayList<Project>();
+        Project project;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from project where Status = ? AND Contractor_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, status);
+            statement.setInt(2, contractor.getID());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                project = new Project();
+                project.setId(result.getString("ID"));
+                project.setName(result.getString("Name"));
+                project.setDescription(result.getString("Description"));
+                project.setType(result.getString("Type"));
+                project.setStatus(result.getString("Status"));
+
+                projects.add(project);
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return projects;
+    }
+
+    public ArrayList<Project> getAllProjectsPerContractor(Contractor contractor) {
+        ArrayList<Project> projects = new ArrayList<Project>();
+        Project project;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from project where Contractor_ID = ?";
+            statement = connection.prepareStatement(query);
+
+            statement.setInt(1, contractor.getID());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                project = new Project();
+                project.setId(result.getString("ID"));
+                project.setName(result.getString("Name"));
+                project.setDescription(result.getString("Description"));
+                project.setType(result.getString("Type"));
+                project.setStatus(result.getString("Status"));
+
+                projects.add(project);
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return projects;
+    }
+
     //======================================ALL INVITATION CODES=========================================
     public void uploadInvitation(InvitationToBid inv) {
 
@@ -205,8 +274,530 @@ public class BACDAO {
         }
     }
 
+    public InvitationToBid getInvitation(Project project) {
+
+        InvitationToBid invitation = null;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from invitationtobid where Project_ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, project.getId());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                invitation = new InvitationToBid();
+                invitation.setID(result.getInt("ID"));
+                invitation.setFileName(result.getString("FileName"));
+                invitation.setDateUploaded(result.getString("DateUploaded"));
+                invitation.setProjectID(project);
+                invitation.setFolderName(result.getString("FolderName"));
+
+            }
+            connection.close();
+            return invitation;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return invitation;
+
+    }
+
+    //======================================ALL DOCUMENT RELATED CODES============================================
+    public Eligibility_Document getDocument(int id) {
+
+        Eligibility_Document d = null;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from eligibility_documents where ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                d = new Eligibility_Document();
+                d.setID(result.getInt("ID"));
+                d.setType(result.getString("Document_Type"));
+                d.setFileName(result.getString("filename"));
+                d.setFolderName(result.getString("folderName"));
+                d.setDateUploaded(result.getString("DateUploaded"));
+                d.setBAC_Remarks(result.getString("BAC_Remarks"));
+
+            }
+            connection.close();
+            return d;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return d;
+    }
+
+    public String checkalldocuments(int id) {
+
+        int result1 = 0;
+        String result2 = null;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+//            String query = "SELECT CASE WHEN NOT EXISTS(SELECT * FROM eligibility_documents WHERE eligibility_documents.Contractor_has_Project_ID = ? AND eligibility_documents.Status = 'Approved') THEN 'Y' ELSE 'N' END AS My_Result";
+            String query = "select count(*) from eligibility_documents where Contractor_has_Project_ID = ? and Status = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            statement.setString(2, "Pending");
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                result1 = result.getInt("count(*)");
+            }
+
+            if (result1 <= 0) {
+                result2 = "Y";
+
+            } else if (result1 > 0) {
+
+                result2 = "N";
+
+            }
+
+            statement.close();
+
+            connection.close();
+            return result2;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result2;
+    }
+
+    public String approveDoc(int id) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "UPDATE eligibility_documents SET Status ='Approved' WHERE ID= ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return "Approved";
+    }
+
+    public void HoldContractorDocument(String remarks, int id) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "UPDATE eligibility_documents SET Status = 'Pending - Action needed', BAC_Remarks = ? WHERE ID = ?";
+            statement = connection.prepareStatement(query);
+
+            statement.setString(1, remarks);
+            statement.setInt(2, id);
+
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //=======================================ALL CONTRACTOR METHODS==================================================
+    public ArrayList<Contractor_Has_Project> getViewRespondents(String id) {
+
+        ArrayList<Contractor_Has_Project> contractorList = new ArrayList<Contractor_Has_Project>();
+        Contractor_Has_Project contProject;
+        Project p = null;
+        Contractor c;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from contractor_has_project \n"
+                    + "JOIN contractor on contractor_has_project.Contractor_ID = contractor.ID\n"
+                    + "WHERE contractor_has_project.Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, id);
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                c = new Contractor();
+                c.setID(result.getInt("contractor.id"));
+                c.setName(result.getString("contractor.name"));
+                p = new Project();
+                p.setId(result.getString("project_id"));
+                contProject = new Contractor_Has_Project();
+                contProject.setID(result.getInt("contractor_has_project.id"));
+                contProject.setStatus(result.getString("status"));
+                contProject.setProject(p);
+                contProject.setContractor(c);
+                contractorList.add(contProject);
+
+            }
+            connection.close();
+            return contractorList;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return contractorList;
+    }
+
+    public void removeContractor(ArrayList<Eligibility_Document> es, Contractor_Has_Project chp) {
+        PreparedStatement statement2;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String deleteE = "delete from eligibility_documents where id = ?";
+            for (int x = 0; x < es.size(); x++) {
+                statement = connection.prepareStatement(deleteE);
+                statement.setInt(1, es.get(x).getID());
+                statement.executeUpdate();
+                statement.close();
+            }
+
+            String deleteC = "delete from contractor_has_project where id = ?";
+            statement2 = connection.prepareStatement(deleteC);
+            statement2.setInt(1, chp.getID());
+            statement2.executeUpdate();
+            statement2.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void addContractorHasProject(Contractor_Has_Project chp) {
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "insert into contractor_has_project (Project_ID,Contractor_ID,Status) values (?,?,?)";
+
+            statement = connection.prepareStatement(query);
+
+            statement.setString(1, chp.getProject().getId());
+            statement.setInt(2, chp.getContractor().getID());
+            statement.setString(3, chp.getStatus());
+
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Contractor getContractorInfo(int id) {
+
+        Contractor cont = null;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from contractor where ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                cont = new Contractor(result.getInt("ID"), result.getString("Name"));
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return cont;
+    }
+
+    public ArrayList<Contractor_User> getContractorUsers(Contractor contractor) {
+
+        ArrayList<Contractor_User> contractors = new ArrayList<Contractor_User>();
+        Contractor_User officer;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from contractorusers where Company_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, contractor.getID());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                officer = new Contractor_User(result.getInt("ID"), result.getString("Name"), result.getString("Telephone"), result.getString("Address"), result.getString("Email"), null, null);
+                contractors.add(officer);
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return contractors;
+    }
+
+    public void changeBACStatus2(int id) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "UPDATE contractor_has_project SET Status = 'Eligible to bid' WHERE ID = ?";
+            statement = connection.prepareStatement(query);
+
+            statement.setInt(1, id);
+
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public int getContractorID(int id) {
+
+        int contractorID = 0;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select Contractor_ID from contractor_has_project WHERE ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+            while (result.next()) {
+
+                contractorID = result.getInt("Contractor_ID");
+
+            }
+
+            statement.close();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return contractorID;
+    }
+
+    public Contractor_User getContUser(int id) {
+        Contractor_User d = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select id from contractorusers where company_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+            while (result.next()) {
+                d = new Contractor_User();
+                d.setID(result.getInt("id"));
+            }
+            statement.close();
+
+            connection.close();
+            return d;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return d;
+    }
     
-    //=======================================Utility Codes===============================================
+    
+
+    public void changeBACStatus4(Contractor_User con, String id) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "UPDATE project SET Status = 'Implementation', Contractor_ID = ? WHERE ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, con.getID());
+            statement.setString(2, id);
+
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void changeBACStatus5(int id) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "UPDATE contractor_has_project SET Status = 'Winning Bidder' WHERE ID = ?";
+            statement = connection.prepareStatement(query);
+
+            statement.setInt(1, id);
+
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void deleteContractorProj(int id) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "delete from contractor_has_project where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+
+    //=======================================ALL ELIGIBILITY DOCUMENT RELATED CODES===============================
+    public ArrayList<Eligibility_Document> getEligibilityDocuments(int id) {
+
+        ArrayList<Eligibility_Document> documents = new ArrayList<Eligibility_Document>();
+        Eligibility_Document doc;
+        Contractor_Has_Project contProject;
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from eligibility_documents where Contractor_has_Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                contProject = new Contractor_Has_Project();
+                contProject.setID(id);
+
+                doc = new Eligibility_Document(result.getInt("ID"), result.getString("FileName"), result.getString("FolderName"), result.getString("DateUploaded"), contProject, result.getString("Document_Type"), result.getString("Status"), result.getString("BAC_Remarks"));
+                documents.add(doc);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return documents;
+    }
+
+    public Eligibility_Document getDocumentStat(int id) {
+
+        Eligibility_Document d = null;
+        Contractor_Has_Project cont = null;
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select count(case when Status = \"Approved\" THEN Status END) Approved,\n"
+                    + "count(case when Status = \"Pending\" THEN Status END) Pending,\n"
+                    + "count(case when Status = \"Pending - Action needed\" THEN Status END) Pending_Action_Needed   \n"
+                    + "from eligibility_documents where Contractor_has_Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                d = new Eligibility_Document();
+                d.setApproved(result.getInt("Approved"));
+                d.setPending(result.getInt("Pending"));
+                d.setPending_Action_Needed(result.getInt("Pending_Action_Needed"));
+
+            }
+            connection.close();
+            return d;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return d;
+    }
+    
+    //=======================================NOTICES CODES========================================================
+    public void uploadBidNotices(Bid_Notices notice) {
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "INSERT INTO bid_notices (FileName, DateUploaded, Project_ID, Contractor_ID, FolderName, Type) VALUES (?, now(), ?, ?, ?, ?);";
+
+            statement = connection.prepareStatement(query);
+
+            statement.setString(1, notice.getFileName());
+            statement.setString(2, notice.getProject().getId());
+            statement.setInt(3, notice.getContractor().getID());
+            statement.setString(4, notice.getFolderName());
+            statement.setString(5, notice.getType());
+
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+
+    //=======================================Utility Codes========================================================
     public boolean hasITB(Project p) {
         boolean hasitb = false;
         int count = 0;
@@ -255,6 +846,49 @@ public class BACDAO {
         } catch (SQLException ex) {
             Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public boolean isFailed(Project p) {
+        int count = 0;
+        boolean check = false;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select count(*) as c from invitationtobid where project_id = ? and status = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            statement.setString(2, "Fail");
+            result = statement.executeQuery();
+            while (result.next()) {
+                count = result.getInt("c");
+            }
+            if (count >= 2) {
+                check = true;
+            }
+            connection.close();
+            return check;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return check;
+    }
+
+    public void addReasonFail(String reason, InvitationToBid itb) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "update invitationtobid set reason = ?, status = ? where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, reason);
+            statement.setString(2, itb.getStatus());
+            statement.setInt(3, itb.getID());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
 }

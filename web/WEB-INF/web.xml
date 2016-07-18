@@ -184,6 +184,70 @@
         <servlet-name>Contractor_UploadContractorDocuments</servlet-name>
         <servlet-class>Servlet.Contractor_UploadContractorDocuments</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Contractor_ViewEligibilityDocuments</servlet-name>
+        <servlet-class>Servlet.Contractor_ViewEligibilityDocuments</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_Contractor_geteligibilityfile</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_Contractor_geteligibilityfile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_ReUpload</servlet-name>
+        <servlet-class>Servlet.Contractor_ReUpload</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_ViewProjectInvitation</servlet-name>
+        <servlet-class>Servlet.BAC_ViewProjectInvitation</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_ViewRespondents</servlet-name>
+        <servlet-class>Servlet.BAC_ViewRespondents</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_SetFailBid</servlet-name>
+        <servlet-class>Servlet.BAC_SetFailBid</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_BAC_generateidlecontractors</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_BAC_generateidlecontractors</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_BAC_SendBidInvitation</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_BAC_SendBidInvitation</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_ViewContractorProfile</servlet-name>
+        <servlet-class>Servlet.BAC_ViewContractorProfile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_ViewEligibilityDocuments</servlet-name>
+        <servlet-class>Servlet.BAC_ViewEligibilityDocuments</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_BAC_checkalldocuments</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_BAC_checkalldocuments</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_BAC_approvedocument</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_BAC_approvedocument</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_HoldContractorDocument</servlet-name>
+        <servlet-class>Servlet.BAC_HoldContractorDocument</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_ConfirmContractor</servlet-name>
+        <servlet-class>Servlet.BAC_ConfirmContractor</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_PlaceAward</servlet-name>
+        <servlet-class>Servlet.BAC_PlaceAward</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_UploadNotices</servlet-name>
+        <servlet-class>Servlet.BAC_UploadNotices</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -367,6 +431,70 @@
     <servlet-mapping>
         <servlet-name>Contractor_UploadContractorDocuments</servlet-name>
         <url-pattern>/Contractor_UploadContractorDocuments</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_ViewEligibilityDocuments</servlet-name>
+        <url-pattern>/Contractor_ViewEligibilityDocuments</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_Contractor_geteligibilityfile</servlet-name>
+        <url-pattern>/AJAX_Contractor_geteligibilityfile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_ReUpload</servlet-name>
+        <url-pattern>/Contractor_ReUpload</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_ViewProjectInvitation</servlet-name>
+        <url-pattern>/BAC_ViewProjectInvitation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_ViewRespondents</servlet-name>
+        <url-pattern>/BAC_ViewRespondents</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_SetFailBid</servlet-name>
+        <url-pattern>/BAC_SetFailBid</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_BAC_generateidlecontractors</servlet-name>
+        <url-pattern>/AJAX_BAC_generateidlecontractors</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_BAC_SendBidInvitation</servlet-name>
+        <url-pattern>/AJAX_BAC_SendBidInvitation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_ViewContractorProfile</servlet-name>
+        <url-pattern>/BAC_ViewContractorProfile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_ViewEligibilityDocuments</servlet-name>
+        <url-pattern>/BAC_ViewEligibilityDocuments</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_BAC_checkalldocuments</servlet-name>
+        <url-pattern>/AJAX_BAC_checkalldocuments</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_BAC_approvedocument</servlet-name>
+        <url-pattern>/AJAX_BAC_approvedocument</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_HoldContractorDocument</servlet-name>
+        <url-pattern>/BAC_HoldContractorDocument</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_ConfirmContractor</servlet-name>
+        <url-pattern>/BAC_ConfirmContractor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_PlaceAward</servlet-name>
+        <url-pattern>/BAC_PlaceAward</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_UploadNotices</servlet-name>
+        <url-pattern>/BAC_UploadNotices</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

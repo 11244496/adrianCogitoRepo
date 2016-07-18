@@ -6,6 +6,7 @@
 package DAO;
 
 import DB.ConnectionFactory;
+import Entity.Contractor;
 import Entity.Files;
 import Entity.Project;
 import Entity.Schedule;
@@ -151,6 +152,31 @@ public class AjaxDAO {
         return f;
 
     }
+    
+    public ArrayList<Contractor> getIdle() {
+        ArrayList<Contractor> cList = new ArrayList<>();
+        Contractor c;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from contractor";
+            statement = connection.prepareStatement(query);
+            result = statement.executeQuery();
+            while (result.next()) {
+                c = new Contractor();
+                c.setID(result.getInt("contractor.id"));
+                c.setName(result.getString("contractor.name"));
+                cList.add(c);
+            }
+            connection.close();
+            return cList;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cList;
+
+    }
+
 
 
 

@@ -417,7 +417,7 @@
                 console.log(docid);
                 $.ajax({
                     type: 'POST',
-                    url: 'geteligibilityfile',
+                    url: 'AJAX_Contractor_geteligibilityfile',
                     dataType: 'json',
                     cache: false,
                     data: {documentID: docid},
@@ -441,7 +441,7 @@
                 console.log(docid);
                 $.ajax({
                     type: 'POST',
-                    url: 'geteligibilityfile',
+                    url: 'AJAX_Contractor_geteligibilityfile',
                     dataType: 'json',
                     cache: false,
                     data: {documentID: docid},
@@ -464,7 +464,7 @@
                 console.log(docid);
                 $.ajax({
                     type: 'POST',
-                    url: 'geteligibilityfile',
+                    url: 'AJAX_Contractor_geteligibilityfile',
                     dataType: 'json',
                     cache: false,
                     data: {documentID: docid},
@@ -490,7 +490,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: 'BAC_approvedocument',
+                    url: 'AJAX_BAC_approvedocument',
                     dataType: 'json',
                     cache: false,
                     data: {documentID: docid},
@@ -516,7 +516,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: 'BAC_checkalldocuments',
+                    url: 'AJAX_BAC_checkalldocuments',
                     dataType: 'json',
                     cache: false,
                     data: {contprojID: cont},

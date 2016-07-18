@@ -131,7 +131,7 @@ public class ContractorDAO {
 
         return projects;
     }
-    
+
     public ArrayList<Project> getAllProjectsWithInvitation() {
 
         ArrayList<Project> projects = new ArrayList<Project>();
@@ -165,7 +165,7 @@ public class ContractorDAO {
 
         return projects;
     }
-    
+
     public ArrayList<Contractor_Has_Project> getRespondedProjects(Contractor contractor) {
 
         ArrayList<Contractor_Has_Project> respondedProjects = new ArrayList<Contractor_Has_Project>();
@@ -202,9 +202,8 @@ public class ContractorDAO {
         return respondedProjects;
 
     }
-    
+
     //========================================ALL CONTRACTOR HAS PROJECT CODES============================================
-    
     public void addContractorHasProject(Project project, Contractor contractor) {
 
         try {
@@ -228,7 +227,6 @@ public class ContractorDAO {
             Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 
     public Contractor_Has_Project getContractorHasProject(Project project, Contractor contractor) {
 
@@ -256,7 +254,7 @@ public class ContractorDAO {
 
         return contractorProject;
     }
-    
+
     public void updateConHasProject(int id) {
 
         try {
@@ -278,11 +276,7 @@ public class ContractorDAO {
         }
     }
 
-    
-    
-    
     //=============================================ALL INVITATION METHODS================================================
-    
     public ArrayList<InvitationToBid> getNegotiatedITB(Contractor c) {
         ArrayList<InvitationToBid> pList = new ArrayList<>();
         Project p;
@@ -321,7 +315,7 @@ public class ContractorDAO {
 
         return pList;
     }
-    
+
     public ArrayList<InvitationToBid> getInvitation(Project project) {
 
         ArrayList<InvitationToBid> invitation = new ArrayList<InvitationToBid>();
@@ -360,7 +354,7 @@ public class ContractorDAO {
         return invitation;
 
     }
-    
+
     //=====================================ALL ELIGIBILITY DOCUMENTS=================================================
     public void uploadEligibilityDocuments(Eligibility_Document document) {
 
@@ -388,7 +382,66 @@ public class ContractorDAO {
         }
     }
 
-    
+    public ArrayList<Eligibility_Document> getSubmittedDocuments(int id) {
+
+        ArrayList<Eligibility_Document> documents = new ArrayList<Eligibility_Document>();
+        Eligibility_Document doc;
+        Contractor_Has_Project contProject;
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from eligibility_documents where Contractor_has_Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                contProject = new Contractor_Has_Project();
+                contProject.setID(result.getInt("Contractor_has_Project_ID"));
+                doc = new Eligibility_Document(result.getInt("ID"), result.getString("FileName"), result.getString("FolderName"), result.getString("DateUploaded"), contProject, result.getString("Document_Type"), result.getString("Status"), result.getString("BAC_Remarks"));
+                documents.add(doc);
+            }
+
+            connection.close();
+
+            return documents;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return documents;
+    }
+
+    public void updateEligibilityDocument(int id, Eligibility_Document document) {
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "UPDATE eligibility_documents SET FileName = ?, FolderName = ?, DateUploaded = now(), Contractor_has_Project_ID= ?, Document_Type = ?, Status= ? WHERE ID = ?";
+
+            statement = connection.prepareStatement(query);
+
+            statement.setString(1, document.getFileName());
+            statement.setString(2, document.getFolderName());
+            statement.setInt(3, document.getContractor_has_project().getID());
+            statement.setString(4, document.getType());
+            statement.setString(5, "Pending");
+            statement.setInt(6, id);
+
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     //==========================================UTILITY CODES========================================================
     public String checkPage(int id, String idd) {
 
@@ -430,6 +483,5 @@ public class ContractorDAO {
 
         return result2;
     }
-
 
 }
