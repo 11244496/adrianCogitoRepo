@@ -4,6 +4,7 @@
     Author     : RoAnn
 --%>
 
+<%@page import="Entity.PWorks"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="Entity.Testimonial"%>
 <%@page import="Entity.Files"%>
@@ -20,18 +21,16 @@
 <%
 
     ArrayList<InvitationToBid> invitation = (ArrayList<InvitationToBid>) request.getAttribute("invitation");
-    Project p = (Project) request.getAttribute("projectInfo");
+    Project p = (Project) request.getAttribute("project");
 
 %>
 
-<%float cost = (Float) session.getAttribute("cost");%>
-<%ArrayList<Material> materials = p.getMaterials();%>
+<%float cost = (Float) request.getAttribute("cost");%>
+<%ArrayList<PWorks> pworks = p.getpWorks();%>
 <%ArrayList<Schedule> schedule = p.getSchedule();%>
 <%ArrayList<Files> files = p.getFiles();%>
-<%ArrayList<Testimonial> tList = (ArrayList<Testimonial>) session.getAttribute("testimonials");%>
 <%DecimalFormat df = new DecimalFormat("#,###.00");%>
-
-<%ArrayList<Files> pfiles = (ArrayList<Files>) session.getAttribute("pFiles");%>
+<%ArrayList<Files> pfiles = (ArrayList<Files>) request.getAttribute("pFiles");%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -263,9 +262,10 @@
                     <section class="panel">
 
                         <header class="panel-heading">
-                            Project Details
+                            View Project
                         </header>
                     </section>
+
                     <div class="row">
 
                         <div class="col-md-12">
@@ -294,7 +294,7 @@
 
                                                     <div>
                                                         <p><span class="bold">Category </span>:</p>
-                                                        <p><%=p.getType()%>&nbsp;-&nbsp;<%=p.getCategory().getSubCategory()%></p>
+                                                        <p><%=p.getType()%>&nbsp;-&nbsp;<%=p.getCategory()%></p>
                                                     </div><br>
                                                     <div>
                                                         <p><span class="bold">Date Submitted</span> :</p>
@@ -315,13 +315,8 @@
                                                     <br>  
 
                                                     <p><span class="bold">Project Progress:</span> :</p>
-
-                                                    <%
-                                                        double percentage = (Double) session.getAttribute("percentage");
-                                                    %>
-
                                                     <div class="progress progress-striped active ">
-                                                        <div style="width: <%=percentage%>%;" class="progress-bar progress-bar-success"></div>
+                                                        <div style="width: 10;" class="progress-bar progress-bar-success"></div>
                                                     </div>
                                                     <small>Current Status: <%out.print(p.getStatus());%></small>
 
@@ -347,55 +342,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"async defer></script>
 
-                                <script>
-                                                var map;
-                                                var markers = <%=session.getAttribute("location")%>;
-                                                function initMap() {
-                                                    map = new google.maps.Map(document.getElementById('map'), {
-                                                        center: {lat: 14.45, lng: 120.98},
-                                                        zoom: 14
-                                                    });
-
-                                                    markers.forEach(function (coor) {
-                                                        var geocoder = new google.maps.Geocoder;
-                                                        var latLng = new google.maps.LatLng(coor.longs, coor.lats);
-                                                        var marker = new google.maps.Marker({
-                                                            position: latLng,
-                                                            map: map
-                                                        });
-
-                                                        var infowindow = new google.maps.InfoWindow;
-
-                                                        marker.addListener('click', function () {
-                                                            geocodeLatLng(geocoder, map, infowindow, latLng);
-                                                        });
-                                                    });
-
-                                                }
-
-                                                function geocodeLatLng(geocoder, map, infowindow, latLng) {
-                                                    var latlng = latLng;
-                                                    geocoder.geocode({'location': latlng}, function (results, status) {
-                                                        if (status === google.maps.GeocoderStatus.OK) {
-                                                            if (results[0]) {
-                                                                var marker = new google.maps.Marker({
-                                                                    position: latlng,
-                                                                    map: map
-                                                                });
-                                                                infowindow.setContent(results[0].formatted_address);
-                                                                infowindow.open(map, marker);
-                                                            } else {
-                                                                window.alert('No results found');
-                                                            }
-                                                        } else {
-                                                            window.alert('Geocoder failed due to: ' + status);
-                                                        }
-                                                    });
-                                                }
-
-                                </script>
                             </section>
                             <div class="row">
 
@@ -411,47 +358,55 @@
                                         <section class="panel">
                                             <div class="panel-body">
                                                 <table class="table" style="width:100%; text-align: center">
+                                                    <%for (int x = 0; x < pworks.size(); x++) {%>
+
                                                     <tr>
-                                                        <th><center>Item Description</center></th>
-                                                    <th><center>% of Total</center></th>
+                                                        <th colspan="6"><%=pworks.get(x).getName()%></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th><center>Name</center></th>
                                                     <th><center>Quantity</center></th>
                                                     <th><center>Unit</center></th>
                                                     <th><center>Unit Price</center></th>
                                                     <th><center>Total</center></th>
                                                     </tr>
-                                                    <% for (Material m : materials) {%>
+                                                    <%for (int y = 0; y < pworks.get(x).getComponents().size(); y++) {%>
                                                     <tr>
-                                                        <td><%=m.getName()%></td>
-                                                        <td><%=m.getPercentage()%></td>
-                                                        <td><%=m.getQuantity()%></td>
-                                                        <td><%=m.getUnit().getUnit()%></td>
-                                                        <td><%=m.getUnitprice()%></td>
-                                                        <td><%=m.getUnitprice() * m.getQuantity()%></td>
+                                                        <td><%=pworks.get(x).getComponents().get(y).getName()%></td>
+                                                        <td><%=pworks.get(x).getComponents().get(y).getQuantity()%></td>
+                                                        <td><%=pworks.get(x).getComponents().get(y).getUnit().getUnit()%></td>
+                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice()%></td>
+                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice() * pworks.get(x).getComponents().get(y).getQuantity()%></td>
                                                     </tr>
+
+
                                                     <%}%>
+
+                                                    <%}%>
+
+                                                </table>
+                                                <br> 
+                                                <table class="table" style="width:100%; text-align: center">    
                                                     <tr>
-                                                        <td>Total cost: </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td colspan="4">Total cost: </td>
                                                         <td>PHP <%=df.format(cost)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="5">Indirect Cost 17% of Total Cost: </td>
+                                                        <td colspan="4">Indirect Cost 17% of Total Cost: </td>
                                                         <td>PHP <%=df.format(cost * 0.17)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="5">Tax 5% of Total Cost + Indirect Cost: </td>
+                                                        <td colspan="4">Tax 5% of Total Cost + Indirect Cost: </td>
                                                         <td>PHP <%=df.format((cost * 0.17) * .05)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="5">Estimated cost: </td>
+                                                        <td colspan="4">Estimated cost: </td>
                                                         <td>PHP <%=df.format(cost + (cost * 0.17) + ((cost * 0.17) * .05))%></td>
                                                     </tr>
+
                                                 </table>
                                             </div>
                                         </section>
@@ -459,148 +414,19 @@
                                 </section>                                                 
                             </div>
 
-                            <!------------------------------------------------------SCHEDULE------------------------------------------>
-                            <style>
-                                .planninglegend {color:#ff3399;}
-                                .biddinglegend {color:#00cc00;}
-                                .implementationlegend {color:#8080ff;}
-                            </style>
-
+                            <!-------------------------------------------------MAIN TESTIMONIAL UPLOADS------------------------------------------>
                             <section class="panel">
                                 <div class="bio-graph-heading project-heading">
-                                    <strong>Schedule</strong>
-                                </div>
-                                <div class="panel-body bio-graph-info">
-                                    <i class="fa fa-square planninglegend"></i>  Planning Events
-                                    <i class="fa fa-square biddinglegend" style="margin-left: 7px"></i>  Bidding Events
-                                    <i class="fa fa-square implementationlegend" style="margin-left: 7px"></i>  Implementation Events
-                                    <div id='calendar' style="height: 100%; width: 100%"></div>
-                                    <br>
-
-                                </div>
-
-                                <center>
-                                    <button class="btn btn-success" data-toggle="modal" type="button" value="Materials" id="taskSchedule">Show Subtasks</button>
-                                </center>
-                                <br>             
-
-
-                                <div class="modal fade" id="TaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-                                                <h4 class="modal-title">View Tasks</h4>
-                                            </div>
-                                            <div class="modal-body">
-
-                                                <table  class="display table table-bordered table-striped" id="projectTask">
-                                                    <thead id="tasktablehead">
-
-
-
-                                                    </thead>
-                                                    <tbody id="tasktablebody">
-
-
-
-                                                    </tbody>
-                                                </table>
-
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="modal fade" id="AddRemarks" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-                                                <h4 class="modal-title">Add Remarks</h4>
-                                            </div>
-                                            <div class="modal-body">
-
-
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </section>
-                            <input type="hidden" id="projId" value="<%=p.getId()%>" name="projId">
-                            <script>
-                                $('document').ready(function () {
-                                    $.ajax({
-                                        url: 'getscheduleforview',
-                                        type: 'POST',
-                                        dataType: 'json',
-                                        data: {projId: $('#projId').val()},
-                                        success: function (sched) {
-
-                                            $('#calendar').fullCalendar({
-                                                defaultView: 'month',
-                                                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-                                                header: {
-                                                    left: '',
-                                                    center: 'title',
-                                                    right: 'today prev,next'
-                                                }
-                                            });
-                                            inputActivities(sched);
-                                        }
-                                    });
-                                });
-
-                                function inputActivities(sched) {
-                                    $.each(sched, function (i) {
-                                        var color;
-                                        if (sched[i].stage === "Planning")
-                                            color = '#ff3399';
-                                        else if (sched[i].stage === "Bidding")
-                                            color = '#00cc00';
-                                        else if (sched[i].stage === "Implementation")
-                                            color = '#8080ff';
-                                        var my_events = {
-                                            events: [
-                                                {
-                                                    title: sched[i].event,
-                                                    start: sched[i].startdate,
-                                                    end: sched[i].enddate,
-                                                    dept: sched[i].dept,
-                                                    stage: sched[i].stage,
-                                                    color: color
-                                                }
-                                            ]
-                                        };
-
-                                        $('#calendar').fullCalendar('addEventSource', my_events);
-                                    });
-                                }
-
-                            </script>
-
-                            <!------------------------------------------------------UPLOADS------------------------------------------>
-                            <section class="panel">
-                                <div class="bio-graph-heading project-heading">
-                                    <strong>Citizen Testimonials</strong>
+                                    <strong>Project Main Testimonial</strong>
                                 </div>
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
                                     <div class="DocumentList2">
                                         <div class="row2">
                                             <%String url = null;%>
-                                            <%for (Testimonial t : tList) {
-                                                    for (Files f : t.getFiles()) {
-                                                        url = t.getFolderName() + "/" + f.getFileName();
-                                                        if (f.getType().equalsIgnoreCase("image")) {%>
+                                            <%Testimonial t = p.getMainTestimonial();
+                                                for (Files f : t.getFiles()) {
+                                                    url = t.getFolderName() + "/" + t.getTitle() + "/" + f.getFileName();
+                                                    if (f.getType().equalsIgnoreCase("image")) {%>
 
                                             <div class="col-lg-3 DocumentItem2">
                                                 <img src="<%=url%>" style="width:100%; height:100%">
@@ -626,6 +452,51 @@
                                             </div>
 
                                             <%}
+                                                }
+                                            %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>                        
+
+                            <!---------------------------------------------------REFERENCED TESTIMONIAL UPLOADS------------------------------------------>
+                            <section class="panel">
+                                <div class="bio-graph-heading project-heading">
+                                    <strong>Project Referenced Testimonial Files</strong>
+                                </div>
+                                <div class="panel-body bio-graph-info" style="height: 250px;">
+                                    <div class="DocumentList2">
+                                        <div class="row2">
+                                            <%String url2 = null;%>
+                                            <%for (Testimonial testi : p.getReferredTestimonials()) {
+                                                    for (Files f : testi.getFiles()) {
+                                                        url2 = testi.getFolderName() + "/" + testi.getTitle() + "/" + f.getFileName();
+                                                        if (f.getType().equalsIgnoreCase("image")) {%>
+
+                                            <div class="col-lg-3 DocumentItem2">
+                                                <img src="<%=url2%>" style="width:100%; height:100%">
+                                                <br/>
+                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                            </div>
+
+                                            <%} else if (f.getType().equalsIgnoreCase("video")) {%>
+
+                                            <div class="col-lg-3 DocumentItem2">
+                                                <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
+                                                    <source src="<%=url2%>" type="video/mp4">
+                                                </video>
+                                                <br/>
+                                                <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getTestimonial(<%=f.getId()%>)">View Details</button>                                        
+                                            </div>
+
+                                            <%} else if (f.getType().equalsIgnoreCase("document")) {%>
+                                            <div class="col-lg-3 DocumentItem2">
+                                                <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
+                                                <br/>
+                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                            </div>
+
+                                            <%}
 
                                                     }
                                                 }%>
@@ -637,7 +508,7 @@
                             <!------------------------------------------------------GS UPLOADS------------------------------------------>
                             <section class="panel">
                                 <div class="bio-graph-heading project-heading">
-                                    <strong>Project Proposals</strong>
+                                    <strong>Project Files</strong>
                                 </div>
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
                                     <div class="DocumentList2">
@@ -645,7 +516,7 @@
                                             <%
                                                 for (Files f : pfiles) {
 
-                                                    url = p.getFoldername() + "/" + f.getFileName();
+                                                    url = p.getFoldername() + "/" + p.getId() + "/" + f.getFileName();
                                                     if (f.getType().equalsIgnoreCase("image")) {%>
 
                                             <div class="col-lg-3 DocumentItem2">
@@ -677,12 +548,11 @@
                                             %>
                                         </div>
                                     </div>
-                                </div>
+                                </div>      
                             </section>
-
                         </div>
-
                     </div>
+                    <!-- page end-->
                 </section>
             </section>
 
@@ -767,18 +637,19 @@
             </div>
         </footer>
 
+        <script src="js/jquery.js"></script>
         <script>
             function getTestimonial(id) {
                 $.ajax({
                     type: 'POST',
-                    url: 'gettestimonial',
+                    url: 'AJAX_BAC_gettestimonial',
                     dataType: 'json',
                     data: {testId: id}, cache: false,
                     success: function (f) {
                         $('#fDisplay').empty();
-                        var url = f.testimonial.folderName + "/" + f.fileName;
+                        var url = f.testimonial.folderName + "/" + f.testimonial.title + "/" + f.fileName;
                         if (f.type === "Video") {
-                            $("<div data-p=\"144.50\"><video><source src=" + url + " type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
+                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
 
                         }
                         else if (f.type === "Image") {
@@ -803,14 +674,14 @@
             function getProjectFiles(id) {
                 $.ajax({
                     type: 'POST',
-                    url: 'getprojectfiles',
+                    url: 'AJAX_BAC_getProjectFiles',
                     dataType: 'json',
                     data: {testId: id}, cache: false,
                     success: function (f) {
                         $('#pfDisplay').empty();
-                        var url = "<%=p.getFoldername()%>" + "/" + f.fileName;
+                        var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
                         if (f.type === "Video") {
-                            $("<div data-p=\"144.50\"><video><source src=" + url + " type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
+                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
 
                         }
                         else if (f.type === "Image") {
@@ -828,7 +699,57 @@
             }
 
         </script>
-        <script src="js/jquery.js"></script>
+        
+        <script>
+           
+
+            var map;
+            var markers = <%=request.getAttribute("location")%>;
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: 14.45, lng: 120.98},
+                    zoom: 14
+                });
+
+                markers.forEach(function (coor) {
+                    var geocoder = new google.maps.Geocoder;
+                    var latLng = new google.maps.LatLng(coor.lats, coor.longs);
+                    var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map
+                    });
+
+                    var infowindow = new google.maps.InfoWindow;
+
+                    marker.addListener('click', function () {
+                        geocodeLatLng(geocoder, map, infowindow, latLng);
+                    });
+                });
+
+            }
+
+            function geocodeLatLng(geocoder, map, infowindow, latLng) {
+                var latlng = latLng;
+                geocoder.geocode({'location': latlng}, function (results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            var marker = new google.maps.Marker({
+                                position: latlng,
+                                map: map
+                            });
+                            infowindow.setContent(results[0].formatted_address);
+                            infowindow.open(map, marker);
+                        } else {
+                            window.alert('No results found');
+                        }
+                    } else {
+                        window.alert('Geocoder failed due to: ' + status);
+                    }
+                });
+            }
+
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"async defer></script>
         <script src="js/bootstrap.min.js"></script>
         <script class="include" type="text/javascript" src="js/jquery.dcjqaccordion.2.7.js"></script>
         <script src="js/jquery.nicescroll.js" type="text/javascript"></script>

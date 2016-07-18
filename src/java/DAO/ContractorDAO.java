@@ -5,10 +5,431 @@
  */
 package DAO;
 
+import DB.ConnectionFactory;
+import Entity.Contractor;
+import Entity.Contractor_Has_Project;
+import Entity.Contractor_User;
+import Entity.Eligibility_Document;
+import Entity.InvitationToBid;
+import Entity.Project;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author AdrianKyle
  */
 public class ContractorDAO {
+
+    Connection connection;
+    PreparedStatement statement;
+    ResultSet result;
+    ConnectionFactory myFactory;
+
+    //===========================================ALL CONTRACTOR METHODS================================================
+    public Contractor getContractor(int id) {
+
+        Contractor contractor = null;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from contractor where ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                contractor = new Contractor(result.getInt("ID"), result.getString("Name"));
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return contractor;
+    }
+
+    //=======================================ALL PROJECT METHODS=======================================================
+    public ArrayList<Project> getImplementedProjects(Contractor_User user) {
+
+        Project project = null;
+        ArrayList<Project> projects = new ArrayList<Project>();
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from project where Contractor_ID = ? AND Status = 'Implementation'";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, user.getID());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                project = new Project();
+                project.setId(result.getString("ID"));
+                project.setName(result.getString("Name"));
+                project.setDescription(result.getString("Description"));
+                project.setType(result.getString("Type"));
+                project.setStatus(result.getString("Status"));
+
+                projects.add(project);
+
+            }
+            connection.close();
+            return projects;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return projects;
+    }
+
+    public ArrayList<Project> getCompletedProjects(Contractor_User user) {
+
+        Project project = null;
+        ArrayList<Project> projects = new ArrayList<Project>();
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from project where Contractor_ID = ? AND Status = 'Finished'";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, user.getID());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                project = new Project();
+                project.setId(result.getString("ID"));
+                project.setName(result.getString("Name"));
+                project.setDescription(result.getString("Description"));
+                project.setType(result.getString("Type"));
+                project.setStatus(result.getString("Status"));
+
+                projects.add(project);
+
+            }
+            connection.close();
+            return projects;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return projects;
+    }
     
+    public ArrayList<Project> getAllProjectsWithInvitation() {
+
+        ArrayList<Project> projects = new ArrayList<Project>();
+        Project project;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from project where Status = 'Posted Invitation'";
+            statement = connection.prepareStatement(query);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                project = new Project();
+                project.setId(result.getString("ID"));
+                project.setName(result.getString("Name"));
+                project.setDescription(result.getString("Description"));
+                project.setType(result.getString("Type"));
+                project.setStatus(result.getString("Status"));
+                projects.add(project);
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return projects;
+    }
+    
+    public ArrayList<Contractor_Has_Project> getRespondedProjects(Contractor contractor) {
+
+        ArrayList<Contractor_Has_Project> respondedProjects = new ArrayList<Contractor_Has_Project>();
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from contractor_has_project JOIN  project on project.ID = contractor_has_project.Project_ID where contractor_has_project.Contractor_ID = ? AND contractor_has_project.Status NOT LIKE 'Winning Bidder' ";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, contractor.getID());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                Project project = new Project();
+                project.setId(result.getString("project.ID"));
+                project.setName(result.getString("Name"));
+                project.setDescription(result.getString("Description"));
+                project.setType(result.getString("Type"));
+                project.setStatus(result.getString("Status"));
+                Contractor_Has_Project conProject = new Contractor_Has_Project(result.getInt("contractor_has_project.ID"), project, contractor, result.getString("contractor_has_project.Status"));
+
+                respondedProjects.add(conProject);
+            }
+            connection.close();
+            return respondedProjects;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return respondedProjects;
+
+    }
+    
+    //========================================ALL CONTRACTOR HAS PROJECT CODES============================================
+    
+    public void addContractorHasProject(Project project, Contractor contractor) {
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "insert into contractor_has_project (Project_ID,Contractor_ID,Status) values (?,?,?);";
+
+            statement = connection.prepareStatement(query);
+
+            statement.setString(1, project.getId());
+            statement.setInt(2, contractor.getID());
+            statement.setString(3, "For eligibility check");
+
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+
+    public Contractor_Has_Project getContractorHasProject(Project project, Contractor contractor) {
+
+        Contractor_Has_Project contractorProject = null;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from contractor_has_project where Project_ID = ? AND Contractor_ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, project.getId());
+            statement.setInt(2, contractor.getID());
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                contractorProject = new Contractor_Has_Project(result.getInt("ID"), project, contractor, result.getString("Status"));
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return contractorProject;
+    }
+    
+    public void updateConHasProject(int id) {
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "update contractor_has_project set Status=? where id = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, "For eligibility check");
+            statement.setInt(2, id);
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    
+    
+    
+    //=============================================ALL INVITATION METHODS================================================
+    
+    public ArrayList<InvitationToBid> getNegotiatedITB(Contractor c) {
+        ArrayList<InvitationToBid> pList = new ArrayList<>();
+        Project p;
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select project.id, project.Name, project.Description, invitationtobid.reason from contractor_has_project \n"
+                    + "join invitationtobid on invitationtobid.project_ID = contractor_has_project.project_id\n"
+                    + "join contractor on contractor_has_project.contractor_id = contractor.id\n"
+                    + "join project on invitationtobid.project_id = project.id\n"
+                    + "where invitationtobid.status = \"negotiated\" and contractor.id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, c.getID());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                p = new Project();
+                p.setId(result.getString("project.id"));
+                p.setName(result.getString("project.name"));
+                p.setDescription(result.getString("project.description"));
+                InvitationToBid itb = new InvitationToBid();
+                itb.setReason(result.getString("reason"));
+                itb.setProjectID(p);
+                pList.add(itb);
+            }
+
+            connection.close();
+
+            return pList;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return pList;
+    }
+    
+    public ArrayList<InvitationToBid> getInvitation(Project project) {
+
+        ArrayList<InvitationToBid> invitation = new ArrayList<InvitationToBid>();
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from invitationtobid where Project_ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, project.getId());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                InvitationToBid invite = new InvitationToBid();
+                if (!result.getString("status").equalsIgnoreCase("Fail")) {
+                    invite.setID(result.getInt("ID"));
+                    invite.setFileName(result.getString("FileName"));
+                    invite.setDateUploaded(result.getString("DateUploaded"));
+                    invite.setProjectID(project);
+                    invite.setFolderName(result.getString("FolderName"));
+
+                    invitation.add(invite);
+                }
+            }
+            connection.close();
+            return invitation;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return invitation;
+
+    }
+    
+    //=====================================ALL ELIGIBILITY DOCUMENTS=================================================
+    public void uploadEligibilityDocuments(Eligibility_Document document) {
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "INSERT INTO eligibility_documents (FileName, FolderName, DateUploaded, Contractor_has_Project_ID, Document_Type, Status) VALUES (?, ?, now(), ?, ?, ?);";
+
+            statement = connection.prepareStatement(query);
+
+            statement.setString(1, document.getFileName());
+            statement.setString(2, document.getFolderName());
+            statement.setInt(3, document.getContractor_has_project().getID());
+            statement.setString(4, document.getType());
+            statement.setString(5, "Pending");
+
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    
+    //==========================================UTILITY CODES========================================================
+    public String checkPage(int id, String idd) {
+
+        int result1 = 0;
+        String result2 = null;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+//            String query = "SELECT CASE WHEN NOT EXISTS(SELECT * FROM eligibility_documents WHERE eligibility_documents.Contractor_has_Project_ID = ? AND eligibility_documents.Status = 'Approved') THEN 'Y' ELSE 'N' END AS My_Result";
+            String query = "select count(*) as c from contractor_has_project where Contractor_ID = ? AND Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            statement.setString(2, idd);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                result1 = result.getInt("c");
+            }
+
+            if (result1 <= 0) {
+                result2 = "N";
+
+            } else if (result1 > 0) {
+
+                result2 = "Y";
+
+            }
+
+            statement.close();
+
+            connection.close();
+            return result2;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result2;
+    }
+
+
 }

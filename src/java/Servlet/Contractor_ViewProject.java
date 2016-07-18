@@ -6,9 +6,11 @@
 package Servlet;
 
 import DAO.BACDAO;
+import DAO.ContractorDAO;
 import DAO.GSDAO;
 import DAO.OCPDDAO;
 import Entity.Files;
+import Entity.InvitationToBid;
 import Entity.Location;
 import Entity.Project;
 import Entity.Schedule;
@@ -32,8 +34,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Krist
  */
-@WebServlet(name = "BAC_ViewProject", urlPatterns = {"/BAC_ViewProject"})
-public class BAC_ViewProject extends HttpServlet {
+@WebServlet(name = "Contractor_ViewProject", urlPatterns = {"/Contractor_ViewProject"})
+public class Contractor_ViewProject extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -52,15 +54,16 @@ public class BAC_ViewProject extends HttpServlet {
             GSDAO gdao = new GSDAO();
             OCPDDAO oc = new OCPDDAO();
             BACDAO bac = new BACDAO();
-            
+            ContractorDAO contDAO = new ContractorDAO();
+                    
             
             String id = request.getParameter("projectID");
 
             Project project = oc.getAllProjectDetails(id);
             ArrayList<Location> projectLocation = project.getLocation();
             String location = new Gson().toJson(projectLocation);
-            session.setAttribute("location", location);
-            session.setAttribute("cost", oc.getCost(project));
+            request.setAttribute("location", location);
+            request.setAttribute("cost", oc.getCost(project));
 
             Testimonial mainTesti = gdao.getTestimonial(project.getMainTestimonial().getId());
             project.setMainTestimonial(mainTesti);
@@ -83,11 +86,20 @@ public class BAC_ViewProject extends HttpServlet {
             
             //Set new arraylist of proposal files
             ArrayList<Files> projectFiles = project.getFiles();
-            session.setAttribute("pFiles", projectFiles);
-            request.setAttribute("hasItb", bac.hasITB(project));
-            session.setAttribute("project", project);
+            request.setAttribute("pFiles", projectFiles);
+            request.setAttribute("project", project);
+            
+            
+            ArrayList<InvitationToBid> invitation = contDAO.getInvitation(project);
+            request.setAttribute("invitation", invitation);
+            
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch = context.getRequestDispatcher("/BAC_ViewProject.jsp");
+            RequestDispatcher dispatch = null;
+            if (!project.getStatus().equalsIgnoreCase("For Negotiation")) {
+                dispatch = context.getRequestDispatcher("/Contractor_ViewProject.jsp");
+            } else {
+                dispatch = context.getRequestDispatcher("/Contractor_ViewProjectN.jsp");
+            }
             dispatch.forward(request, response);
 
         } finally {

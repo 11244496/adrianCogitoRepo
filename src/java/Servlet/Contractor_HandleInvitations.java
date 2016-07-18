@@ -5,24 +5,18 @@
  */
 package Servlet;
 
-import DAO.BACDAO;
-import DAO.GSDAO;
-import DAO.OCPDDAO;
-import Entity.Files;
-import Entity.Location;
+import DAO.ContractorDAO;
+import Entity.Contractor;
+import Entity.Contractor_Has_Project;
+import Entity.Contractor_User;
+import Entity.InvitationToBid;
 import Entity.Project;
-import Entity.Schedule;
-import Entity.Task;
-import Entity.Testimonial;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,10 +24,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Krist
+ * @author Lenovo
  */
-@WebServlet(name = "BAC_ViewProject", urlPatterns = {"/BAC_ViewProject"})
-public class BAC_ViewProject extends HttpServlet {
+public class Contractor_HandleInvitations extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,50 +40,28 @@ public class BAC_ViewProject extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         try {
-            GSDAO gdao = new GSDAO();
-            OCPDDAO oc = new OCPDDAO();
-            BACDAO bac = new BACDAO();
-            
-            
-            String id = request.getParameter("projectID");
 
-            Project project = oc.getAllProjectDetails(id);
-            ArrayList<Location> projectLocation = project.getLocation();
-            String location = new Gson().toJson(projectLocation);
-            session.setAttribute("location", location);
-            session.setAttribute("cost", oc.getCost(project));
+            ContractorDAO cont = new ContractorDAO();
+            //Gets the contractor
+            Contractor_User contractor_user = (Contractor_User) session.getAttribute("user");
+            Contractor contractor = contractor_user.getContractor();
 
-            Testimonial mainTesti = gdao.getTestimonial(project.getMainTestimonial().getId());
-            project.setMainTestimonial(mainTesti);
-            
-            //References
-            ArrayList<Testimonial> referencedTList = new ArrayList<Testimonial>();
-            ArrayList<Project> referencedPList = new ArrayList<Project>();
-            
-            for(int x = 0; x<project.getReferredTestimonials().size();x++){
-                Testimonial t = gdao.getTestimonial(project.getReferredTestimonials().get(x).getId());
-                referencedTList.add(t);
-            }
-            project.setReferredTestimonials(referencedTList);
-            
-            for(int x = 0; x < project.getReferredProjects().size();x++){
-                Project p = oc.getAllProjectDetails(project.getReferredProjects().get(x).getId());
-                referencedPList.add(p);
-            }
-            project.setReferredProjects(referencedPList);
-            
-            //Set new arraylist of proposal files
-            ArrayList<Files> projectFiles = project.getFiles();
-            session.setAttribute("pFiles", projectFiles);
-            request.setAttribute("hasItb", bac.hasITB(project));
-            session.setAttribute("project", project);
+            ArrayList<Project> projects = cont.getAllProjectsWithInvitation();
+            ArrayList<Contractor_Has_Project> respondedProjects = cont.getRespondedProjects(contractor);
+            ArrayList<InvitationToBid> nego = cont.getNegotiatedITB(contractor);
+            request.setAttribute("projectsWithInvitation", projects);
+            request.setAttribute("nego", nego);
+            request.setAttribute("respondedProjects", respondedProjects);
+
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch = context.getRequestDispatcher("/BAC_ViewProject.jsp");
+            RequestDispatcher dispatch = context.getRequestDispatcher("/Contractor_HandleInvitations.jsp");
             dispatch.forward(request, response);
 
         } finally {
+
             out.close();
         }
 

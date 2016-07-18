@@ -240,7 +240,7 @@
                                                                 <form action="Contractor_ViewProject">
                                                                     <input type="hidden" name="projectID" value="<%=projects.get(x).getId()%>">
 
-                                                                    <button type="submit" class="btn btn-success btn-xs" value="View proposal details"><i class="fa fa-eye"></i>Open invitation</button>
+                                                                    <button type="submit" class="btn btn-success btn-xs" value="View proposal details"><i class="fa fa-eye"></i> Open invitation</button>
 
                                                                 </form>
                                                             </td>

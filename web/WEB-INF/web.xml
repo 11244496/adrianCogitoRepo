@@ -140,6 +140,50 @@
         <servlet-name>BAC_UploadInvitationToBid</servlet-name>
         <servlet-class>Servlet.BAC_UploadInvitationToBid</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AJAX_BAC_gettestimonial</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_BAC_gettestimonial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_BAC_getProjectFiles</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_BAC_getProjectFiles</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_NotificationActivity</servlet-name>
+        <servlet-class>Servlet.BAC_NotificationActivity</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_Home</servlet-name>
+        <servlet-class>Servlet.Contractor_Home</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_ViewProjectList</servlet-name>
+        <servlet-class>Servlet.Contractor_ViewProjectList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_HandleInvitations</servlet-name>
+        <servlet-class>Servlet.Contractor_HandleInvitations</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_ViewProject</servlet-name>
+        <servlet-class>Servlet.Contractor_ViewProject</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_UploadDocPage</servlet-name>
+        <servlet-class>Servlet.Contractor_UploadDocPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_Contractor_CheckPage</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_Contractor_CheckPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_UploadBiddingProposal</servlet-name>
+        <servlet-class>Servlet.Contractor_UploadBiddingProposal</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_UploadContractorDocuments</servlet-name>
+        <servlet-class>Servlet.Contractor_UploadContractorDocuments</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -279,7 +323,51 @@
     <servlet-mapping>
         <servlet-name>GS_ReplyToTestimonial</servlet-name>
         <url-pattern>/GS_ReplyToTestimonial</url-pattern>
-    </servlet-mapping>    
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_BAC_gettestimonial</servlet-name>
+        <url-pattern>/AJAX_BAC_gettestimonial</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_BAC_getProjectFiles</servlet-name>
+        <url-pattern>/AJAX_BAC_getProjectFiles</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_NotificationActivity</servlet-name>
+        <url-pattern>/BAC_NotificationActivity</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_Home</servlet-name>
+        <url-pattern>/Contractor_Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_ViewProjectList</servlet-name>
+        <url-pattern>/Contractor_ViewProjectList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_HandleInvitations</servlet-name>
+        <url-pattern>/Contractor_HandleInvitations</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_ViewProject</servlet-name>
+        <url-pattern>/Contractor_ViewProject</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_UploadDocPage</servlet-name>
+        <url-pattern>/Contractor_UploadDocPage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_Contractor_CheckPage</servlet-name>
+        <url-pattern>/AJAX_Contractor_CheckPage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_UploadBiddingProposal</servlet-name>
+        <url-pattern>/Contractor_UploadBiddingProposal</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_UploadContractorDocuments</servlet-name>
+        <url-pattern>/Contractor_UploadContractorDocuments</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

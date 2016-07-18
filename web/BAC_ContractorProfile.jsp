@@ -114,15 +114,9 @@
                     </li>
 
                     <li>
-                        <a href="BAC_NotificationList">
+                        <a href="BAC_NotificationActivity">
                             <i class="fa fa-book"></i>
-                            <span>Notifications</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="BAC_ActivityList">
-                            <i class="fa fa-book"></i>
-                            <span>Department Activity Log</span>
+                            <span>Notifications and Activity</span>
                         </a>
                     </li>
                 </ul>

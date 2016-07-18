@@ -16,12 +16,11 @@
 <%@page import="Entity.Citizen"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%Employee bac = (Employee) session.getAttribute("user");%>
-<%Project p = (Project) session.getAttribute("projectInfo");%>
+<%Project p = (Project) session.getAttribute("project");%>
 <%float cost = (Float) session.getAttribute("cost");%>
 <%ArrayList<PWorks> pworks = p.getpWorks();%>
 <%ArrayList<Schedule> schedule = p.getSchedule();%>
 <%ArrayList<Files> files = p.getFiles();%>
-<%ArrayList<Testimonial> tList = (ArrayList<Testimonial>) session.getAttribute("testimonials");%>
 <%DecimalFormat df = new DecimalFormat("#,###.00");%>
 <%boolean hasITB = (Boolean) request.getAttribute("hasItb");%>
 
@@ -160,15 +159,9 @@
                     </li>
 
                     <li>
-                        <a href="BAC_NotificationList">
+                        <a href="BAC_NotificationActivity">
                             <i class="fa fa-book"></i>
-                            <span>Notifications</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="BAC_ActivityList">
-                            <i class="fa fa-book"></i>
-                            <span>Department Activity Log</span>
+                            <span>Notifications and Activity</span>
                         </a>
                     </li>
                 </ul>
@@ -182,7 +175,7 @@
 
                     <header class="panel-heading">
                         View Project
-                        <%if(!hasITB){%>
+                        <%if (!hasITB) {%>
                         <span class="pull-right">
                             <a class="btn btn-success btn-sm" data-toggle="modal" href="#uploadModal"><i class="fa  fa-upload"></i> Upload Invitation to Bid</a>
                         </span>
@@ -231,21 +224,12 @@
                                                     <p>PHP <%=df.format(p.getBudget())%></p>
                                                 </div><br>
                                                 <%}%>
-                                                <div>
-                                                    <p><span class="bold">Additional Files:</span> :</p>
-                                                    <p>FILE.doc</p>
-                                                </div>
 
                                                 <br>  
 
                                                 <p><span class="bold">Project Progress:</span> :</p>
-
-                                                <%
-                                                    double percentage = (Double) session.getAttribute("percentage");
-                                                %>
-
                                                 <div class="progress progress-striped active ">
-                                                    <div style="width: <%=percentage%>%;" class="progress-bar progress-bar-success"></div>
+                                                    <div style="width: 10;" class="progress-bar progress-bar-success"></div>
                                                 </div>
                                                 <small>Current Status: <%out.print(p.getStatus());%></small>
 
@@ -343,19 +327,19 @@
                             </section>                                                 
                         </div>
 
-                        <!------------------------------------------------------UPLOADS------------------------------------------>
+                        <!-------------------------------------------------MAIN TESTIMONIAL UPLOADS------------------------------------------>
                         <section class="panel">
                             <div class="bio-graph-heading project-heading">
-                                <strong>Citizen Testimonials</strong>
+                                <strong>Project Main Testimonial</strong>
                             </div>
                             <div class="panel-body bio-graph-info" style="height: 250px;">
                                 <div class="DocumentList2">
                                     <div class="row2">
                                         <%String url = null;%>
-                                        <%for (Testimonial t : tList) {
-                                                for (Files f : t.getFiles()) {
-                                                    url = t.getFolderName() + "/" + f.getFileName();
-                                                    if (f.getType().equalsIgnoreCase("image")) {%>
+                                        <%Testimonial t = p.getMainTestimonial();
+                                            for (Files f : t.getFiles()) {
+                                                url = t.getFolderName() + "/" + t.getTitle() + "/" + f.getFileName();
+                                                if (f.getType().equalsIgnoreCase("image")) {%>
 
                                         <div class="col-lg-3 DocumentItem2">
                                             <img src="<%=url%>" style="width:100%; height:100%">
@@ -381,6 +365,51 @@
                                         </div>
 
                                         <%}
+                                            }
+                                        %>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>                        
+
+                        <!---------------------------------------------------REFERENCED TESTIMONIAL UPLOADS------------------------------------------>
+                        <section class="panel">
+                            <div class="bio-graph-heading project-heading">
+                                <strong>Project Referenced Testimonial Files</strong>
+                            </div>
+                            <div class="panel-body bio-graph-info" style="height: 250px;">
+                                <div class="DocumentList2">
+                                    <div class="row2">
+                                        <%String url2 = null;%>
+                                        <%for (Testimonial testi : p.getReferredTestimonials()) {
+                                                for (Files f : testi.getFiles()) {
+                                                    url2 = testi.getFolderName() + "/" + testi.getTitle() + "/" + f.getFileName();
+                                                    if (f.getType().equalsIgnoreCase("image")) {%>
+
+                                        <div class="col-lg-3 DocumentItem2">
+                                            <img src="<%=url2%>" style="width:100%; height:100%">
+                                            <br/>
+                                            <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                        </div>
+
+                                        <%} else if (f.getType().equalsIgnoreCase("video")) {%>
+
+                                        <div class="col-lg-3 DocumentItem2">
+                                            <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
+                                                <source src="<%=url2%>" type="video/mp4">
+                                            </video>
+                                            <br/>
+                                            <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getTestimonial(<%=f.getId()%>)">View Details</button>                                        
+                                        </div>
+
+                                        <%} else if (f.getType().equalsIgnoreCase("document")) {%>
+                                        <div class="col-lg-3 DocumentItem2">
+                                            <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
+                                            <br/>
+                                            <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                        </div>
+
+                                        <%}
 
                                                 }
                                             }%>
@@ -392,7 +421,7 @@
                         <!------------------------------------------------------GS UPLOADS------------------------------------------>
                         <section class="panel">
                             <div class="bio-graph-heading project-heading">
-                                <strong>Project Proposals</strong>
+                                <strong>Project Files</strong>
                             </div>
                             <div class="panel-body bio-graph-info" style="height: 250px;">
                                 <div class="DocumentList2">
@@ -400,7 +429,7 @@
                                         <%
                                             for (Files f : pfiles) {
 
-                                                url = p.getFoldername() + "/" + f.getFileName();
+                                                url = p.getFoldername() + "/" + p.getId() + "/" + f.getFileName();
                                                 if (f.getType().equalsIgnoreCase("image")) {%>
 
                                         <div class="col-lg-3 DocumentItem2">
@@ -531,14 +560,14 @@
             function getTestimonial(id) {
                 $.ajax({
                     type: 'POST',
-                    url: 'gettestimonial',
+                    url: 'AJAX_BAC_gettestimonial',
                     dataType: 'json',
                     data: {testId: id}, cache: false,
                     success: function (f) {
                         $('#fDisplay').empty();
-                        var url = f.testimonial.folderName + "/" + f.fileName;
+                        var url = f.testimonial.folderName + "/" + f.testimonial.title + "/" + f.fileName;
                         if (f.type === "Video") {
-                            $("<div data-p=\"144.50\"><video><source src=" + url + " type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
+                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
 
                         }
                         else if (f.type === "Image") {
@@ -563,14 +592,14 @@
             function getProjectFiles(id) {
                 $.ajax({
                     type: 'POST',
-                    url: 'getprojectfiles',
+                    url: 'AJAX_BAC_getProjectFiles',
                     dataType: 'json',
                     data: {testId: id}, cache: false,
                     success: function (f) {
                         $('#pfDisplay').empty();
-                        var url = "<%=p.getFoldername()%>" + "/" + f.fileName;
+                        var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
                         if (f.type === "Video") {
-                            $("<div data-p=\"144.50\"><video><source src=" + url + " type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
+                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
 
                         }
                         else if (f.type === "Image") {
@@ -611,7 +640,7 @@
 
                 markers.forEach(function (coor) {
                     var geocoder = new google.maps.Geocoder;
-                    var latLng = new google.maps.LatLng(coor.longs, coor.lats);
+                    var latLng = new google.maps.LatLng(coor.lats, coor.longs);
                     var marker = new google.maps.Marker({
                         position: latLng,
                         map: map

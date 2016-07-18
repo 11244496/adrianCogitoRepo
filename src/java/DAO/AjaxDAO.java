@@ -6,8 +6,10 @@
 package DAO;
 
 import DB.ConnectionFactory;
+import Entity.Files;
 import Entity.Project;
 import Entity.Schedule;
+import Entity.Testimonial;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -88,6 +90,69 @@ public class AjaxDAO {
 
         return id;
     }
+    
+    public Files getFile(int id) {
+        Files f = null;
+        Testimonial t;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String filesQuery = ("select * from files where id = ?");
+            statement = connection.prepareStatement(filesQuery);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                f = new Files();
+                f.setId(id);
+                f.setFileName(result.getString("FileName"));
+                f.setDateUploaded(result.getString("DateUploaded"));
+                f.setType(result.getString("type"));
+                f.setStatus(result.getString("status"));
+                f.setUploader(result.getString("uploader"));
+                t = new Testimonial();
+                t.setId(result.getInt("Testimonial_ID"));
+                f.setTestimonial(t);
+            }
+            connection.close();
+            return f;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return f;
+
+    }
+    
+    
+
+    public Files getProjectFile(int id) {
+        Files f = null;
+        Testimonial t;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String filesQuery = ("select * from files where id = ?");
+            statement = connection.prepareStatement(filesQuery);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                f = new Files();
+                f.setId(id);
+                f.setFileName(result.getString("FileName"));
+                f.setDateUploaded(result.getString("DateUploaded"));
+                f.setType(result.getString("type"));
+                f.setStatus(result.getString("status"));
+                f.setUploader(result.getString("uploader"));
+            }
+            connection.close();
+            return f;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return f;
+
+    }
+
+
 
 //        Random r = new Random();
 //        int num = r.nextInt(8999);
