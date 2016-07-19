@@ -5,26 +5,21 @@
  */
 package Servlet;
 
-import DAO.CitizenDAO;
 import DAO.GSDAO;
-import Entity.Testimonial;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author AdrianKyle
+ * @author RoAnn
  */
-public class GS_CreateProposal extends HttpServlet {
+public class GS_ViewProjectList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,33 +33,13 @@ public class GS_CreateProposal extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        HttpSession session = request.getSession();
-        try {
+        try (PrintWriter out = response.getWriter()) {
             GSDAO gs = new GSDAO();
-            CitizenDAO c = new CitizenDAO();
-
-            //Get All Testimonials
-            ArrayList<Testimonial> allTestimonials = gs.getAllTestimonials();
-            for (int x = 0; x < allTestimonials.size(); x++) {
-                allTestimonials.get(x).setFiles(c.getFilesWithStatus(allTestimonials.get(x).getId(),allTestimonials.get(x), "Approved"));
-                allTestimonials.get(x).setMainproject(gs.getMainProjectOnTestimonial(allTestimonials.get(x).getId()));
-                allTestimonials.get(x).setReferencedproject(gs.getReferenceProjectOnTestimonial(allTestimonials.get(x).getId()));
-            }
-
-            //Request set attributes testimonials
-            request.setAttribute("allTestimonials", allTestimonials);
-            request.setAttribute("worksList", gs.getWorks());
-            request.setAttribute("works", new Gson().toJson(gs.getWorks()));
-            request.setAttribute("unitGson", new Gson().toJson(gs.getAllUnits()));
-            
+            request.setAttribute("pList", gs.getProjectsForList());
             ServletContext context = getServletContext();
-
-            RequestDispatcher dispatch = context.getRequestDispatcher("/GS_CreateProposal.jsp");
+            RequestDispatcher dispatch = context.getRequestDispatcher("/GS_ViewProjectList.jsp");
             dispatch.forward(request, response);
 
-        } finally {
-            out.close();
         }
     }
 

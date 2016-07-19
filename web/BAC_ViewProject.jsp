@@ -515,6 +515,7 @@
                 </div>
             </div>
         </div>
+                                    
         <form action="BAC_UploadInvitationToBid" class="form-horizontal tasi-form" method="POST" enctype="multipart/form-data">  
 
             <div class="modal fade top-modal-without-space" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">

@@ -152,7 +152,7 @@
                                 </div>
                                 <label class="col-sm-2 col-sm-2 control-label">Concern<i class="formAsterisk">*</i></label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" rows="10" name="testimonialtype" onchange="showDiv(this)">
+                                    <select class="form-control" required rows="10" name="testimonialtype" onchange="showDiv(this)">
                                         <option  selected disabled hidden required>Select category</option>
                                         <option value="NewProject">Suggest project</option>
                                         <option value="Maintenance">Maintenance/Repair</option>

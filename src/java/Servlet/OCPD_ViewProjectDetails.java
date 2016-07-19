@@ -5,12 +5,16 @@
  */
 package Servlet;
 
-import DAO.CitizenDAO;
 import DAO.GSDAO;
+import DAO.OCPDDAO;
+import Entity.Files;
+import Entity.Location;
+import Entity.Project;
 import Entity.Testimonial;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import static java.lang.System.out;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -22,9 +26,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author AdrianKyle
+ * @author RoAnn
  */
-public class GS_CreateProposal extends HttpServlet {
+public class OCPD_ViewProjectDetails extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,34 +42,57 @@ public class GS_CreateProposal extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        HttpSession session = request.getSession();
-        try {
-            GSDAO gs = new GSDAO();
-            CitizenDAO c = new CitizenDAO();
-
-            //Get All Testimonials
-            ArrayList<Testimonial> allTestimonials = gs.getAllTestimonials();
-            for (int x = 0; x < allTestimonials.size(); x++) {
-                allTestimonials.get(x).setFiles(c.getFilesWithStatus(allTestimonials.get(x).getId(),allTestimonials.get(x), "Approved"));
-                allTestimonials.get(x).setMainproject(gs.getMainProjectOnTestimonial(allTestimonials.get(x).getId()));
-                allTestimonials.get(x).setReferencedproject(gs.getReferenceProjectOnTestimonial(allTestimonials.get(x).getId()));
-            }
-
-            //Request set attributes testimonials
-            request.setAttribute("allTestimonials", allTestimonials);
-            request.setAttribute("worksList", gs.getWorks());
-            request.setAttribute("works", new Gson().toJson(gs.getWorks()));
-            request.setAttribute("unitGson", new Gson().toJson(gs.getAllUnits()));
+        try (PrintWriter out = response.getWriter()) {
+            HttpSession session = request.getSession();
+            /* TODO output your page here. You may use following sample code. */
+            GSDAO gdao = new GSDAO();
+            OCPDDAO oc = new OCPDDAO();
             
-            ServletContext context = getServletContext();
+            
+            String id = request.getParameter("projid");
 
-            RequestDispatcher dispatch = context.getRequestDispatcher("/GS_CreateProposal.jsp");
+            Project project = oc.getAllProjectDetails(id);
+            ArrayList<Location> projectLocation = project.getLocation();
+            String location = new Gson().toJson(projectLocation);
+            session.setAttribute("location", location);
+            session.setAttribute("cost", oc.getCost(project));
+
+            Testimonial mainTesti = gdao.getTestimonial(project.getMainTestimonial().getId());
+            project.setMainTestimonial(mainTesti);
+            
+            //References
+            ArrayList<Testimonial> referencedTList = new ArrayList<Testimonial>();
+            ArrayList<Project> referencedPList = new ArrayList<Project>();
+            
+            for(int x = 0; x<project.getReferredTestimonials().size();x++){
+                Testimonial t = gdao.getTestimonial(project.getReferredTestimonials().get(x).getId());
+                referencedTList.add(t);
+            }
+            project.setReferredTestimonials(referencedTList);
+            
+            for(int x = 0; x < project.getReferredProjects().size();x++){
+                Project p = oc.getAllProjectDetails(project.getReferredProjects().get(x).getId());
+                referencedPList.add(p);
+            }
+            project.setReferredProjects(referencedPList);
+            
+            //Set new arraylist of proposal files
+            ArrayList<Files> projectFiles = project.getFiles();
+            session.setAttribute("pFiles", projectFiles);
+            session.setAttribute("project", project);
+            ServletContext context = getServletContext();
+            RequestDispatcher dispatch;
+            if (project.getStatus().equalsIgnoreCase("On-hold")){
+                dispatch = context.getRequestDispatcher("/OCPD_ViewProjectDetailsOnHold.jsp");
+            } else {
+                dispatch = context.getRequestDispatcher("/OCPD_ViewProjectDetails.jsp");
+            }
             dispatch.forward(request, response);
 
         } finally {
             out.close();
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

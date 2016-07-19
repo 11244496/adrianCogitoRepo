@@ -1,9 +1,8 @@
 <%-- 
-    Document   : OCPD_ViewProjectDetails
-    Created on : 03 14, 16, 10:29:11 PM
+    Document   : GS_ViewProjectDetailsOnHold
+    Created on : 07 19, 16, 4:48:02 PM
     Author     : RoAnn
 --%>
-
 
 <%@page import="Entity.Testimonial"%>
 <%@page import="java.text.DecimalFormat"%>
@@ -181,42 +180,53 @@
                     <!-- sidebar menu start-->
                     <ul class="sidebar-menu" id="nav-accordion">
                         <li>
-                            <a href="OCPD_Home" class="active">
+                            <a href="GS_Home">
                                 <i class="fa fa-dashboard"></i>
                                 <span>Home</span>
                             </a>
                         </li>
 
-
                         <li>
-                            <a href="OCPD_ViewPlanningDocument">
-                                <i class="fa fa-book"></i>
-                                <span>CLUP and CDP</span>
+                            <a href="GS_ViewTestimonials">
+                                <i class="fa fa-dashboard"></i>
+                                <span>View Citizen Testimonials</span>
                             </a>
-                        </li>
+                        </li>	
 
                         <!--multi level menu start-->
                         <li class="sub-menu">
-                            <a href="javascript:;" >
+                            <a href="javascript:;">
                                 <i class="fa fa-tasks"></i>
                                 <span>Project Proposals</span>
                             </a>
                             <ul class="sub">
-                                <li><a  href="OCPD_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
-                                <li class="sub-menu">
-                                    <a  href="">&nbsp; &nbsp; &nbsp; &nbsp; Monitor Projects</a>
-                                    <ul class="sub">
-                                        <li><a  href="OCPD_Timeline.jsp">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Timeline</a></li>
-                                        <li class="sub-menu">
-                                            <a  href="OCPD_ViewProjectStatus">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Project Status</a>
-                                        </li>
-                                    </ul>
-                                </li>
+                                <li><a  href="GS_CreateProposal">&nbsp; &nbsp; &nbsp; &nbsp; Create Proposal</a></li>
+                                <li><a  href="GS_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
+                                <li><a  href="GS_ViewImplementedProjects">&nbsp; &nbsp; Monitor Implemented Projects</a></li>
                             </ul>
+                        </li>
+                        <li>
+                            <a href="GS_ScheduleChange">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Schedule Change Requests</span>
+                            </a>
                         </li>
                         <!--multi level menu end-->
                         <li>
-                            <a href="OCPD_NotificationActivity">
+                            <a href="GS_DisplayCDPCLUP">
+                                <i class="fa fa-book"></i>
+                                <span>View CLUP and CDP</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="GS_ViewAR.jsp">
+                                <i class="fa fa-book"></i>
+                                <span>View Accomplishment Report</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="GS_NotificationActivity">
                                 <i class="fa fa-book"></i>
                                 <span>Notification and Activity</span>
                             </a>
@@ -236,24 +246,9 @@
 
                         <header class="panel-heading">
                             View Project
-                            <script>
-                                function submitForm(btn) {
-                                    if (btn.id === "putOnHold") {
-                                        $('#formApproveHold').attr('action', 'OCPD_PuttingProjectOnHold.jsp').submit();
-                                    } else {
-                                        $('#formApproveHold').attr('action', 'OCPD_ApproveProposal').submit();
-                                    }
-                                }
-                            </script>
+
                             <span class="pull-right">
-                                <%if (p.getStatus().equalsIgnoreCase("Pending")){%>
-                                <form id="formApproveHold">
-                                    <button class="btn btn-danger btn-sm" id="putOnHold" type="button" onclick="submitForm(this)"><i class="fa fa-times"></i> Put on-hold</button>
-                                    <button class="btn btn-success btn-sm" type="button" onclick="submitForm(this) id="approve" ><i class="fa fa-check"></i> Approve</button>
-                                </form>
-                                <%} else if (p.getStatus().equalsIgnoreCase("For compilation")){%>
-                                <button class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Set for compilation</button>
-                                <%}%>
+                                <button class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> Edit</button>
                             </span>
 
                         </header>
@@ -269,6 +264,8 @@
                                 <div class="panel-body bio-graph-info">
                                     <!--<h1>New Dashboard BS3 </h1>-->
                                     <div class="row">
+                                        <span class="pull-right" style="margin-right: 3%">
+                                            <button class="btn btn-success btn-sm" data-toggle="modal" value="Project Details" type="button" id="detailsB"><b>+</b> Show Comment</button>                                        </span>
                                         <div class="col-lg-5" >
                                             <section class="panel">
                                                 <div class="panel-body">
@@ -340,12 +337,20 @@
                                 <section class="panel">
 
                                     <div class="col-lg-12">
+
                                         <div class="bio-graph-heading project-heading">
                                             <strong>Program Works</strong>
                                         </div>
 
                                         <section class="panel">
+                                            <span class="pull-right" style="margin-right: 3%">
+                                                <br>
+                                                <button class="btn btn-success" data-toggle="modal" type="button" value="Materials" id="materialsB"><b>+</b> Show Comment</button>
+                                                <br>
+                                            </span>
+                                            <br>
                                             <div class="panel-body">
+                                                <br>
                                                 <table class="table" style="width:100%; text-align: center">
                                                     <%for (int x = 0; x < pworks.size(); x++) {%>
 
@@ -409,6 +414,11 @@
                                     <strong>Project Main Testimonial</strong>
                                 </div>
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
+                                    <span class="pull-right" style="margin-right: 3%">
+                                        <button class="btn btn-success" data-toggle="modal" type="button" value="MainTest" id="mainTestB"><b>+</b> Show Comment</button>                                        
+                                        <br>
+                                        <br>
+                                    </span>
                                     <div class="DocumentList2">
                                         <div class="row2">
                                             <%String url = null;%>
@@ -455,7 +465,14 @@
                                 </div>
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
                                     <div class="DocumentList2">
+                                        <span class="pull-right" style="margin-right: 3%">
+                                            <button class="btn btn-success" data-toggle="modal" type="button" value="ProjectRef" id="projectRefB"><b>+</b> Show Comment</button>
+                                            <br>
+                                            <br>
+                                        </span>
+
                                         <div class="row2">
+
                                             <%String url2 = null;%>
                                             <%for (Testimonial testi : p.getReferredTestimonials()) {
                                                     for (Files f : testi.getFiles()) {
@@ -501,6 +518,12 @@
                                 </div>
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
                                     <div class="DocumentList2">
+                                        <span class="pull-right" style="margin-right: 3%">
+                                            <button class="btn btn-success" data-toggle="modal" type="button" value="Files" id="filesB"><b>+</b> Show Comment</button>
+                                            <br>
+                                            <br>
+                                        </span>
+
                                         <div class="row2">
                                             <%
                                                 for (Files f : pfiles) {
@@ -592,10 +615,37 @@
                 </div>
             </div>
         </section>
+
+        <div class="modal fade full-width-modal-right" id="addComments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content-wrap">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                            <h4 class="modal-title" id="comHead">Title</h4>
+                        </div>
+                        <div class="modal-body">
+                            <label class="panel-heading">Comments:</label>
+                            <textarea rows="10" style="background: white; border:0px;" readonly class="wysihtml5 form-control" id="detailsTA" name="detailsTA"><%//=p.getAnnotations().getDescription()%></textarea>
+                            <textarea rows="10" style="background: white; border:0px;" readonly class="wysihtml5 form-control" id="materialsTA" name="materialsTA"><%//=p.getAnnotations().getMaterials()%></textarea>
+                            <textarea rows="10" style="background: white; border:0px;" readonly class="wysihtml5 form-control" id="mainTestTA" name="mainTestTA"><%//=p.getAnnotations().getSchedule()%></textarea>
+                            <textarea rows="10" style="background: white; border:0px;" readonly class="wysihtml5 form-control" id="projectRefTA" name="projectRefTA"><%//=p.getAnnotations().getUpload()%></textarea>
+                            <textarea rows="10" style="background: white; border:0px;" readonly class="wysihtml5 form-control" id="filesTA" name="filesTA"><%//=p.getAnnotations().getUpload()%></textarea>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
         <script>
             function getTestimonial(id) {
-                $.ajax({
-                    type: 'POST',
+                $.ajax({type: 'POST',
                     url: 'AJAX_BAC_gettestimonial',
                     dataType: 'json',
                     data: {testId: id}, cache: false,
@@ -624,13 +674,12 @@
                 });
             }
 
-
             function getProjectFiles(id) {
                 $.ajax({
                     type: 'POST',
                     url: 'AJAX_BAC_getProjectFiles',
                     dataType: 'json',
-                    data: {testId: id}, cache: false,
+                    data: {testId: id}, cache: fa lse,
                     success: function (f) {
                         $('#pfDisplay').empty();
                         var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
@@ -650,9 +699,7 @@
                         $('#projectFiles').modal();
                     }
                 });
-            }
-
-        </script>
+            }</script>
 
         <!-- js placed at the end of the document so the pages load faster -->
         <!--<script src="js/jquery.js"></script>-->
@@ -691,7 +738,6 @@
                 });
 
             }
-
             function geocodeLatLng(geocoder, map, infowindow, latLng) {
                 var latlng = latLng;
                 geocoder.geocode({'location': latlng}, function (results, status) {
@@ -711,9 +757,56 @@
                     }
                 });
             }
+            
+            $('#detailsB').click(function () {
+                $('#comHead').text("Project Details");
+                $('#detailsTA').show();
+                $('#materialsTA').hide();
+                $('#mainTestTA').hide();
+                $('#projectRefTA').hide();
+                $('#filesTA').hide();
+                $('#addComments').modal();
+            });
+
+            $('#materialsB').click(function () {
+                $('#comHead').text("Materials");
+                $('#detailsTA').hide();
+                $('#materialsTA').show();
+                $('#mainTestTA').hide();
+                $('#projectRefTA').hide();
+                $('#filesTA').hide();
+                $('#addComments').modal();
+            });
+
+            $('#mainTestB').click(function () {
+                $('#comHead').text("Schedule");
+                $('#detailsTA').hide();
+                $('#materialsTA').hide();
+                $('#mainTestTA').show();
+                $('#projectRefTA').hide();
+                $('#filesTA').hide();
+                $('#addComments').modal();
+            });
+            $('#projectRefB').click(function () {
+                $('#comHead').text("Citizen Testimonial");
+                $('#detailsTA').hide();
+                $('#materialsTA').hide();
+                $('#mainTestTA').hide();
+                $('#projectRefTA').show();
+                $('#filesTA').hide();
+                $('#addComments').modal();
+            });
+            $('#filesB').click(function () {
+                $('#comHead').text("Citizen Testimonial");
+                $('#detailsTA').hide();
+                $('#materialsTA').hide();
+                $('#mainTestTA').hide();
+                $('#projectRefTA').hide();
+                $('#filesTA').show();
+                $('#addComments').modal();
+            });
 
         </script>
-    </script>
 
 
 </body>

@@ -228,39 +228,6 @@ public class OCPDDAO {
             }
             project.setLocation(projectLocation);
 
-            //Scheule            
-            String scheduleQuery = ("SELECT * FROM schedule where project_id = ? order by startdate asc");
-            scheduleS = connection.prepareStatement(scheduleQuery);
-            scheduleS.setString(1, id);
-            result = scheduleS.executeQuery();
-            while (result.next()) {
-                Schedule sc = new Schedule();
-                sc.setId(result.getInt("id"));
-                sc.setEvent(result.getString("event"));
-                sc.setStartdate(result.getString("startdate"));
-                sc.setEnddate(result.getString("enddate"));
-                sc.setStatus(result.getString("status"));
-                sc.setStage(result.getString("stage"));
-                sc.setDept(result.getString("department"));
-                sc.setActualenddate(result.getString("actualenddate"));
-                sc.setRemarks(result.getString("Remarks"));
-                sc.setTime(result.getString("Time"));
-                Project p = new Project();
-                p.setId(p.getId());
-                p.setName(p.getName());
-                p.setDescription(p.getDescription());
-                p.setType(p.getType());
-                p.setStatus(p.getStatus());
-                p.setFoldername(p.getFoldername());
-                p.setDatesubmitted(p.getDatesubmitted());
-                p.setCategory(p.getCategory());
-                p.setBudget(p.getBudget());
-                sc.setProject(p);
-
-                projectSchedule.add(sc);
-            }
-            project.setSchedule(projectSchedule);
-
             //Files
             String filesQuery = ("select * from files where project_id = ?");
             filesS = connection.prepareStatement(filesQuery);
@@ -427,18 +394,31 @@ public class OCPDDAO {
 
 
     //=============================ALL SCHEDULE AND TASK RELATED CODES======================================
-    public void setMeeting(Schedule s) {
+    public void setMeeting(Task t) {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "insert into meeting (event, startdate, enddate, status, time, project_id) values (?,?,?,?,?,?)";
+            String query = "insert into task (name, project_id) values (?, ?)";
             statement = connection.prepareStatement(query);
-            statement.setString(1, s.getEvent());
-            statement.setString(2, s.getStartdate());
-            statement.setString(3, s.getEnddate());
-            statement.setString(4, s.getStatus());
-            statement.setString(5, s.getTime());
-            statement.setString(5, s.getProject().getId());
+            statement.setString(1, t.getName());
+            statement.setString(2, t.getProject().getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting meeting", ex);
+        }
+    }
+    public void insertToSchedule(Schedule s) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into (startdate, enddate, status, time, remarks) values (?,?,?,?,?)";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, s.getStartdate());
+            statement.setString(2, s.getEnddate());
+            statement.setString(3, s.getStatus());
+            statement.setString(4, s.getTime());
+            statement.setString(5, s.getRemarks());
             statement.executeUpdate();
             connection.close();
         } catch (SQLException ex) {
@@ -491,7 +471,6 @@ public class OCPDDAO {
             result = statement.executeQuery();
             while (result.next()) {
                 t = new Task();
-                t.setDescription(result.getString("Description"));
                 tList.add(t);
             }
             connection.close();
@@ -581,8 +560,7 @@ public class OCPDDAO {
             statement.setString(3, status);
             result = statement.executeQuery();
             while (result.next()) {
-                s = new Schedule(result.getInt("ID"), result.getString("Event"), result.getString("StartDate"),
-                        result.getString("Enddate"), status, result.getString("Department"), result.getString("Time"), result.getString("Stage"), result.getString("Project_ID"), result.getString("ActualEndDate"), result.getString("remarks"));
+                s = new Schedule();
             }
             connection.close();
             return s;
@@ -597,16 +575,15 @@ public class OCPDDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "insert into annotations (testimonials, projects, details, program, general, status, date, project_id) values (?,?,?,?,?,?,?,?)";
+            String query = "insert into annotations (testimonials, projects, details, program, status, date, project_id) values (?,?,?,?,?,?,?)";
             statement = connection.prepareStatement(query);
             statement.setString(1, a.getTestimonials());
             statement.setString(2, a.getProjects());
             statement.setString(3, a.getDetails());
             statement.setString(4, a.getProgram());
-            statement.setString(5, a.getGeneral());
-            statement.setString(6, a.getStatus());
-            statement.setString(7, a.getDate());
-            statement.setString(8, a.getProject().getId());
+            statement.setString(5, a.getStatus());
+            statement.setString(6, a.getDate());
+            statement.setString(7, a.getProject().getId());
             statement.executeUpdate();
             connection.close();
         } catch (SQLException ex) {

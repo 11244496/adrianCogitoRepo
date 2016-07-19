@@ -1,85 +1,4 @@
-var tableinput = [];
-var componentvalues = [];
-var materialstable = [];
-var materialvalues = [];
-var values = [];
-var tasksTemp = [];
-var tasksFinal = [];
-var schedulevalue = [];
-var taskValue = [];
-
 var powNumber = 1;
-
-
-$(function () {
-    $('#proposalForm').stepy({
-        backLabel: 'Previous',
-        block: true,
-        nextLabel: 'Next',
-        titleClick: true,
-        titleTarget: '.stepy-tab'
-    });
-});
-
-function addRowForWorks() {
-    //debugger;
-
-    var table = document.getElementById("powTable");
-    var rowCount = table.rows.length;
-    var row = table.insertRow(-1);
-    var cell1 = row.insertCell(-1);
-    var cell2 = row.insertCell(-1);
-
-    var sel = document.createElement('select')
-    sel.setAttribute("id", "worksSelect-" + powNumber);
-    sel.setAttribute("class", "worksSelect");
-    sel.setAttribute("name", "works");
-    var ok = document.createElement('button');
-    sel.setAttribute("id", "worksOk-" + powNumber)
-
-    var button = document.createElement('button');
-    button.setAttribute("id", "worksButton-" + powNumber);
-    button.setAttribute("class", "worksSelect");
-    button.setAttribute("name", "works");
-    
-    $(button).hide();
-    
-    $(sel).change(function () {
-        $(sel).hide();
-        $(button).show();
-    });
-    
-    $(button).dblclick(function(){
-       $(button).hide();
-       $(sel).show();
-    });
-    
-    var t = document.createTextNode(powNumber);
-
-    var option2 = document.createElement("option");
-    option2.setAttribute('hidden', true);
-    option2.text = 'Select Works';
-    sel.appendChild(option2);
-
-
-    for (var i = 0; i < worksList.length; i++) {
-        var option = document.createElement("option");
-        option.setAttribute("value", worksList[i].id);
-        option.text = worksList[i].name;
-        sel.appendChild(option);
-    }
-
-    var option = document.createElement("option");
-    option.setAttribute("value", "new");
-    option.text = "New...";
-    sel.appendChild(option);
-
-    cell1.appendChild(t);
-    cell2.appendChild(sel);
-    cell2.appendChild(button);
-    powNumber++;
-
-}
 
 $(document).ready(function () {
     var form = $("#wizard-validation-form");
@@ -105,434 +24,414 @@ $(document).ready(function () {
     });
 });
 
-$('#maincategory').change(function () {
-    $.ajax({
-        type: 'GET',
-        url: 'AJAX_GS_GenerateProjectID',
-        dataType: 'json',
-        data: {
-            category: $('#maincategory').val()
-        },
-        success: function (id) {
-            $('#projectID').val(id);
-            console.log(id);
-        }
+$(function () {
+    $('#proposalForm').stepy({
+        backLabel: 'Previous',
+        block: true,
+        nextLabel: 'Next',
+        titleClick: true,
+        titleTarget: '.stepy-tab'
     });
 });
 
-function myCreateFunction() {
-    var table = document.getElementById("costtable");
-    var row = table.insertRow(-1);
-    var cell1 = row.insertCell(-1).contentEditable = true;
-    var cell2 = row.insertCell(-1).contentEditable = true;
-    var cell3 = row.insertCell(-1).contentEditable = true;
-    var cell4 = row.insertCell(-1).contentEditable = true;
-
-}
-
-function myDeleteFunctionGeneral() {
-
-    document.getElementById("general").deleteRow(-1);
-    for (x = 0; x < 5; x++) {
-        materialstable.pop();
-    }
-}
-
-function myDeleteFunctionPW() {
-
-    document.getElementById("programworks").deleteRow(-1);
-
-    for (x = 0; x < 3; x++) {
-        tableinput.pop();
-    }
-}
-
-
-function myDeleteFunction2() {
-
-    document.getElementById("component").deleteRow(-1);
-
-}
-
-$(document).on("change", "#componentid,#descriptionid,#unitid", function () {
-
-    if (verifytable() === "true") {
-        document.getElementById("PWsave").disabled = false;
-
-    }
-    else
-        document.getElementById("PWsave").disabled = true;
-
-});
-
-
-function verifytable() {
-    var temp;
-
-    for (x = 0; x < tableinput.length; x++) {
-
-        if (tableinput[x].value.length > 0) {
-            temp = "true";
-        }
-        else {
-            temp = "false";
-            return temp;
-        }
-    }
-
-    return temp;
-}
-
-function setPWtocalendar() {
-    //ajax call here
-    while (values.length > 0) {
-        values.pop();
-    }
-
-    for (x = 0; x < tableinput.length; x++) {
-        values.push(tableinput[x].value);
-    }
-    var json = JSON.stringify(values);
-
+$('.viewbutton').click(function () {
     $.ajax({
-        type: 'POST', url: 'getpwschedule',
+        type: 'post',
+        url: 'AJAX_GS_ViewTestimonialDetails',
         dataType: 'json',
-        data: {tableinputs: json, targetimplementationdate: $('#targetimplementationdate').val()},
+        data:
+                {
+                    testimonialID: $(this).val()
+                },
         cache: false,
-        success: function (sched) {
-            alert("programs are successfully saved");
-            inputActivities(sched);
+        success: function (data) {
+
+            $('#tVideoDisplay').empty();
+            $('#tImageDisplay').empty();
+            $('#tDocumentUploads').empty();
+
+            $('#testTitle').text("Title: " + data.title);
+            $('#testDate').text("Date Uploaded: " + data.dateUploaded);
+            $('#testCategory').text("Category: " + data.category);
+            $('#testMessage').text("Message: " + data.message);
+
+            $.each(data.files, function (i) {
+                var url = data.folderName + data.title + "/" + data.files[i].fileName;
+
+                if (data.files[i].type === "Video") {
+                    $("<video width='100%' height='100%' controls><source src=\"" + url + "\" type='video/mp4'></video>").appendTo("#tVideoDisplay");
+                }
+                else if (data.files[i].type === "Image") {
+                    $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#tImageDisplay");
+                }
+
+                else if (data.files[i].type === "Document") {
+                    $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + data.files[i].fileName + "</a> </header>").appendTo("#tDocumentUploads");
+                }
+            });
         }
     });
+    //Ajax Call here and change modal fields
 
-}
+    $('#viewdetails').modal();
 
-function showAddTaskForm() {
-    $('#modalTitle2').html($('#eventTag').val());
-    $('#displayTasks').modal();
-    $('#addTaskB').text("Add");
-    $("#addTaskB").click(function () {
-        addTask();
-    });
-    $("#viewTasksB").click(function () {
-        viewTasks();
-    });
-    $('#fullCalModal').modal('hide');
-}
+});
 
-function addTask() {
-    var task = [];
-    if ($('#taskName').val() !== '') {
-        task = [$("#eventTag").val(), $('#taskName').val(), $('#taskDesc').val(), $('#taskStart').val(), $('#taskEnd').val(), $('#taskPerson').val(), "Temporary", tasksTemp.length];
-        tasksTemp.push(task);
-    }
-    $('#taskName').val('');
-    $('#taskDesc').val('');
-    $('#taskStart').val('');
-    $('#taskEnd').val('');
-    $('#taskPerson').val('');
+var mainTestimonial = [];
+var referencedTestimonial = [];
+var detachedMainRow;
+var tablerow;
+var Testimonialmarkers = [];
 
-    viewTasks();
 
-}
+//Select Testimonial from Testimonial List as Main Testimonial and append labels.
+$('.selectmainbtn').click(function () {
+    detachedMainRow = $(this).closest('tr').detach();
 
-function saveTask() {
-    var task = [];
-    $.each(tasksTemp, function (i) {
-        task = [tasksTemp[0], tasksTemp[0], tasksTemp[0], tasksTemp[0], tasksTemp[0], tasksTemp[0], "Final", tasksFinal.length];
+    var testimonial = {id: $(this).val()};
+    mainTestimonial.push(testimonial);
 
-        tasksFinal.push(tasksTemp[i]);
-    });
-    $('#fullCalModalBody').empty();
-    $('#displayTasks').modal('hide');
-    $('#fullCalModal').modal('hide');
-    tasksTemp.length = 0;
-}
+    $.ajax({
+        type: 'post',
+        url: 'AJAX_GS_SelectMainTestimonial',
+        dataType: 'json',
+        data: {mainTestimonial: JSON.stringify(mainTestimonial)},
+        cache: false,
+        success: function (data) {
+            //Place the object in the Main Testimonial Div
+            $("#TestiTitle").text("You have selected " + data[0].title + " as your main testimonial");
 
-function closeModal() {
-    if (tasksTemp.length > 0) {
-        viewTasks();
-        if (confirm("You have tasks that weren't saved. Are you sure you want to close this?")) {
-            $('#fullCalModalBody').empty();
-            $('#displayTasks').modal('hide');
-            $('#fullCalModal').modal('hide');
-            tasksTemp.length = 0;
+            //Set Testimonial Locaiton on map markers
+            $.each(data[0].tlocation, function (i) {
+                Testimonialmarkers.push(data[0].tlocation[i]);
+            });
+            initMap();
+
+
+            $("#MainTestimonial").show();
+            $('.selectmainbtn').hide();
         }
-        else
-            return false;
+    });
+});
 
+//Remove the Selected Main Testimonial, detach and put back to testimonial list
+$('.deselectmainbtn').click(function () {
+    mainTestimonial.length = 0;
+    $("#TestimonialTableBody").append(detachedMainRow);
+    $('.selectmainbtn').show();
+    $("#MainTestimonial").hide();
+
+    //Map Functions
+    Testimonialmarkers.length = 0;
+    allPosition.length = 0;
+    document.getElementById("location").value = allPosition;
+    initMap();
+
+});
+
+//Transfer from Testi List to Referenced Table List via detach
+$(document).on('click', '.selectreferencebtn', function () {
+
+    $("#ReferenceTestimonialList").show();
+
+    var Rtestimonial = {id: $(this).val()};
+    referencedTestimonial.push(Rtestimonial);
+    var Rt = $(this).closest('tr').detach();
+    $("#RTestimonialTableBody").append(Rt);
+    $(this).removeClass('btn btn-warning btn-sm selectreferencebtn').addClass('btn btn-danger btn-sm unselectreferencebtn');
+    $(this).text("Remove");
+});
+
+//Transfer from Referenced Table back to Testi list
+$(document).on('click', '.unselectreferencebtn', function () {
+    for (var x = 0; x < referencedTestimonial.length; x++) {
+        if (referencedTestimonial[x].id == $(this).val()) {
+            referencedTestimonial.splice(x, 1);
+        }
     }
-    else {
-        $('#fullCalModalBody').empty();
-        $('#displayTasks').modal('hide');
-        $('#fullCalModal').modal('hide');
 
+    if (referencedTestimonial.length == 0) {
+        $("#ReferenceTestimonialList").hide();
     }
 
+    var detached = $(this).closest('tr').detach();
+    $("#TestimonialTableBody").append(detached);
+    $(this).removeClass('btn btn-danger btn-sm unselectreferencebtn').addClass('btn btn-warning btn-sm selectreferencebtn');
+    $(this).text("Use as reference");
+});
+
+$.fn.searchableTable = function () {
+    return this.each(function () {
+        var data = $(this).data(), $rows = $(this).find('tbody > tr'),
+                $searchField = $(data.searchField),
+                $rowsCount;
+        if (data.searchRows) {
+            $rowsCount = $(data.searchRows);
+        }
+        $searchField.keyup(function () {
+            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+            var $filtered = $rows.show().filter(function () {
+                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                return !~text.indexOf(val);
+            }).hide();
+            if ($rowsCount)
+                $rowsCount.text($rows.length - $filtered.length);
+        })
+                .trigger('keyup');
+    });
+};
+// Initialize
+$('.table').searchableTable();
+
+var map;
+var markers = [];
+var allPosition = [];
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 14.45, lng: 120.98},
+        zoom: 14
+    });
+    google.maps.event.addListener(map, 'click', function (event) {
+        placeMarker(event.latLng);
+    });
+    function placeMarker(location) {
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+        markers.push(marker);
+        latitude = marker.position.lat();
+        longitude = marker.position.lng();
+        var string = latitude + "&" + longitude;
+        allPosition.push(string);
+        document.getElementById("location").value = allPosition;
+    }
+
+    Testimonialmarkers.forEach(function (coor) {
+        var geocoder = new google.maps.Geocoder;
+        var latLng = new google.maps.LatLng(coor.latitude, coor.longitude);
+        var latitude = coor.latitude;
+        var longitude = coor.longitude;
+
+        var string = latitude + "&" + longitude;
+        allPosition.push(string);
+        document.getElementById("location").value = allPosition;
+
+        var marker = new google.maps.Marker({
+            position: latLng,
+            map: map
+        });
+        var infowindow = new google.maps.InfoWindow;
+
+        marker.addListener('click', function () {
+            geocodeLatLng(geocoder, map, infowindow, latLng);
+        });
+    });
 
 }
 
-function viewTasks() {
-    var event = $("#eventTag").val();
-    if (getTaskCount(event) < 1) {
-        $('#fullCalModalBody').empty();
-        $("<center><header class=\"panel-heading\" id=\"noTask\">No tasks for this activity yet</header></center>").appendTo("#fullCalModalBody");
+function removeMarker() {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
     }
-    else {
-        $('#fullCalModalBody').html('');
-        $.each(tasksFinal, function (i) {
-            if (tasksFinal[i][0] === event) {
-                $("<span class=\"pull-right\" aria-hidden=\"true\"><button type=\"button\" class=\"btn btn-info btn-sm\" onclick=\"editView(this)\" id=\"" + i + "-Final\"><i class=\"fa fa-pencil\"></i>&nbsp</button><button type=\"button\" class=\"btn btn-danger btn-sm\" onclick=\"deleteTask(this)\" id=\"" + i + "-Final\"><i class=\"fa fa-times\"></i></button></span>").appendTo("#fullCalModalBody");
-                $("<b> <p class=\"control-label\" style=\" font-size: medium;\">Task: " + tasksFinal[i][1] + "</p></b>").appendTo("#fullCalModalBody");
+    markers = [];
+    allPosition = [];
+}
 
-                if (tasksFinal[i][2] !== "")
-                    $("&nbsp <p class=\"control-label\">Description: " + tasksFinal[i][2] + "</p>").appendTo("#fullCalModalBody");
+var powNumber = 1;
 
-                if (tasksFinal[i][3] !== "")
-                    $("&nbsp <p class=\"control-label\">Start: " + tasksFinal[i][3] + "</p>").appendTo("#fullCalModalBody");
+function addRowForWorks() {
+    //debugger;
 
-                if (tasksFinal[i][4] !== "")
-                    $("&nbsp <p class=\"control-label\">End: " + tasksFinal[i][4] + "</p>").appendTo("#fullCalModalBody");
+    var table = document.getElementById("powTable");
+    var row = table.insertRow(-1);
+    var cell2 = row.insertCell(-1);
+    var cell3 = row.insertCell(-1);
 
-                if (tasksFinal[i][5] !== "")
-                    $("&nbsp <p class=\"control-label\">Person in Charge: " + tasksFinal[i][5] + "</p>").appendTo("#fullCalModalBody");
-                $("<header class=\"panel-heading\"></header>").appendTo("#fullCalModalBody");
+    var sel = document.createElement('select');
+    sel.setAttribute("id", "worksSelect-" + powNumber);
+    sel.setAttribute("class", "worksSelect");
+    sel.setAttribute("class", "form-control");
+    sel.setAttribute("name", "works");
+    var ok = document.createElement('button');
+    sel.setAttribute("id", "worksOk-" + powNumber);
 
+    var button = document.createElement('button');
+    button.setAttribute("id", "worksButton-" + powNumber);
+    button.setAttribute("class", "form-control");
+    button.setAttribute("name", "works");
+    button.setAttribute("type", "button");
+
+    var delBtn = document.createElement('button');
+    delBtn.setAttribute("id", "worksDel-" + powNumber);
+    delBtn.setAttribute("class", "btn btn-danger btn-sm");
+    delBtn.setAttribute("type", "button");
+    delBtn.innerHTML = "-";
+    delBtn.addEventListener("click", function () {
+        var row = delBtn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        $('#componentsDiv-' + (getIdNum(delBtn.id))).remove();
+    });
+
+    var option = document.createElement("option");
+    option.setAttribute('hidden', true);
+    option.text = 'Select Works';
+    sel.appendChild(option);
+
+    for (var i = 0; i < worksList.length; i++) {
+        option = document.createElement("option");
+        option.setAttribute("value", worksList[i].name);
+        option.text = worksList[i].name;
+        sel.appendChild(option);
+    }
+
+    option = document.createElement("option");
+    option.setAttribute("value", "new");
+    option.text = "New...";
+    sel.appendChild(option);
+
+    powTableFc(button, sel, powNumber);
+
+    cell2.appendChild(sel);
+    cell2.appendChild(button);
+    cell3.appendChild(delBtn);
+    powNumber++;
+}
+
+function createTble(works, id) {
+    var div = $('<div id="componentsDiv-' + id + '"></div>');
+    var header = $('<header class="panel-heading no-border"> Components - ' + works + '</header>');
+    var table = $('<table class="table table-bordered table-striped table-condensed" id="comp-' + id + '"></table>');
+    var tableHeader = $('<thead><tr><th style="width: 20%">Component</th><th style="width: 10%">Qty/Area</th><th style="width: 12%">Unit</th><th style="width: 20%">Unit Cost</th><th style="width: 20%">Amount</th></tr></thead>');
+    var tableBody = $('<tbody></tbody>');
+    var tableFoot = $('<tfoot><tr id="totalTR"><td colspan="3"></td><td style="font-weight: bold;">Subtotal</td><td style="font-weight: bold; border-bottom: 3px double;"> <input type="text" class="form-control" name="subtotal" id="subtotal-"' + id + ' readonly style="background: transparent"></td></tr></tfoot>');
+    var deleteBtn = $('<button class="btn btn-danger btn-sm pull-right" type="button" onclick="delBtn(this)" id="componentsDelete-' + id + '"><i class="fa fa-times"></i> Delete </button>');
+    var addBtn = $('<button class="btn btn-success btn-sm pull-right" type="button" onclick="addComponentsRow(this)" id="componentsAdd-' + id + '" style="margin-right: 5px"><i class="fa fa-plus"></i> Add </button>');
+    var brk = $('<br><br><br>');
+
+
+    $('#compMain').append(div);
+    $(div).append(header);
+    $(div).append(table);
+    $(table).append(tableHeader);
+    $(table).append(tableBody);
+    $(table).append(tableFoot);
+    $(div).append(deleteBtn);
+    $(div).append(addBtn);
+    $(div).append(brk);
+}
+
+function powTableFc(button, sel, num) {
+    $(button).hide();
+
+    $(sel).change(function () {
+        $(sel).hide();
+        $(button).text($(sel).val());
+        $(button).show();
+        $('#compMain div').each(function () {
+            $(this).hide();
+        });
+        createTble(button.innerHTML, num);
+    });
+
+    $(button).dblclick(function () {
+        $(button).hide();
+        $(sel).show();
+    });
+
+    $(button).click(function () {
+        $('#compMain div').each(function () {
+            if (this.id === "componentsDiv-" + num) {
+                $('#componentsDiv-' + num).show();
             }
-
+            else {
+                $(this).hide();
+            }
         });
 
-        $.each(tasksTemp, function (i) {
-            if (tasksTemp[i][0] === event) {
-                $("<span class=\"pull-right\" aria-hidden=\"true\"><button type=\"button\" class=\"btn btn-info btn-sm\" onclick=\"editView(this)\" id=\"" + i + "-" + tasksTemp[i][6] + "\"><i class=\"fa fa-pencil\"></i>&nbsp</button><button type=\"button\" class=\"btn btn-danger btn-sm\" onclick=\"deleteTask(this)\" id=\"" + i + "-" + tasksTemp[i][6] + "\"><i class=\"fa fa-times\"></i></button></span>").appendTo("#fullCalModalBody");
-                $("<b> <p class=\"control-label\" style=\" font-size: medium;\">Task: " + tasksTemp[i][1] + "</p></b>").appendTo("#fullCalModalBody");
+    });
+}
 
-                if (tasksTemp[i][2] !== "")
-                    $("&nbsp <p class=\"control-label\">Description: " + tasksTemp[i][2] + "</p>").appendTo("#fullCalModalBody");
+function getIdNum(string) {
+    var spl = string.split('-', 2);
+    return spl[1];
+}
 
-                if (tasksTemp[i][3] !== "")
-                    $("&nbsp <p class=\"control-label\">Start: " + tasksTemp[i][3] + "</p>").appendTo("#fullCalModalBody");
+function delBtn(btn) {
+    var row = btn.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+}
 
-                if (tasksTemp[i][4] !== "")
-                    $("&nbsp <p class=\"control-label\">End: " + tasksTemp[i][4] + "</p>").appendTo("#fullCalModalBody");
+function addComponentsRow(btn) {
+    var id = getIdNum(btn.id);
+    var tableId = "comp-" + id;
+    var row = $('<tr></tr>');
 
-                if (tasksTemp[i][5] !== "")
-                    $("&nbsp <p class=\"control-label\">Person in Charge: " + tasksTemp[i][5] + "</p>").appendTo("#fullCalModalBody");
-                $("<header class=\"panel-heading\"></header>").appendTo("#fullCalModalBody");
+    var componenttd = $('<td></td>');
+    var component = $('<input type="text" name="component" class="form-control">');
+    componenttd.append(component);
 
-            }
+    var quantitytd = $('<td></td>');
+    var quantity = $('<input type="text" name="quantity" class="form-control">');
+    quantitytd.append(quantity);
 
-        });
-
+    var unittd = $('<td></td>');
+    var select = $('<select type="text" name="unit" class="form-control"></select>');
+    for (var i = 0; i < unitList.length; i++) {
+        $(select).append($("<option></option>").val(unitList[i].id).html(unitList[i].unit));
     }
-    $('#modalTitle').html($('#eventTag').val());
-    $('#fullCalModal').modal();
-    $("#addTaskB").click(function () {
-        addTask();
-    });
-    $("#showTaskMod").click(function () {
-        showAddTaskForm();
-    });
-    $('#displayTasks').modal('hide');
+    $(unittd).append(select);
 
+    var unitCosttd = $('<td></td>');
+    var unitCost = $('<input type="text" name="unitCost" class="form-control">');
+    unitCosttd.append(unitCost);
+
+    var amounttd = $('<td></td>');
+    var amount = $('<input readonly type="text" name="amount" class="form-control amount" style="background: white">');
+    amounttd.append(amount);
+
+    $(row).append(componenttd);
+    $(row).append(quantitytd);
+    $(row).append(unittd);
+    $(row).append(unitCosttd);
+    $(row).append(amounttd);
+
+    onchanges(quantity, unitCost, amount, id);
+    $("#" + tableId).append(row);
 
 }
 
-function getTaskCount() {
-    var counter = 0;
-    var event = $("#eventTag").val();
+function onchanges(quantity, unitcost, amount, id) {
+    var cost;
 
-    $.each(tasksTemp, function (i) {
-        if (tasksTemp[i][0] === event) {
-            counter++;
+    $(quantity).change(function () {
+        //if unitcost is not empty set amount
+        if ($(unitcost).val() !== "") {
+            cost = parseFloat($(quantity).val() * $(unitcost).val());
+            $(amount).val(cost.toFixed(2));
+            var total;
+            $('#comp-' + id + ' .amount').each(function () {
+                total += $(this).val();
+            });
+            $('#subtotal-' + id).val(total.toFixed(2));
+
         }
     });
 
-    $.each(tasksFinal, function (i) {
-        if (tasksFinal[i][0] === event)
-            counter++;
-    });
-    return counter;
-}
+    $(unitcost).change(function () {
+        if ($(quantity).val() !== "") {
+            cost = parseFloat($(quantity).val() * $(unitcost).val());
+            $(amount).val(cost.toFixed(2));
+            var total = 0;
+            
+            $('#comp-' + id + ' .amount').each(function () {
+                total = total + parseFloat($(this).val());
+            });
+            $('#comp-' + id + ' tfoot input').val(total.toFixed(2));
 
-function editView(button) {
-    var taskNoStatus = button.id;
-    var getSched = taskNoStatus.split('-');
-    var task = [];
-    if (getSched[1] === "Temporary") {
-        task = tasksTemp[getSched[0]];
-    }
-    else if (getSched[1] === "Final") {
-        task = tasksFinal[getSched[0]];
-    }
-
-    $('#modalTitle2').html($('#eventTag').val());
-    $('#taskName').val(task[1]);
-    $('#taskDesc').val(task[2]);
-    $('#taskStart').val(task[3]);
-    $('#taskEnd').val(task[4]);
-    $('#taskPerson').val(task[5]);
-    $('#displayTasks').modal();
-    $('#addTaskB').text("Save Changes");
-    $("#addTaskB").click(function () {
-        editTask(taskNoStatus);
-    });
-    $("#viewTasksB").click(function () {
-        viewTasks();
-    });
-    $('#fullCalModal').modal('hide');
-
-    return getSched;
-}
-
-function draftbutton() {
-    $('#actionI').val("draft");
-}
-function finishbutton() {
-    $('#actionI').val("finish");
-}
-
-function editTask(taskNoStatus) {
-    var getSched = taskNoStatus.split('-');
-    var task = [];
-
-    if (getSched[1] === "Temporary") {
-        tasksTemp[getSched[0]] = task;
-        if ($('#taskName').val() !== '') {
-            task = [$("#eventTag").val(), $('#taskName').val(), $('#taskDesc').val(), $('#taskStart').val(), $('#taskEnd').val(), $('#taskPerson').val(), "Temporary", getSched[0]];
         }
+    });
 
-    }
-    else if (getSched[1] === "Final") {
-        tasksFinal[getSched[0]] = task;
-        if ($('#taskName').val() !== '') {
-            task = [$("#eventTag").val(), $('#taskName').val(), $('#taskDesc').val(), $('#taskStart').val(), $('#taskEnd').val(), $('#taskPerson').val(), "Temporary", getSched[0]];
-        }
 
-    }
-
-    $('#taskName').val('');
-    $('#taskDesc').val('');
-    $('#taskStart').val('');
-    $('#taskEnd').val('');
-    $('#taskPerson').val('');
-
-    viewTasks();
 
 }
-
-function deleteTask(button) {
-    var taskNoStatus = button.id;
-    var getSched = taskNoStatus.split('-');
-    if (getSched[1] === "Temporary") {
-        tasksTemp.splice(getSched[0], 1);
-    }
-    else if (getSched[1] === "Final") {
-        tasksFinal.splice(getSched[0], 1);
-    }
-    viewTasks();
-}
-
-//function saveDraft() {
-//    var location;
-//    var details;
-//    var materials;
-//    var schedule;
-//    var upload;
-//    $.ajax({
-//        type: 'POST',
-//        url: 'saveasdraft',
-//        dataType: 'json',
-//        data: {details: details, location: location, materials: materials,
-//            schedule: schedule, upload: upload},
-//        cache: false,
-//        success: function (sched) {
-//            //servlet that redirects to list of projects
-//        }
-//    });
-//
-//}
-//
-//function submitProposal() {
-//
-//    while (0 < materialstable.length) {
-//
-//        var material = {
-//            material: materialstable[materialstable.length - 5].value,
-//            percentage: materialstable[materialstable.length - 4].value,
-//            quantity: materialstable[materialstable.length - 3].value,
-//            unit: materialstable[materialstable.length - 2].value,
-//            unitprice: materialstable[materialstable.length - 1].value
-//        };
-//        materialvalues.push(material);
-//        materialstable.pop();
-//        materialstable.pop();
-//        materialstable.pop();
-//        materialstable.pop();
-//        materialstable.pop();
-//    }
-//
-//    while (0 < tableinput.length) {
-//
-//        var component = {
-//            component: tableinput[tableinput.length - 3].value,
-//            duration: tableinput[tableinput.length - 2].value,
-//            unit: tableinput[tableinput.length - 1].value
-//        };
-//        componentvalues.push(component);
-//        tableinput.pop();
-//        tableinput.pop();
-//        tableinput.pop();
-//    }
-//
-//
-//    for (x = 0; x < tasksFinal.length; x++) {
-//
-//        var task = {
-//            Activity: tasksFinal[x][0],
-//            Task: tasksFinal[x][1],
-//            Description: tasksFinal[x][2],
-//            StartDate: tasksFinal[x][3],
-//            EndDate: tasksFinal[x][4],
-//            PersonInCharge: tasksFinal[x][5],
-//            Status: tasksFinal[x][6],
-//            Index: tasksFinal[x][7]
-//        };
-//        taskValue.push(task);
-//    }
-//
-//    var subcategory;
-//
-//    if ($('#subcategory').val() == "Others") {
-//        subcategory = $('#OtherSub').val();
-//    } else
-//        subcategory = $('#subcategory').val();
-//
-//    var files = $('input[type="checkbox"].filetid:checked').map(function () {
-//        return $(this).val();
-//    }).toArray();
-//    $.ajax({
-//        type: 'post',
-//        url: 'GS_SubmitProposal',
-//        dataType: 'json',
-//        data:
-//                {
-//                    projectid: $('#projectID').val(),
-//                    projectname: $('#projectname').val(),
-//                    projectdescription: $('#projectdescription').val(),
-//                    category: $('#maincategory').val(),
-//                    subcategory: subcategory,
-//                    hiddenlocation: $('#location').val(),
-//                    materialvalues: JSON.stringify(materialvalues),
-//                    componentvalues: JSON.stringify(componentvalues),
-//                    eventvalues: JSON.stringify(schedulevalue),
-//                    tfilevalues: JSON.stringify(files),
-//                    actionI: $('#actionI').val()
-//                },
-//        cache: false,
-//        success: function (data) {
-//            alert("Project has been submitted");
-//            window.location = data.url;
-//        }
-//    });
-//}

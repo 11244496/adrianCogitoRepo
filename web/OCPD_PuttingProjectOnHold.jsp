@@ -1,9 +1,8 @@
 <%-- 
-    Document   : OCPD_ViewProjectDetails
-    Created on : 03 14, 16, 10:29:11 PM
+    Document   : OCPD_ViewProjectDetailsOnHold
+    Created on : 07 19, 16, 5:48:56 PM
     Author     : RoAnn
 --%>
-
 
 <%@page import="Entity.Testimonial"%>
 <%@page import="java.text.DecimalFormat"%>
@@ -181,7 +180,7 @@
                     <!-- sidebar menu start-->
                     <ul class="sidebar-menu" id="nav-accordion">
                         <li>
-                            <a href="OCPD_Home" class="active">
+                            <a href="OCPD_Home">
                                 <i class="fa fa-dashboard"></i>
                                 <span>Home</span>
                             </a>
@@ -236,24 +235,10 @@
 
                         <header class="panel-heading">
                             View Project
-                            <script>
-                                function submitForm(btn) {
-                                    if (btn.id === "putOnHold") {
-                                        $('#formApproveHold').attr('action', 'OCPD_PuttingProjectOnHold.jsp').submit();
-                                    } else {
-                                        $('#formApproveHold').attr('action', 'OCPD_ApproveProposal').submit();
-                                    }
-                                }
-                            </script>
+
                             <span class="pull-right">
-                                <%if (p.getStatus().equalsIgnoreCase("Pending")){%>
-                                <form id="formApproveHold">
-                                    <button class="btn btn-danger btn-sm" id="putOnHold" type="button" onclick="submitForm(this)"><i class="fa fa-times"></i> Put on-hold</button>
-                                    <button class="btn btn-success btn-sm" type="button" onclick="submitForm(this) id="approve" ><i class="fa fa-check"></i> Approve</button>
-                                </form>
-                                <%} else if (p.getStatus().equalsIgnoreCase("For compilation")){%>
-                                <button class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Set for compilation</button>
-                                <%}%>
+                                <button class="btn btn-danger btn-sm" type="button" onclick="history.go(-1)"><i class="fa fa-times"></i> Cancel</button>
+                                <button type="button" id="submitModal" class="btn btn-success btn-sm" data-toggle="modal"><i class="fa fa-check"></i> Finish</button>
                             </span>
 
                         </header>
@@ -269,6 +254,8 @@
                                 <div class="panel-body bio-graph-info">
                                     <!--<h1>New Dashboard BS3 </h1>-->
                                     <div class="row">
+                                        <span class="pull-right" style="margin-right: 3%">
+                                            <button class="btn btn-success" data-toggle="modal" value="Project Details" type="button" id="detailsB"><i class="fa fa-plus"></i> Add Comment</button>                                        </span>
                                         <div class="col-lg-5" >
                                             <section class="panel">
                                                 <div class="panel-body">
@@ -340,12 +327,20 @@
                                 <section class="panel">
 
                                     <div class="col-lg-12">
+
                                         <div class="bio-graph-heading project-heading">
                                             <strong>Program Works</strong>
                                         </div>
 
                                         <section class="panel">
+                                            <span class="pull-right" style="margin-right: 3%">
+                                                <br>
+                                                <button class="btn btn-success" data-toggle="modal" type="button" value="Materials" id="materialsB"><i class="fa fa-plus"></i> Add Comment</button>
+                                                <br>
+                                            </span>
+                                            <br>
                                             <div class="panel-body">
+                                                <br>
                                                 <table class="table" style="width:100%; text-align: center">
                                                     <%for (int x = 0; x < pworks.size(); x++) {%>
 
@@ -409,6 +404,11 @@
                                     <strong>Project Main Testimonial</strong>
                                 </div>
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
+                                    <span class="pull-right" style="margin-right: 3%">
+                                        <button class="btn btn-success" data-toggle="modal" type="button" value="MainTest" id="mainTestB"><i class="fa fa-plus"></i> Add Comment</button>                                        
+                                        <br>
+                                        <br>
+                                    </span>
                                     <div class="DocumentList2">
                                         <div class="row2">
                                             <%String url = null;%>
@@ -455,7 +455,14 @@
                                 </div>
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
                                     <div class="DocumentList2">
+                                        <span class="pull-right" style="margin-right: 3%">
+                                            <button class="btn btn-success" data-toggle="modal" type="button" value="ProjectRef" id="projectRefB"><i class="fa fa-plus"></i> Add Comment</button>
+                                            <br>
+                                            <br>
+                                        </span>
+
                                         <div class="row2">
+
                                             <%String url2 = null;%>
                                             <%for (Testimonial testi : p.getReferredTestimonials()) {
                                                     for (Files f : testi.getFiles()) {
@@ -501,6 +508,12 @@
                                 </div>
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
                                     <div class="DocumentList2">
+                                        <span class="pull-right" style="margin-right: 3%">
+                                            <button class="btn btn-success" data-toggle="modal" type="button" value="Files" id="filesB"><i class="fa fa-plus"></i> Add Comment</button>
+                                            <br>
+                                            <br>
+                                        </span>
+
                                         <div class="row2">
                                             <%
                                                 for (Files f : pfiles) {
@@ -592,10 +605,107 @@
                 </div>
             </div>
         </section>
+        <form id="putProjectOnHold" action="OCPD_PutOnHold" class="form-horizontal">
+            <input type="hidden" name="projectid" value="<%=p.getId()%>">
+            <div class="modal fade full-width-modal-right" id="addComments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content-wrap">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                <h4 class="modal-title" id="comHead">Title</h4>
+                            </div>
+                            <div class="modal-body">
+                                <label class="panel-heading">Comments:</label>
+                                <textarea rows="10" style="background: white; border:0px;" class="wysihtml5 form-control" id="detailsTA" name="detailsTA"><%//=p.getAnnotations().getDescription()%></textarea>
+                                <textarea rows="10" style="background: white; border:0px;" class="wysihtml5 form-control" id="materialsTA" name="materialsTA"><%//=p.getAnnotations().getMaterials()%></textarea>
+                                <textarea rows="10" style="background: white; border:0px;" class="wysihtml5 form-control" id="mainTestTA" name="mainTestTA"><%//=p.getAnnotations().getSchedule()%></textarea>
+                                <textarea rows="10" style="background: white; border:0px;" class="wysihtml5 form-control" id="projectRefTA" name="projectRefTA"><%//=p.getAnnotations().getUpload()%></textarea>
+                                <textarea rows="10" style="background: white; border:0px;" class="wysihtml5 form-control" id="filesTA" name="filesTA"><%//=p.getAnnotations().getUpload()%></textarea>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-success" data-dismiss="modal" type="button">Finish</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade " id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" >
+                    <div class="modal-content" style="width: 50%;">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Create new account</h4>
+                        </div>
+
+                        <div class="modal-body form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label class="control-label">Date: </label>
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="date" class="form-control" name="date">
+                                    <br>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label class="control-label">Time: </label>
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="time" class="form-control" name="time">
+                                    <br>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label class="control-label">Agenda </label>
+                                </div>
+                                <div class="col-md-10">
+                                    <button type="button" class="btn btn-success btn-xs pull-right" onclick="addRow()"><i class="fa fa-plus"></i> Add Agenda</button> 
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div id="agendaDiv">
+                                    <br>
+                                    <table class="table table-bordered table-striped table-condensed"  id="agendaTable">
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label class="control-label">Remarks </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <textarea type="text" name="addtcomments"  class="form-control" rows="3" placeholder=""></textarea>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                            <button class="btn btn-success" type="submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>               
+
+
+
+
+        </form>
+
+
         <script>
             function getTestimonial(id) {
-                $.ajax({
-                    type: 'POST',
+                $.ajax({type: 'POST',
                     url: 'AJAX_BAC_gettestimonial',
                     dataType: 'json',
                     data: {testId: id}, cache: false,
@@ -624,7 +734,6 @@
                 });
             }
 
-
             function getProjectFiles(id) {
                 $.ajax({
                     type: 'POST',
@@ -650,9 +759,7 @@
                         $('#projectFiles').modal();
                     }
                 });
-            }
-
-        </script>
+            }</script>
 
         <!-- js placed at the end of the document so the pages load faster -->
         <!--<script src="js/jquery.js"></script>-->
@@ -691,7 +798,6 @@
                 });
 
             }
-
             function geocodeLatLng(geocoder, map, infowindow, latLng) {
                 var latlng = latLng;
                 geocoder.geocode({'location': latlng}, function (results, status) {
@@ -712,10 +818,102 @@
                 });
             }
 
+            $('#detailsB').click(function () {
+                $('#comHead').text("Project Details");
+                $('#detailsTA').show();
+                $('#materialsTA').hide();
+                $('#mainTestTA').hide();
+                $('#projectRefTA').hide();
+                $('#filesTA').hide();
+                $('#addComments').modal();
+            });
+
+            $('#materialsB').click(function () {
+                $('#comHead').text("Materials");
+                $('#detailsTA').hide();
+                $('#materialsTA').show();
+                $('#mainTestTA').hide();
+                $('#projectRefTA').hide();
+                $('#filesTA').hide();
+                $('#addComments').modal();
+            });
+
+            $('#mainTestB').click(function () {
+                $('#comHead').text("Schedule");
+                $('#detailsTA').hide();
+                $('#materialsTA').hide();
+                $('#mainTestTA').show();
+                $('#projectRefTA').hide();
+                $('#filesTA').hide();
+                $('#addComments').modal();
+            });
+            $('#projectRefB').click(function () {
+                $('#comHead').text("Citizen Testimonial");
+                $('#detailsTA').hide();
+                $('#materialsTA').hide();
+                $('#mainTestTA').hide();
+                $('#projectRefTA').show();
+                $('#filesTA').hide();
+                $('#addComments').modal();
+            });
+            $('#filesB').click(function () {
+                $('#comHead').text("Citizen Testimonial");
+                $('#detailsTA').hide();
+                $('#materialsTA').hide();
+                $('#mainTestTA').hide();
+                $('#projectRefTA').hide();
+                $('#filesTA').show();
+                $('#addComments').modal();
+            });
+            $('#submitModal').click(function () {
+                $('#myModal3').modal();
+            });
+
+            function add_agenda() {
+                var d = document.getElementById("agendaDiv");
+
+                d.innerHTML += "<p><span><input type='text' name='meetingAgenda' style='width: 75%;'><button onclick='delete_agenda(this)'>Delete</button></span>";
+            }
+            function delete_agenda(e) {
+                e.remove();
+            }
+            function addRow() {
+                //debugger;
+                var tableID = "agendaTable";
+                var table = document.getElementById(tableID);
+                var rowCount = table.rows.length;
+
+
+                var row = table.insertRow(-1);
+                var cell1 = row.insertCell(-1);
+                var cell2 = row.insertCell(-1);
+                var element1 = document.createElement('input');
+                element1.type = "text";
+                element1.name = "meetingagenda";
+                element1.style.width = "100%";
+                element1.style.height = "100%";
+                element1.style.border = "1px";
+                element1.style.marginBottom = "5px";
+                var del = document.createElement('input');
+                del.type = "button";
+                del.id = "delCost"
+                del.value = "Delete";
+                del.className = "btn btn-danger btn-xs";
+                del.addEventListener('click', function () {
+                    delBtn(this);
+                });
+                cell1.appendChild(element1);
+                cell2.appendChild(del);
+
+            }
+
+            function delBtn(btn) {
+                var row = btn.parentNode.parentNode;
+                row.parentNode.removeChild(row);
+            }
         </script>
-    </script>
 
 
-</body>
+    </body>
 
 </html>

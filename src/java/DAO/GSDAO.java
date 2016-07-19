@@ -37,6 +37,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -718,6 +719,31 @@ public class GSDAO {
             Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return p;
+    }
+    public ArrayList<Project> getProjectsForList() {
+        Project p = null;
+        ArrayList<Project> pList = new ArrayList<>();
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String detailsQuery = ("select id, name, type, description, datesubmitted, status from project");
+            statement = connection.prepareStatement(detailsQuery);
+            result = statement.executeQuery();
+            while (result.next()) {
+                p = new Project();
+                p.setId(result.getString("id"));
+                p.setName(result.getString("name"));
+                p.setDescription(result.getString("description"));
+                p.setType(result.getString("project.type"));
+                p.setStatus(result.getString("status"));
+                p.setDatesubmitted(result.getString("datesubmitted"));
+                pList.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, "Error in getting basic details for project list", ex);
+        }
+        return pList;
     }
 
     public ArrayList<PWorks> getWorks() {

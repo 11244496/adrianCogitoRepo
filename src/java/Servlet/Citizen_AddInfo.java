@@ -130,7 +130,7 @@ public class Citizen_AddInfo extends HttpServlet {
                             String root = getServletContext().getRealPath("/");
 
                             //path where the file will be stored
-                            path = new File("C:\\Users\\AdrianKyle\\Documents\\NetBeansProjects\\Cogito\\Upload" + "/Citizen/" + title);
+                            path = new File("D:\\Development\\NetBeans\\Projects\\Cogito\\Upload" + "/Citizen/" + title);
                             if (!path.exists()) {
                                 boolean status = path.mkdirs();
                             }

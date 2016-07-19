@@ -315,7 +315,6 @@
                                                                 <th style="width: 15%; text-align: center">Category</th>
                                                                 <th style="width: 30%; text-align: center">Description</th>
                                                                 <th style="width: 10%; text-align: center">Date Submitted</th>
-                                                                <th style="width: 15%; text-align: center">Status</th>
                                                                 <th style="width: 10%; text-align: center"></th>
                                                             </tr>
                                                         </thead>
@@ -329,7 +328,6 @@
                                                                 <td class="p-name"><%=p.getType()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
-                                                                <td class="p-name"><%=p.getStatus()%></td>
                                                                 <td>
                                                                     <form action="GS_ViewProjectDetails">
                                                                         <input type="hidden" name="projid" value="<%=p.getId()%>">
@@ -374,7 +372,6 @@
                                                                 <th style="width: 15%;">Category</th>
                                                                 <th style="width: 30%;">Description</th>
                                                                 <th style="width: 10%;">Date Submitted</th>
-                                                                <th style="width: 15%; text-align: center">Status</th>
                                                                 <th style="width: 10%; text-align: center"></th>
                                                             </tr>
                                                         </thead>
@@ -389,7 +386,6 @@
                                                                 <td class="p-name"><%=p.getType()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
-                                                                <td class="p-name"><%=p.getStatus()%></td>
                                                                 <td>
                                                                     <form action="GS_ViewProjectDetails">
                                                                         <button type="submit" class="btn btn-success btn-xs" value="View proposal details">View proposal details</button>
@@ -427,7 +423,6 @@
                                                                 <th style="width: 15%;">Category</th>
                                                                 <th style="width: 25%;">Description</th>
                                                                 <th style="width: 10%;">Date Submitted</th>
-                                                                <th style="width: 15%; text-align: center">Status</th>
                                                                 <th style="width: 10%; text-align: center"></th>
                                                             </tr>
                                                         </thead>
@@ -442,7 +437,6 @@
                                                                 <td class="p-name"><%=p.getType()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
-                                                                <td class="p-name"><%=p.getStatus()%></td>
                                                                 <td>
                                                                     <form action="GS_ViewProjectDetails">
                                                                         <input type="hidden" name="projid" value="<%=p.getId()%>">
@@ -479,7 +473,6 @@
                                                                 <th style="width: 15%;">Category</th>
                                                                 <th style="width: 25%;">Description</th>
                                                                 <th style="width: 10%;">Date Submitted</th>
-                                                                <th style="width: 15%; text-align: center">Status</th>
                                                                 <th style="width: 10%; text-align: center"></th>
                                                             </tr>
                                                         </thead>
@@ -494,7 +487,6 @@
                                                                 <td class="p-name"><%=p.getType()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
-                                                                <td class="p-name"><%=p.getStatus()%></td>
                                                                 <td>
                                                                     <form action="GS_ViewProjectDetails">
                                                                         <input type="hidden" name="projid" value="<%=p.getId()%>">
@@ -529,7 +521,6 @@
                                                                 <th style="width: 15%;">Category</th>
                                                                 <th style="width: 25%;">Description</th>
                                                                 <th style="width: 10%;">Date Submitted</th>
-                                                                <th style="width: 15%; text-align: center">Status</th>
                                                                 <th style="width: 10%; text-align: center"></th>
                                                             </tr>
                                                         </thead>
@@ -544,7 +535,6 @@
                                                                 <td class="p-name"><%=p.getType()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
-                                                                <td class="p-name"><%=p.getStatus()%></td>
                                                                 <td>
                                                                     <form action="GS_ViewProjectDetails">
                                                                         <input type="hidden" name="projid" value="<%=p.getId()%>">
@@ -579,20 +569,6 @@
 
 
         <!-- js placed at the end of the document so the pages load faster -->
-        <script>
-            function setBudget(id) {
-                $.ajax({
-                    type: 'POST',
-                    url: 'setbudget',
-                    dataType: 'json',
-                    data: {projid: id, budget: $('#budget').val()},
-                    cache: false,
-                    success: function () {
-                        $("#approved").load(location.href + " #approved");
-                    }
-                });
-            }
-        </script>
         <script src="js/jquery.js"></script>
         <script src="js/jquery-ui-1.9.2.custom.min.js"></script>
         <script src="js/jquery-migrate-1.2.1.min.js"></script>

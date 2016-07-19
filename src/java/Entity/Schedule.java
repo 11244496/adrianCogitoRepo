@@ -14,163 +14,137 @@ import java.util.ArrayList;
 public class Schedule {
 
     private int id;
-    private String event;
     private String startdate;
     private String enddate;
     private String status;
-    private String dept;
     private String time;
-    private String stage;
-    private String projectID;
     private String actualenddate;
     private String remarks;
-    private ArrayList<Task> tasks;
-    private Project project;
+    private Task task;
 
     public Schedule() {
     }
 
-    public Schedule(int id, String event, String startdate, String enddate, String status, String dept, String time, String stage, String projectID, String actualenddate, String remarks, ArrayList<Task> tasks, Project project) {
+    public Schedule(int id, String startdate, String enddate, String status, String time, String actualenddate, String remarks, Task task) {
         this.id = id;
-        this.event = event;
         this.startdate = startdate;
         this.enddate = enddate;
         this.status = status;
-        this.dept = dept;
         this.time = time;
-        this.stage = stage;
-        this.projectID = projectID;
         this.actualenddate = actualenddate;
         this.remarks = remarks;
-        this.tasks = tasks;
-        this.project = project;
+        this.task = task;
     }
-    
-    public Schedule(int id, String event, String startdate, String enddate, String status, String dept, String time, String stage, String projectID, String actualenddate, String remarks) {
-        this.id = id;
-        this.event = event;
-        this.startdate = startdate;
-        this.enddate = enddate;
-        this.status = status;
-        this.dept = dept;
-        this.time = time;
-        this.stage = stage;
-        this.projectID = projectID;
-        this.actualenddate = actualenddate;
-        this.remarks = remarks;
-    }
-
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getStage() {
-        return stage;
-    }
-
-    public void setStage(String stage) {
-        this.stage = stage;
-    }
-
+    /**
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(int id) {
         this.id = id;
     }
 
-    public String getEvent() {
-        return event;
-    }
-
-    public void setEvent(String event) {
-        this.event = event;
-    }
-
+    /**
+     * @return the startdate
+     */
     public String getStartdate() {
         return startdate;
     }
 
+    /**
+     * @param startdate the startdate to set
+     */
     public void setStartdate(String startdate) {
         this.startdate = startdate;
     }
 
+    /**
+     * @return the enddate
+     */
     public String getEnddate() {
         return enddate;
     }
 
+    /**
+     * @param enddate the enddate to set
+     */
     public void setEnddate(String enddate) {
         this.enddate = enddate;
     }
 
+    /**
+     * @return the status
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * @param status the status to set
+     */
     public void setStatus(String status) {
         this.status = status;
     }
 
-    public String getDept() {
-        return dept;
+    /**
+     * @return the time
+     */
+    public String getTime() {
+        return time;
     }
 
-    public void setDept(String dept) {
-        this.dept = dept;
+    /**
+     * @param time the time to set
+     */
+    public void setTime(String time) {
+        this.time = time;
     }
 
-    public ArrayList<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(ArrayList<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public String getProjectID() {
-        return projectID;
-    }
-
-    public void setProjectID(String projectID) {
-        this.projectID = projectID;
-    }
-
+    /**
+     * @return the actualenddate
+     */
     public String getActualenddate() {
         return actualenddate;
     }
 
+    /**
+     * @param actualenddate the actualenddate to set
+     */
     public void setActualenddate(String actualenddate) {
         this.actualenddate = actualenddate;
     }
 
+    /**
+     * @return the remarks
+     */
     public String getRemarks() {
         return remarks;
     }
 
+    /**
+     * @param remarks the remarks to set
+     */
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
 
     /**
-     * @return the project
+     * @return the task
      */
-    public Project getProject() {
-        return project;
+    public Task getTask() {
+        return task;
     }
 
     /**
-     * @param project the project to set
+     * @param task the task to set
      */
-    public void setProject(Project project) {
-        this.project = project;
+    public void setTask(Task task) {
+        this.task = task;
     }
-    
-    
 
 }

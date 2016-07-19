@@ -5,6 +5,8 @@
  */
 package Entity;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author RoAnn
@@ -12,28 +14,18 @@ package Entity;
 public class Task {
 
     private int id;
-    private int taskNo;
     private String name;
-    private String description;
-    private String startDate;
-    private String endDate;
-    private String personInCharge;
-    private String schedule;
-    private String status;
-    private Schedule schedule2;
+    private Project project;
+    private ArrayList<Schedule> schedules;
 
     public Task() {
     }
 
-    public Task(int id, int taskNo, String name, String description, String startDate, String endDate, String personInCharge, String schedule) {
+    public Task(int id, String name, Project project, ArrayList<Schedule> schedules) {
         this.id = id;
-        this.taskNo = taskNo;
         this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.personInCharge = personInCharge;
-        this.schedule = schedule;
+        this.project = project;
+        this.schedules = schedules;
     }
 
     public int getId() {
@@ -44,14 +36,6 @@ public class Task {
         this.id = id;
     }
 
-    public int getTaskNo() {
-        return taskNo;
-    }
-
-    public void setTaskNo(int taskNo) {
-        this.taskNo = taskNo;
-    }
-
     public String getName() {
         return name;
     }
@@ -60,60 +44,21 @@ public class Task {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public Project getProject() {
+        return project;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public ArrayList<Schedule> getSchedules() {
+        return schedules;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setSchedules(ArrayList<Schedule> schedules) {
+        this.schedules = schedules;
     }
 
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getPersonInCharge() {
-        return personInCharge;
-    }
-
-    public void setPersonInCharge(String personInCharge) {
-        this.personInCharge = personInCharge;
-    }
-
-    public String getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(String schedule) {
-        this.schedule = schedule;
-    }
-
-    public Schedule getSchedule2() {
-        return schedule2;
-    }
-
-    public void setSchedule2(Schedule schedule2) {
-        this.schedule2 = schedule2;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
 }

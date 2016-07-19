@@ -127,7 +127,7 @@ public class Citizen_SendTestimonial extends HttpServlet {
                                 String root = getServletContext().getRealPath("/");
 
                                 //path where the file will be stored
-                                path = new File("C:\\Users\\AdrianKyle\\Documents\\NetBeansProjects\\Cogito\\Upload" + "/Citizen/" + title);
+                                path = new File("D:\\Development\\NetBeans\\Projects\\Cogito\\Upload" + "/Citizen/" + title);
                                 if (!path.exists()) {
                                     boolean status = path.mkdirs();
                                 }
@@ -159,7 +159,7 @@ public class Citizen_SendTestimonial extends HttpServlet {
 //                            }
 //                        }
 //                    }
-                    Testimonial t = new Testimonial(title, null, message, "chrome-extension://affgigbpilagplecbaihihkcaddmlkji/Citizen/", category, "Unlinked", c);
+                    Testimonial t = new Testimonial(title, null, message, "chrome-extension://nhcgkapmceenhknicldaiaplpkpmicmc/Citizen/", category, "Unlinked", c);
                     //Upload testimonial
                     citizenDAO.submitTestimonial(t);
                     t.setId(citizenDAO.lastID());
