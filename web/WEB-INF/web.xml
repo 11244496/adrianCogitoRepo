@@ -248,6 +248,22 @@
         <servlet-name>BAC_UploadNotices</servlet-name>
         <servlet-class>Servlet.BAC_UploadNotices</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BAC_ViewContractorList</servlet-name>
+        <servlet-class>Servlet.BAC_ViewContractorList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_ViewBidNotices</servlet-name>
+        <servlet-class>Servlet.BAC_ViewBidNotices</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_ViewBidNotices</servlet-name>
+        <servlet-class>Servlet.Contractor_ViewBidNotices</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_ActivityandNotification</servlet-name>
+        <servlet-class>Servlet.Contractor_ActivityandNotification</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -495,6 +511,22 @@
     <servlet-mapping>
         <servlet-name>BAC_UploadNotices</servlet-name>
         <url-pattern>/BAC_UploadNotices</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_ViewContractorList</servlet-name>
+        <url-pattern>/BAC_ViewContractorList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_ViewBidNotices</servlet-name>
+        <url-pattern>/BAC_ViewBidNotices</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_ViewBidNotices</servlet-name>
+        <url-pattern>/Contractor_ViewBidNotices</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_ActivityandNotification</servlet-name>
+        <url-pattern>/Contractor_ActivityandNotification</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

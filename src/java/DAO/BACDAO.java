@@ -701,6 +701,41 @@ public class BACDAO {
             Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public ArrayList<Contractor_User> getAllContractors() {
+
+        ArrayList<Contractor_User> contractors = new ArrayList<Contractor_User>();
+        Contractor cont;
+        Contractor_User cu = null;
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from contractorusers join contractor on company_id = contractor.id";
+            statement = connection.prepareStatement(query);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                cu = new Contractor_User();
+                cu.setID(result.getInt("contractorusers.id"));
+                cu.setName(result.getString("contractorusers.name"));
+                cu.setTelephone(result.getString("telephone"));
+                cu.setAddress(result.getString("Address"));
+                cu.setEmail(result.getString("Email"));
+                cont = new Contractor(result.getInt("ID"), result.getString("Name"));
+                cu.setContractor(cont);
+                contractors.add(cu);
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return contractors;
+    }
 
 
     //=======================================ALL ELIGIBILITY DOCUMENT RELATED CODES===============================
@@ -795,6 +830,40 @@ public class BACDAO {
             Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public ArrayList<Bid_Notices> getBidNotices(Project p, Contractor c) {
+
+        ArrayList<Bid_Notices> bidnotices = new ArrayList<Bid_Notices>();
+        Bid_Notices bidnotice;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from bid_notices where Project_ID = ? AND Contractor_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            statement.setInt(2, c.getID());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                bidnotice = new Bid_Notices(result.getInt("ID"), result.getString("FileName"), result.getString("DateUploaded"), p, c, result.getString("FolderName"), result.getString("Type"));
+                bidnotices.add(bidnotice);
+
+            }
+            connection.close();
+            return bidnotices;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return bidnotices;
+    }
+
 
 
     //=======================================Utility Codes========================================================

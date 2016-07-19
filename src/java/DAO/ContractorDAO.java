@@ -6,6 +6,7 @@
 package DAO;
 
 import DB.ConnectionFactory;
+import Entity.Bid_Notices;
 import Entity.Contractor;
 import Entity.Contractor_Has_Project;
 import Entity.Contractor_User;
@@ -58,6 +59,35 @@ public class ContractorDAO {
 
         return contractor;
     }
+    
+    public Contractor getContractorInfo(int id) {
+
+        Contractor cont = null;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from contractor where ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                cont = new Contractor(result.getInt("ID"), result.getString("Name"));
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return cont;
+    }
+
 
     //=======================================ALL PROJECT METHODS=======================================================
     public ArrayList<Project> getImplementedProjects(Contractor_User user) {
@@ -441,6 +471,41 @@ public class ContractorDAO {
             Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    //==========================================ALL BID DOCUMENTS================================================
+    public ArrayList<Bid_Notices> getBidNotices(Project p, Contractor c) {
+
+        ArrayList<Bid_Notices> bidnotices = new ArrayList<Bid_Notices>();
+        Bid_Notices bidnotice;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from bid_notices where Project_ID = ? AND Contractor_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            statement.setInt(2, c.getID());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                bidnotice = new Bid_Notices(result.getInt("ID"), result.getString("FileName"), result.getString("DateUploaded"), p, c, result.getString("FolderName"), result.getString("Type"));
+                bidnotices.add(bidnotice);
+
+            }
+            connection.close();
+            return bidnotices;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return bidnotices;
+    }
+
 
     //==========================================UTILITY CODES========================================================
     public String checkPage(int id, String idd) {
