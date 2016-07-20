@@ -476,7 +476,6 @@
                                                         <div class="col-md-12">
                                                             <header class="panel-heading">
                                                                 <h3>Compile Projects</h3>
-
                                                             </header>
                                                             <br>
                                                             <div class="input-group"><input type="text" placeholder="Search Here" class="input-sm form-control" style="width: 500px;">
@@ -484,46 +483,41 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <table class="table table-hover p-table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th></th>
-                                                                <th style="">Title</th>
-                                                                <th style="">Category</th>
-                                                                <th style="">Description</th>
-                                                                <th style="">Date Submitted</th>
-                                                                <th style=""></th>
-                                                            </tr>
-                                                        </thead>
+                                                    <form method="POST" id="compProj">
+                                                        <table class="table table-hover p-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th style="">Title</th>
+                                                                    <th style="">Category</th>
+                                                                    <th style="">Description</th>
+                                                                    <th style="">Date Submitted</th>
+                                                                </tr>
+                                                            </thead>
 
-                                                        <tbody>
-                                                            <%for (Project p : pList) {
-                                                                    if (p.getStatus().equalsIgnoreCase("For Compilation")) {
-                                                            %>
+                                                            <tbody>
+                                                                <%for (Project p : pList) {
+                                                                        if (p.getStatus().equalsIgnoreCase("For Compilation")) {
+                                                                %>
 
-                                                            <tr>
-                                                                <td>
-                                                                    <input class="checkbox" type="checkbox" name="project" value="<%=p.getId()%>">
-                                                                </td>
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class="checkbox" type="checkbox" name="project" value="<%=p.getId()%>">
+                                                                    </td>
 
-                                                                <td class="p-name"><%=p.getName()%></td>
-                                                                <td class="p-name"><%=p.getType()%></td>
-                                                                <td class="p-name"><%=p.getDescription()%></td>
-                                                                <td class="p-name"><%=p.getDatesubmitted()%></td>
-                                                                <td>
-                                                                    <form action="OCPD_ViewProjectDetails">
-                                                                        <input type="hidden" name="projid" value="<%=p.getId()%>">
-                                                                        <button type="submit" class="btn btn-success btn-xs" value="View details"><i class="fa fa-eye"></i> View details</button>
-                                                                    </form>
-                                                                </td>
-                                                            </tr>
-                                                            <%}
+                                                                    <td class="p-name"><%=p.getName()%></td>
+                                                                    <td class="p-name"><%=p.getType()%></td>
+                                                                    <td class="p-name"><%=p.getDescription()%></td>
+                                                                    <td class="p-name"><%=p.getDatesubmitted()%></td>
+                                                                </tr>
+                                                                <%}
                                                                     }%>
-                                                        </tbody>
+                                                            </tbody>
 
-                                                    </table>
-                                                    <center>
-                                                        <button id="goCompile" name="submit" type="submit" class="btn btn-sm btn-success" > Submit</button></center>
+                                                        </table>
+                                                        <center>
+                                                            <button id="goCompile" name="submit" type="submit" class="btn btn-sm btn-success" > Submit</button></center>
+                                                    </form>
                                                 </div>    
 
 
@@ -588,7 +582,7 @@
             $('#goCompile').click(function () {
                 location.reload();
                 $('#compProj').attr('target', '_blank');
-                $('#compProj').attr('action', 'OCPD_CompileProjects').submit();
+                $('#compProj').attr('action', 'OCPD_CompileProposals').submit();
             });
 
         </script>

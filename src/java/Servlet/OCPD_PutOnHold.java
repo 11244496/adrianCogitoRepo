@@ -41,16 +41,17 @@ public class OCPD_PutOnHold extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             OCPDDAO oc = new OCPDDAO();
-            String projId = request.getParameter("projectId");
-            Project p = new Project();
-            p.setId(projId);
-
+            String projId = request.getParameter("projectid");
+            System.out.println(projId);
+            Project p = new Project(projId);
+            
             Annotation an = new Annotation();
             an.setTestimonials(request.getParameter("mainTestTA"));
             an.setProjects(request.getParameter("projectRefTA"));
             an.setDetails(request.getParameter("detailsTA"));
             an.setProgram(request.getParameter("materialsTA"));
             an.setProject(p);
+            an.setStatus("Pending");
             oc.setAnnotations(an);
 
             ArrayList<Schedule> sList = new ArrayList();
@@ -66,11 +67,13 @@ public class OCPD_PutOnHold extends HttpServlet {
             meeting.setProject(p);
             meeting.setSchedules(sList);
             oc.setMeeting(meeting);
+            meeting.setId(oc.getTaskID());
             for (Schedule s : meeting.getSchedules()) {
+                s.setTask(meeting);
                 oc.insertToSchedule(s);
             }
 
-            oc.changeProjStatus("Pending", p);
+            oc.changeProjStatus("On-Hold", p);
 
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/OCPD_ViewProjectList");

@@ -284,6 +284,14 @@
         <servlet-name>OCPD_PutOnHold</servlet-name>
         <servlet-class>Servlet.OCPD_PutOnHold</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OCPD_ApproveProposal</servlet-name>
+        <servlet-class>Servlet.OCPD_ApproveProposal</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OCPD_CompileProposals</servlet-name>
+        <servlet-class>Servlet.OCPD_CompileProposals</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -567,6 +575,14 @@
     <servlet-mapping>
         <servlet-name>OCPD_PutOnHold</servlet-name>
         <url-pattern>/OCPD_PutOnHold</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_ApproveProposal</servlet-name>
+        <url-pattern>/OCPD_ApproveProposal</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_CompileProposals</servlet-name>
+        <url-pattern>/OCPD_CompileProposals</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

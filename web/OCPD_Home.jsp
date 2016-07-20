@@ -14,8 +14,8 @@
 <!DOCTYPE html>
 
 <%Employee e = (Employee) session.getAttribute("user");
-    ArrayList<Schedule> unconfirmedMeeting = (ArrayList<Schedule>) request.getAttribute("unconfirmedMeeting");
-    ArrayList<Project> unconfirmedMProjects = (ArrayList<Project>) request.getAttribute("unconfirmedMProjects");
+//    ArrayList<Schedule> unconfirmedMeeting = (ArrayList<Schedule>) request.getAttribute("unconfirmedMeeting");
+//    ArrayList<Project> unconfirmedMProjects = (ArrayList<Project>) request.getAttribute("unconfirmedMProjects");
 
 %>
 <head>
@@ -208,25 +208,25 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <%for (int x = 0; x < unconfirmedMeeting.size(); x++) {
-                                                                      if (unconfirmedMeeting.get(x).getDept().equalsIgnoreCase("GS")) {%>
+                                                            <%//for (int x = 0; x < unconfirmedMeeting.size(); x++) {
+                                                                //      if (unconfirmedMeeting.get(x).getDept().equalsIgnoreCase("GS")) {%>
                                                             <tr>
-                                                                <td><%=unconfirmedMProjects.get(x).getName()%></td>
-                                                                <td><%=unconfirmedMeeting.get(x).getStartdate()%></td>
-                                                                <td><%=unconfirmedMeeting.get(x).getTime()%></td>
+                                                                <td><%//=unconfirmedMProjects.get(x).getName()%></td>
+                                                                <td><%//=unconfirmedMeeting.get(x).getStartdate()%></td>
+                                                                <td><%//=unconfirmedMeeting.get(x).getTime()%></td>
                                                                 <td>
-                                                                    <%for (Task t : unconfirmedMeeting.get(x).getTasks()) {%>
-                                                                    <p><%=t.getDescription()%></p>
-                                                                    <%}%>
+                                                                    <%//for (Task t : unconfirmedMeeting.get(x).getTasks()) {%>
+                                                                    <p><%//=t.getDescription()%></p>
+                                                                    <%//}%>
                                                                 </td>
-                                                                <td><%=unconfirmedMeeting.get(x).getRemarks()%></td>
+                                                                <td><%//=unconfirmedMeeting.get(x).getRemarks()%></td>
                                                                 <td>
-                                                                    <button id="<%=unconfirmedMeeting.get(x).getId()%>" onclick="approveMeeting(this)" class="btn btn-sm btn-success">Approve</button>
-                                                                    <button id="<%=unconfirmedMeeting.get(x).getId()%>" onclick="rescheduleModal(this)" class="btn btn-sm btn-danger">Reschedule</button>
+                                                                    <button id="<%//=unconfirmedMeeting.get(x).getId()%>" onclick="approveMeeting(this)" class="btn btn-sm btn-success">Approve</button>
+                                                                    <button id="<%//=unconfirmedMeeting.get(x).getId()%>" onclick="rescheduleModal(this)" class="btn btn-sm btn-danger">Reschedule</button>
                                                                 </td>
                                                             </tr>
-                                                            <%}%>
-                                                            <%}%>
+                                                            <%//}%>
+                                                            <%//}%>
                                                         </tbody>
                                                     </table>
                                                 </div>

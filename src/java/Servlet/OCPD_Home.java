@@ -43,13 +43,14 @@ public class OCPD_Home extends HttpServlet {
             GSDAO gsdao = new GSDAO();
             OCPDDAO odao = new OCPDDAO();
 
-            ArrayList<Schedule> unconfirmedMeeting = gsdao.getAllMeetings("Unconfirmed");
+//            ArrayList<Schedule> unconfirmedMeeting = gsdao.getAllMeetings("Unconfirmed");
+            ArrayList<Schedule> unconfirmedMeeting = new ArrayList<>();
             ArrayList<Project> unconfirmedMProjects = new ArrayList<>();
             OCPDDAO oc = new OCPDDAO();
                 for (int x = 0; x < unconfirmedMeeting.size(); x++) {
-                    unconfirmedMProjects.add(odao.getBasicProjectDetails(unconfirmedMeeting.get(x).getProjectID()));
-                    unconfirmedMeeting.get(x).setTasks(oc.getAgenda(unconfirmedMeeting.get(x)));
-                
+//                    unconfirmedMProjects.add(odao.getBasicProjectDetails(unconfirmedMeeting.get(x).getProjectID()));
+//                    unconfirmedMeeting.get(x).setTasks(oc.getAgenda(unconfirmedMeeting.get(x)));
+//                
             }
 
             //Get Counts

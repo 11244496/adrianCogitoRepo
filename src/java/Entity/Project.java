@@ -45,6 +45,9 @@ public class Project {
 
     public Project() {
     }
+    public Project(String id) {
+        this.id = id;
+    }
 
     public Project(String id, String name, String description, String type, String status, String foldername, Employee employee, String datesubmitted, float budget, String category, ArrayList<Location> location, ArrayList<Schedule> schedule, ArrayList<Files> files, ArrayList<PWorks> pWorks, Annotation annotation, ArrayList<PComments> pComments, ArrayList<Testimonial> referredTestimonials, ArrayList<Project> referredProjects, ArrayList<Feedback> feedback, ArrayList<Project_Inspection> inspection, Contractor contractor, Contractor_User contractorUser) {
         this.id = id;

@@ -371,7 +371,7 @@ public class OCPDDAO {
         }
         return AllProjectID;
     }
-    
+
     public void changeProjStatus(String s, Project p) {
         try {
 
@@ -392,7 +392,6 @@ public class OCPDDAO {
 
     }
 
-
     //=============================ALL SCHEDULE AND TASK RELATED CODES======================================
     public void setMeeting(Task t) {
         try {
@@ -408,22 +407,42 @@ public class OCPDDAO {
             Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting meeting", ex);
         }
     }
+
     public void insertToSchedule(Schedule s) {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "insert into (startdate, enddate, status, time, remarks) values (?,?,?,?,?)";
+            String query = "insert into schedule (startdate, enddate, status, time, remarks, task_id) values (?,?,?,?,?,?)";
             statement = connection.prepareStatement(query);
             statement.setString(1, s.getStartdate());
             statement.setString(2, s.getEnddate());
             statement.setString(3, s.getStatus());
             statement.setString(4, s.getTime());
             statement.setString(5, s.getRemarks());
+            statement.setInt(6, s.getTask().getId());
             statement.executeUpdate();
             connection.close();
         } catch (SQLException ex) {
             Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting meeting", ex);
         }
+    }
+
+    public int getTaskID() {
+        int x = 0;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select max(id) i from task";
+            statement = connection.prepareStatement(query);
+            result = statement.executeQuery();
+            while (result.next()) {
+                x = result.getInt("i");
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting meeting", ex);
+        }
+        return x;
     }
 
     public void rescheduleMeeting(Schedule s) {
@@ -575,15 +594,14 @@ public class OCPDDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "insert into annotations (testimonials, projects, details, program, status, date, project_id) values (?,?,?,?,?,?,?)";
+            String query = "insert into annotations (testimonials, projects, details, program, status, date, project_id) values (?,?,?,?,?,now(),?)";
             statement = connection.prepareStatement(query);
             statement.setString(1, a.getTestimonials());
             statement.setString(2, a.getProjects());
             statement.setString(3, a.getDetails());
             statement.setString(4, a.getProgram());
             statement.setString(5, a.getStatus());
-            statement.setString(6, a.getDate());
-            statement.setString(7, a.getProject().getId());
+            statement.setString(6, a.getProject().getId());
             statement.executeUpdate();
             connection.close();
         } catch (SQLException ex) {

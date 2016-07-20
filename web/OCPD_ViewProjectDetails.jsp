@@ -248,8 +248,10 @@
                             <span class="pull-right">
                                 <%if (p.getStatus().equalsIgnoreCase("Pending")){%>
                                 <form id="formApproveHold">
+                                    <input type="hidden" name="projectid" value="<%out.print(p.getId());%>">
+
                                     <button class="btn btn-danger btn-sm" id="putOnHold" type="button" onclick="submitForm(this)"><i class="fa fa-times"></i> Put on-hold</button>
-                                    <button class="btn btn-success btn-sm" type="button" onclick="submitForm(this) id="approve" ><i class="fa fa-check"></i> Approve</button>
+                                    <button class="btn btn-success btn-sm" type="button" onclick="submitForm(this)" id ="approve" ><i class="fa fa-check"></i> Approve</button>
                                 </form>
                                 <%} else if (p.getStatus().equalsIgnoreCase("For compilation")){%>
                                 <button class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Set for compilation</button>
