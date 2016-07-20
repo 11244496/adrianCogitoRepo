@@ -291,8 +291,9 @@
                                                             <td class="p-name">
                                                                 <%out.print(type);%>
                                                             </td>
-                                                            <td></td>
-
+                                                            <td class="p-name">
+                                                                <%out.print(status);%>
+                                                            </td>
 
                                                             <td class="p-name">
                                                                 <a href="BAC_ViewRespondents?projectid=<%=idd%>"><%out.print(responses + " submissions, " + confirmed + " eligible");%> </a>  

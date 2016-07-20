@@ -27,9 +27,6 @@
             table.table td { overflow: hidden; }
         </style>   
 
-
-
-
     </head>
     <body>
 
@@ -137,16 +134,21 @@
 
 
             <%
-                //ArrayList<Testimonial> myTestimonials = (ArrayList<Testimonial>) request.getAttribute("myTestimonials");
+                ArrayList<Testimonial> myTestimonials = (ArrayList<Testimonial>) request.getAttribute("myTestimonials");
                 ArrayList<Testimonial> allTestimonials = (ArrayList<Testimonial>) request.getAttribute("allTestimonials");
-                //ArrayList<Testimonial> subscribedTestimonials = (ArrayList<Testimonial>) request.getAttribute("subscribedTestimonials");
-                //ArrayList<Testimonial> trendingTestimonials = (ArrayList<Testimonial>) request.getAttribute("trendingTestimonials");
+                ArrayList<Testimonial> subscribedTestimonials = (ArrayList<Testimonial>) request.getAttribute("subscribedTestimonials");
+                ArrayList<Testimonial> trendingTestimonials = (ArrayList<Testimonial>) request.getAttribute("trendingTestimonials");
 
                 String allLocation = (String) request.getAttribute("allLocation");
-                //ArrayList<Location> myLocation = new ArrayList<Location>();
-                //ArrayList<Location> subscribedLocation = new ArrayList<Location>();
-                //ArrayList<Location> trendingLocation = new ArrayList<Location>();
-            %>
+                String myLocation = (String) request.getAttribute("myLocation");
+                String TLocation = (String) request.getAttribute("TLocation");
+                String SLocation = (String) request.getAttribute("SLocation");
+           %>
+
+            <script>
+                var map;
+                var markers = <%=allLocation%>;
+            </script>
 
             <section id="main-content">
                 <section class="wrapper site-min-height">
@@ -195,12 +197,17 @@
                                                         <div class="col-lg-13">
                                                             <!--Map should be here -->
                                                             <center>
-                                                            <div id="map" style="height: 700px; margin: 0; padding: 0; width: 80%;"></div>
+                                                                <div id="map" style="height: 700px; margin: 0; padding: 0; width: 80%;"></div>
                                                             </center>
                                                         </div> 
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <script>
+                                                 
+
+                                            </script>    
 
                                         </div>
 
@@ -446,8 +453,6 @@
             -->
 
             <script>
-                var map;
-                var markers = <%=allLocation%>;
                 function initMap() {
 
                     map = new google.maps.Map(document.getElementById('map'), {
@@ -491,7 +496,7 @@
                                         '<br><div>Location: ' + results[0].formatted_address + '</div>' +
                                         '<br><div>Category: ' + coor.testimonial.category + '</div>' +
                                         '<br><div>Message: ' + coor.testimonial.message + ' </div>' +
-                                        '<br><div>Uploader: ' + coor.testimonial.citizen.firstName + ' ' +coor.testimonial.citizen.lastName+ ' </div>' +
+                                        '<br><div>Uploader: ' + coor.testimonial.citizen.firstName + ' ' + coor.testimonial.citizen.lastName + ' </div>' +
                                         '</div>' +
                                         '</div>';
 

@@ -270,14 +270,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label">Tentative Schedule for Re-post</label>
-                                    <div class="col-lg-10">
-                                        <input type="date" class="form-control" name="failStart" id="taskStart" cols="60" rows="5"></textarea>
-                                    </div>
-                                </div>
-
-
                             </fieldset>
 
                         </div>

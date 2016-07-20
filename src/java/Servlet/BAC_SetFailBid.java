@@ -52,8 +52,10 @@ public class BAC_SetFailBid extends HttpServlet {
             String projid = request.getParameter("projId");
             OCPDDAO oc = new OCPDDAO();
             String reason = request.getParameter("failReason");
+            Project p = oc.getBasicProjectDetails(projid);
+            oc.changeProjStatus("BAC", p);
             bac.addReasonFail(reason, itb);
-
+            
             ArrayList<Contractor_Has_Project> contractors = bac.getViewRespondents(projid);
             Contractor_Has_Project chp;
             ArrayList<Eligibility_Document> eds;
@@ -64,7 +66,6 @@ public class BAC_SetFailBid extends HttpServlet {
                 bac.removeContractor(eds, chp);
             }
 
-            
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/BAC_Home");
             dispatch.forward(request, response);
