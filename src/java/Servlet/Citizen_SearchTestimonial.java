@@ -62,9 +62,6 @@ public class Citizen_SearchTestimonial extends HttpServlet {
             ArrayList<Testimonial> myTestimonials = new ArrayList<Testimonial>();
 
             ArrayList<TLocation> allLocation = new ArrayList<TLocation>();
-            ArrayList<TLocation> myLocation = new ArrayList<TLocation>();
-            ArrayList<TLocation> subscribedLocation = new ArrayList<TLocation>();
-            ArrayList<TLocation> trendingLocation = new ArrayList<TLocation>();
 
             Testimonial t;
 
@@ -94,24 +91,6 @@ public class Citizen_SearchTestimonial extends HttpServlet {
                 }
             }
 
-            for (Testimonial testi : myTestimonials) {
-                for (TLocation l : testi.getTlocation()) {
-                    myLocation.add(l);
-                }
-            }
-
-            for (Testimonial testi : trendingTestimonials) {
-                for (TLocation l : testi.getTlocation()) {
-                    trendingLocation.add(l);
-                }
-            }
-
-            for (Testimonial testi : subscribedTestimonials) {
-                for (TLocation l : testi.getTlocation()) {
-                    subscribedLocation.add(l);
-                }
-            }
-
             request.setAttribute("allTestimonials", allTestimonials);
             request.setAttribute("myTestimonials", myTestimonials);
             request.setAttribute("subscribedTestimonials", subscribedTestimonials);
@@ -119,13 +98,7 @@ public class Citizen_SearchTestimonial extends HttpServlet {
 
             String location = new Gson().toJson(allLocation);
             request.setAttribute("allLocation", location);
-            String mylocation = new Gson().toJson(allLocation);
-            request.setAttribute("myLocation", mylocation);
-            String Tlocation = new Gson().toJson(allLocation);
-            request.setAttribute("TLocation", Tlocation);
-            String Slocation = new Gson().toJson(allLocation);
-            request.setAttribute("SLocation", Slocation);
-
+            
             ServletContext context = getServletContext();
             String success = (String) request.getAttribute("success");
 

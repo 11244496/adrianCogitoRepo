@@ -6,10 +6,13 @@
 package DAO;
 
 import DB.ConnectionFactory;
+import Entity.Citizen;
 import Entity.Contractor;
 import Entity.Files;
+import Entity.Location;
 import Entity.Project;
 import Entity.Schedule;
+import Entity.TLocation;
 import Entity.Testimonial;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -60,6 +63,46 @@ public class AjaxDAO {
         }
 
         return new ArrayList(idList);
+    }
+    
+    public ArrayList<TLocation> getSearchedTestimonial(String searchQuery) {
+        
+        ArrayList<TLocation> tlocation = new ArrayList<TLocation>();
+        
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "SELECT * FROM testimonial join TLocation on testimonial.ID = tlocation.Testimonial_ID where Title like \"%"+searchQuery+"%\" or Category like \"%"+searchQuery+"%\" or Message like \"%"+searchQuery+"%\";";
+            statement = connection.prepareStatement(query);
+            result = statement.executeQuery();
+            while (result.next()) {
+            TLocation loc = new TLocation();
+                loc.setId(result.getInt("tlocation.ID"));
+                loc.setLatitude(result.getString("latitude"));
+                loc.setLongitude(result.getString("longitude"));
+                Testimonial testi = new Testimonial();
+                testi.setId(result.getInt("testimonial.id"));
+                testi.setTitle(result.getString("Title"));
+                testi.setDateUploaded(result.getString("dateuploaded"));
+                testi.setMessage(result.getString("message"));
+                testi.setCategory(result.getString("category"));
+                testi.setFolderName(result.getString("foldername"));
+                Citizen c = new Citizen();
+                c.setId(result.getInt("Citizen_ID"));
+                testi.setCitizen(c);
+                testi.setStatus(result.getString("Status"));
+                loc.setTestimonial(testi);
+
+                tlocation.add(loc);
+            }
+            
+            
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in retrieving IDs", ex);
+        }
+
+        return tlocation;
     }
 
     public String generateNewIfExisting(String category) {

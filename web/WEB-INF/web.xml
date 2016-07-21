@@ -264,6 +264,10 @@
         <servlet-name>Contractor_ActivityandNotification</servlet-name>
         <servlet-class>Servlet.Contractor_ActivityandNotification</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AJAX_Citizen_SearchTestimonialViaMap</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_Citizen_SearchTestimonialViaMap</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -527,6 +531,10 @@
     <servlet-mapping>
         <servlet-name>Contractor_ActivityandNotification</servlet-name>
         <url-pattern>/Contractor_ActivityandNotification</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_Citizen_SearchTestimonialViaMap</servlet-name>
+        <url-pattern>/AJAX_Citizen_SearchTestimonialViaMap</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

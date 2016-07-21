@@ -140,10 +140,7 @@
                 ArrayList<Testimonial> trendingTestimonials = (ArrayList<Testimonial>) request.getAttribute("trendingTestimonials");
 
                 String allLocation = (String) request.getAttribute("allLocation");
-                String myLocation = (String) request.getAttribute("myLocation");
-                String TLocation = (String) request.getAttribute("TLocation");
-                String SLocation = (String) request.getAttribute("SLocation");
-           %>
+            %>
 
             <script>
                 var map;
@@ -205,7 +202,19 @@
                                             </div>
 
                                             <script>
-                                                 
+                                                $(document).on("keyup", "#all-testimonial", function () {
+                                                    $.ajax({
+                                                        type: 'POST',
+                                                        url: 'AJAX_Citizen_SearchTestimonialViaMap',
+                                                        dataType: 'json',
+                                                        data: {searchtext: $('#all-testimonial').val()},
+                                                        cache: false,
+                                                        success: function (searchresult) {
+                                                            markers = searchresult;
+                                                            initMap();
+                                                        }
+                                                    });
+                                                });
 
                                             </script>    
 
