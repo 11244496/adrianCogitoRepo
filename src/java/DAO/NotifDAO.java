@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Lenovo
  */
-public class NotificationDAO {
+public class NotifDAO {
 
     Connection connection;
     PreparedStatement statement;
