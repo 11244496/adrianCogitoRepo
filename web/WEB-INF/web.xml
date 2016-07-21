@@ -265,8 +265,32 @@
         <servlet-class>Servlet.Contractor_ActivityandNotification</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>AJAX_Citizen_SearchTestimonialViaMap</servlet-name>
-        <servlet-class>Servlet.AjaxServlet.AJAX_Citizen_SearchTestimonialViaMap</servlet-class>
+        <servlet-name>GS_ViewProjectDetails</servlet-name>
+        <servlet-class>Servlet.GS_ViewProjectDetails</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_ViewProjectList</servlet-name>
+        <servlet-class>Servlet.GS_ViewProjectList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OCPD_ViewProjectList</servlet-name>
+        <servlet-class>Servlet.OCPD_ViewProjectList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OCPD_ViewProjectDetails</servlet-name>
+        <servlet-class>Servlet.OCPD_ViewProjectDetails</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OCPD_PutOnHold</servlet-name>
+        <servlet-class>Servlet.OCPD_PutOnHold</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OCPD_ApproveProposal</servlet-name>
+        <servlet-class>Servlet.OCPD_ApproveProposal</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OCPD_CompileProposals</servlet-name>
+        <servlet-class>Servlet.OCPD_CompileProposals</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -533,8 +557,32 @@
         <url-pattern>/Contractor_ActivityandNotification</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>AJAX_Citizen_SearchTestimonialViaMap</servlet-name>
-        <url-pattern>/AJAX_Citizen_SearchTestimonialViaMap</url-pattern>
+        <servlet-name>GS_ViewProjectDetails</servlet-name>
+        <url-pattern>/GS_ViewProjectDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_ViewProjectList</servlet-name>
+        <url-pattern>/GS_ViewProjectList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_ViewProjectList</servlet-name>
+        <url-pattern>/OCPD_ViewProjectList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_ViewProjectDetails</servlet-name>
+        <url-pattern>/OCPD_ViewProjectDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_PutOnHold</servlet-name>
+        <url-pattern>/OCPD_PutOnHold</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_ApproveProposal</servlet-name>
+        <url-pattern>/OCPD_ApproveProposal</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_CompileProposals</servlet-name>
+        <url-pattern>/OCPD_CompileProposals</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -6,13 +6,8 @@
 package Servlet;
 
 import DAO.GSDAO;
-import DAO.OCPDDAO;
-import Entity.Project;
-import Entity.Schedule;
-import Entity.Testimonial;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -24,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author RoAnn
  */
-public class GS_Home extends HttpServlet {
+public class GS_ViewProjectList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,28 +34,10 @@ public class GS_Home extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-
-            GSDAO gsdao = new GSDAO();
-
-            ArrayList<Testimonial> noreplyT = gsdao.getTestimonialsNR();
-            
-                        
-            OCPDDAO oc = new OCPDDAO();
-
-            //Get Counts
-            int PP = gsdao.getProjectCount("Pending");
-            int OP = gsdao.getProjectCount("On-Going");
-            int FP = gsdao.getProjectCount("Finished");
-            int OH = gsdao.getProjectCount("On-Hold");
-
-            request.setAttribute("noreplyT", noreplyT);
-            request.setAttribute("PP", PP);
-            request.setAttribute("OP", OP);
-            request.setAttribute("FP", FP);
-            request.setAttribute("OH", OH);
-
+            GSDAO gs = new GSDAO();
+            request.setAttribute("pList", gs.getProjectsForList());
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch = context.getRequestDispatcher("/GS_Home.jsp");
+            RequestDispatcher dispatch = context.getRequestDispatcher("/GS_ViewProjectList.jsp");
             dispatch.forward(request, response);
 
         }

@@ -5,13 +5,17 @@
  */
 package Servlet;
 
+import DAO.BACDAO;
 import DAO.GSDAO;
 import DAO.OCPDDAO;
+import Entity.Files;
+import Entity.Location;
 import Entity.Project;
-import Entity.Schedule;
 import Entity.Testimonial;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import static java.lang.System.out;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -19,12 +23,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author RoAnn
  */
-public class GS_Home extends HttpServlet {
+public class GS_ViewProjectDetails extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,34 +43,57 @@ public class GS_Home extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-
-            GSDAO gsdao = new GSDAO();
-
-            ArrayList<Testimonial> noreplyT = gsdao.getTestimonialsNR();
-            
-                        
+        HttpSession session = request.getSession();
+        try {
+            GSDAO gdao = new GSDAO();
             OCPDDAO oc = new OCPDDAO();
+            
+            
+            String id = request.getParameter("projid");
 
-            //Get Counts
-            int PP = gsdao.getProjectCount("Pending");
-            int OP = gsdao.getProjectCount("On-Going");
-            int FP = gsdao.getProjectCount("Finished");
-            int OH = gsdao.getProjectCount("On-Hold");
+            Project project = oc.getAllProjectDetails(id);
+            ArrayList<Location> projectLocation = project.getLocation();
+            String location = new Gson().toJson(projectLocation);
+            session.setAttribute("location", location);
+            session.setAttribute("cost", oc.getCost(project));
 
-            request.setAttribute("noreplyT", noreplyT);
-            request.setAttribute("PP", PP);
-            request.setAttribute("OP", OP);
-            request.setAttribute("FP", FP);
-            request.setAttribute("OH", OH);
-
+            Testimonial mainTesti = gdao.getTestimonial(project.getMainTestimonial().getId());
+            project.setMainTestimonial(mainTesti);
+            
+            //References
+            ArrayList<Testimonial> referencedTList = new ArrayList<Testimonial>();
+            ArrayList<Project> referencedPList = new ArrayList<Project>();
+            
+            for(int x = 0; x<project.getReferredTestimonials().size();x++){
+                Testimonial t = gdao.getTestimonial(project.getReferredTestimonials().get(x).getId());
+                referencedTList.add(t);
+            }
+            project.setReferredTestimonials(referencedTList);
+            
+            for(int x = 0; x < project.getReferredProjects().size();x++){
+                Project p = oc.getAllProjectDetails(project.getReferredProjects().get(x).getId());
+                referencedPList.add(p);
+            }
+            project.setReferredProjects(referencedPList);
+            
+            //Set new arraylist of proposal files
+            ArrayList<Files> projectFiles = project.getFiles();
+            session.setAttribute("pFiles", projectFiles);
+            session.setAttribute("project", project);
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch = context.getRequestDispatcher("/GS_Home.jsp");
+            RequestDispatcher dispatch;
+            if (project.getStatus().equalsIgnoreCase("On-hold")){
+                dispatch = context.getRequestDispatcher("/GS_ViewProjectDetailsOnHold.jsp");
+            } else {
+                dispatch = context.getRequestDispatcher("/GS_ViewProjectDetails.jsp");
+            }
             dispatch.forward(request, response);
 
+        } finally {
+            out.close();
         }
-    }
 
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

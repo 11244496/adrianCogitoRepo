@@ -4,11 +4,6 @@
     Author     : RoAnn
 --%>
 
-<%@page import="Entity.Files"%>
-<%@page import="java.text.DecimalFormat"%>
-<%@page import="Entity.Schedule"%>
-<%@page import="Entity.Material"%>
-<%@page import="Entity.Component"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="Entity.Project"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -61,7 +56,6 @@
 
         <%
             ArrayList<Project> pList = (ArrayList<Project>) request.getAttribute("pList");
-            ArrayList<Float> costs = (ArrayList<Float>) request.getAttribute("cList");
         %>
 
         <section class="panel">
@@ -89,94 +83,9 @@
                             <p><span class="bold">Description </span>: <%=p.getDescription()%></p>
                         </div><br>
                         <div>
-                            <p><span class="bold">Category </span>: <%=p.getType()%> - <%=p.getCategory().getSubCategory()%></p>
+                            <p><span class="bold">Category </span>: <%=p.getType()%></p>
                         </div><br>
 
-                        <div>
-                            <p><span class="bold">Location </span>: </p>
-                        </div><br>
-
-                        <div>
-                            <p><span class="bold">Program Components </span> :
-
-                            <table class="table" style="width:50%; text-align: center" >
-                                <tr>
-                                    <th><center>Component</center></th>
-                                <th><center>Duration</center></th>
-                                </tr>
-                                <% for (Schedule c : p.getSchedule()) {
-                                        if (c.getStage().equalsIgnoreCase("Implementation")) {
-                                            String startdate = c.getStartdate();
-                                            String enddate = c.getEnddate();
-                                            String[] date = startdate.split("-");
-                                            String[] months = {"January", "February", "March", "April",
-                                                "May", "June", "July", "August", "September", "October",
-                                                "November", "December",};
-                                            startdate = months[Integer.parseInt(date[1]) - 1] + " " + date[2] + " " + date[0];
-                                            date = enddate.split("-");
-                                            enddate = months[Integer.parseInt(date[1]) - 1] + " " + date[2] + " " + date[0];
-                                %>
-                                <tr>
-                                    <td><%=c.getEvent()%></td>
-                                    <td><%=startdate%> - <%=enddate%></td>
-                                </tr>
-                                <%}
-                                    }%>
-                            </table>
-
-                            </p>
-                        </div><br>
-
-                        <p><u><span class="bold">Program Works</span></u> </p>
-                        <table class="table" style="width:50%; text-align: center">
-                            <tr>
-                                <th><center>Item Description</center></th>
-                            <th><center>% of Total</center></th>
-                            <th><center>Quantity</center></th>
-                            <th><center>Unit</center></th>
-                            <th><center>Unit Price</center></th>
-                            <th><center>Total Cost per item</center></th>
-
-                            </tr>
-                            <% for (Material m : p.getMaterials()) {
-
-                            %>
-                            <tr>
-                                <td><%=m.getName()%></td>
-                                <td><%=m.getPercentage()%></td>
-                                <td><%=m.getQuantity()%></td>
-                                <td><%=m.getUnit().getUnit()%></td>
-                                <td><%=m.getUnitprice()%></td>
-                                <td><%=m.getUnitprice() * m.getQuantity()%></td>
-
-                            </tr>
-                            <%}
-                                float cost = costs.get(x);
-                                DecimalFormat df = new DecimalFormat("#,###.00");%>
-
-                            <tr>
-                                <td colspan="5">Total Cost: </td>
-                                <td>PHP <%=df.format(cost)%></td>
-                            </tr>    
-                                
-                            <tr>
-                                <td colspan="5">Indirect Cost 17% of Total Cost: </td>
-                                <td>PHP <%=df.format(cost * 0.17)%></td>
-                            </tr>
-                            
-                            <tr>
-                                <td colspan="5">Tax 5% of Total Cost + Indirect Cost: </td>
-                                <td>PHP <%=df.format((cost * 0.17)*.05)%></td>
-                            </tr>
-                                
-                            <tr>
-                                <td colspan="5">Estimated cost: </td>
-                                <td>PHP <%=df.format(cost + (cost * 0.17) + ((cost * 0.17)*.05))%></td>
-                            </tr>
-
-
-                        </table>
-                        <br>
 
                         <div>
                             <p><span class="bold">Date Submitted</span> : <%=p.getDatesubmitted()%></p>
@@ -184,48 +93,30 @@
 
                         </div>
                         <br>
-                        <table class="table" style="width:50%; text-align: center">
-                            <tr>
-                                <th><center>Project <%out.print(p.getName());%> has the following files:</center></th>
-                            </tr>
-                            <% for (Files f : p.getFiles()) {
-
-                            %>
-                            <tr>
-                                <td><%=f.getFileName()%></td>
-                            </tr>
-                            <%}%>
-                        </table>
-
-                        <hr style="height: 1px; background: black; width: 60%">
-                    </div>
-
-                    <%x++;
-                        }%>        
+                        <%}%>
+                        </section>
+                        <div id="printpage">
+                            <button onclick="myFunction()">Print</button>
+                            <button onclick="cancel()">Cancel</button> <br>
+                        </div>
+                        </center>
 
                 </section>
-                <div id="printpage">
-                    <button onclick="myFunction()">Print</button>
-                    <button onclick="cancel()">Cancel</button> <br>
-                </div>
-            </center>
+                <!-- page end-->
 
-        </section>
-        <!-- page end-->
+                <!--main content end-->
+                <script>
+                    function myFunction() {
+                        window.print();
+                    }
 
-        <!--main content end-->
-        <script>
-            function myFunction() {
-                window.print();
-            }
+                    function cancel() {
+                        window.close();
+                    }
+                </script>
 
-            function cancel() {
-                window.close();
-            }
-        </script>
-
-    </body>
+                </body>
 
 
 
-</html>
+                </html>

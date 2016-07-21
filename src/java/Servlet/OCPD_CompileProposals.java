@@ -5,11 +5,8 @@
  */
 package Servlet;
 
-import DAO.GSDAO;
 import DAO.OCPDDAO;
 import Entity.Project;
-import Entity.Schedule;
-import Entity.Testimonial;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author RoAnn
  */
-public class GS_Home extends HttpServlet {
+public class OCPD_CompileProposals extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,28 +36,20 @@ public class GS_Home extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-
-            GSDAO gsdao = new GSDAO();
-
-            ArrayList<Testimonial> noreplyT = gsdao.getTestimonialsNR();
-            
-                        
+            /* TODO output your page here. You may use following sample code. */
+            String[] ids = request.getParameterValues("project");
             OCPDDAO oc = new OCPDDAO();
-
-            //Get Counts
-            int PP = gsdao.getProjectCount("Pending");
-            int OP = gsdao.getProjectCount("On-Going");
-            int FP = gsdao.getProjectCount("Finished");
-            int OH = gsdao.getProjectCount("On-Hold");
-
-            request.setAttribute("noreplyT", noreplyT);
-            request.setAttribute("PP", PP);
-            request.setAttribute("OP", OP);
-            request.setAttribute("FP", FP);
-            request.setAttribute("OH", OH);
-
+            Project p = null;
+            ArrayList<Project> pList = new ArrayList<>();
+            for (String s : ids) {
+                p = oc.getAllProjectDetails(s);
+                oc.changeProjStatus("Approved", p);
+                pList.add(p);
+            }
+            request.setAttribute("pList", pList);
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch = context.getRequestDispatcher("/GS_Home.jsp");
+
+            RequestDispatcher dispatch = context.getRequestDispatcher("/OCPD_CompiledProjects.jsp");
             dispatch.forward(request, response);
 
         }

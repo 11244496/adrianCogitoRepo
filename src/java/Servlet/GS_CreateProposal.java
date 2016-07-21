@@ -54,7 +54,9 @@ public class GS_CreateProposal extends HttpServlet {
 
             //Request set attributes testimonials
             request.setAttribute("allTestimonials", allTestimonials);
+            request.setAttribute("worksList", gs.getWorks());
             request.setAttribute("works", new Gson().toJson(gs.getWorks()));
+            request.setAttribute("unitGson", new Gson().toJson(gs.getAllUnits()));
             
             ServletContext context = getServletContext();
 

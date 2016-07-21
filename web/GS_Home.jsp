@@ -12,12 +12,8 @@
 
 
     <% Employee e = (Employee) session.getAttribute("user");
-        ArrayList<Schedule> meetingList = (ArrayList<Schedule>) request.getAttribute("meetingList");
-        ArrayList<Schedule> unconfirmedMeeting = (ArrayList<Schedule>) request.getAttribute("unconfirmedMeeting");
         ArrayList<Testimonial> noreplyT = (ArrayList<Testimonial>) request.getAttribute("noreplyT");
-        ArrayList<String> meetingProjects = (ArrayList<String>) request.getAttribute("meetingProjects");
-        ArrayList<Project> unconfirmedMProjects = (ArrayList<Project>) request.getAttribute("unconfirmedMProjects");
-
+        
         int PP = (Integer) request.getAttribute("PP");
 
         int OP = (Integer) request.getAttribute("OP");
@@ -279,31 +275,6 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <%if (!unconfirmedMeeting.isEmpty()) {
-                                                                        for (int x = 0; x < unconfirmedMeeting.size(); x++) {
-                                                                            if (unconfirmedMeeting.get(x).getDept().equalsIgnoreCase("OCPD")) {%>
-                                                                <tr>
-                                                                    <td><%=unconfirmedMProjects.get(x).getName()%></td>
-                                                                    <td><%=unconfirmedMeeting.get(x).getStartdate()%></td>
-                                                                    <td><%=unconfirmedMeeting.get(x).getTime()%></td>
-                                                                    <td>
-                                                                        <%for (Task t : unconfirmedMeeting.get(x).getTasks()) {%>
-                                                                        <p><%=t.getDescription()%></p>
-                                                                        <%}%>
-                                                                    </td>
-                                                                    <td>
-                                                                        <% if (unconfirmedMeeting.get(x).getRemarks() != null) {%>
-                                                                        <%=unconfirmedMeeting.get(x).getRemarks()%>
-                                                                        <%}%></td>
-
-                                                                    <td>
-                                                                        <button id="<%=unconfirmedMeeting.get(x).getId()%>" onclick="approveMeeting(this)" class="btn btn-sm btn-success">Approve</button>
-                                                                        <button id="<%=unconfirmedMeeting.get(x).getId()%>" onclick="rescheduleModal(this)" class="btn btn-sm btn-danger">Reschedule</button>
-                                                                    </td>
-                                                                </tr>
-                                                                <%}
-                                                                    }%>
-                                                                <%}%>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -327,20 +298,6 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-
-                                                                <%for (int x = 0; x < meetingList.size(); x++) {
-                                                                        Date d = new Date();
-                                                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                                                %>
-                                                                <tr><td><%out.print(meetingList.get(x).getStartdate());%></td>
-                                                                    <td><%out.print(meetingProjects.get(x));%></td>
-                                                                    <td>
-                                                                        <%if (meetingList.get(x).getStartdate().equalsIgnoreCase(sdf.format(d))) {%>
-                                                                        <button type="button" class="btn btn-success btn-xs" name="SetScheduleDone" onclick="setScheduleDone(<%=meetingList.get(x).getId()%>)"> Done </button>
-                                                                        <%}%>
-                                                                        <button class="btn btn-default btn-xs" type="button" onclick="resched(<%=meetingList.get(x).getId()%>)" id="taskSchedule">Reschedule</button></td></tr>
-                                                                        <%}%>
-
                                                             </tbody>
                                                         </table>
                                                     </div>

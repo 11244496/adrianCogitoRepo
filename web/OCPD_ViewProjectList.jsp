@@ -298,7 +298,6 @@
                                                                 <th style="width: 15%; text-align: center">Category</th>
                                                                 <th style="width: 30%; text-align: center">Description</th>
                                                                 <th style="width: 10%; text-align: center">Date Submitted</th>
-                                                                <th style="width: 15%; text-align: center">Status</th>
                                                                 <th style="width: 10%; text-align: center"></th>
                                                             </tr>
                                                         </thead>
@@ -312,7 +311,6 @@
                                                                 <td class="p-name"><%=p.getType()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
-                                                                <td class="p-name"><%=p.getStatus()%></td>
                                                                 <td>
                                                                     <form action="OCPD_ViewProjectDetails">
                                                                         <input type="hidden" name="projid" value="<%=p.getId()%>">
@@ -357,7 +355,6 @@
                                                                 <th style="width: 15%;">Category</th>
                                                                 <th style="width: 30%;">Description</th>
                                                                 <th style="width: 10%;">Date Submitted</th>
-                                                                <th style="width: 15%; text-align: center">Status</th>
                                                                 <th style="width: 10%; text-align: center"></th>
                                                             </tr>
                                                         </thead>
@@ -372,7 +369,6 @@
                                                                 <td class="p-name"><%=p.getType()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
-                                                                <td class="p-name"><%=p.getStatus()%></td>
                                                                 <td>
                                                                     <form action="OCPD_ViewProjectDetails">
                                                                         <input type="hidden" name="projid" value="<%=p.getId()%>">
@@ -447,7 +443,6 @@
                                                                 <th style="width: 15%;">Category</th>
                                                                 <th style="width: 30%;">Description</th>
                                                                 <th style="width: 10%;">Date Submitted</th>
-                                                                <th style="width: 15%; text-align: center">Status</th>
                                                                 <th style="width: 10%; text-align: center"></th>
                                                             </tr>
                                                         </thead>
@@ -462,13 +457,10 @@
                                                                 <td class="p-name"><%=p.getType()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
-                                                                <td class="p-name"><%=p.getStatus()%></td>
                                                                 <td>
                                                                     <form action="OCPD_ViewProjectDetails">
                                                                         <input type="hidden" name="projid" value="<%=p.getId()%>">
-
                                                                         <button type="submit" class="btn btn-success btn-xs" value="View details"><i class="fa fa-eye"></i> View details</button>
-
                                                                     </form>
                                                                 </td>
                                                             </tr>
@@ -484,7 +476,6 @@
                                                         <div class="col-md-12">
                                                             <header class="panel-heading">
                                                                 <h3>Compile Projects</h3>
-
                                                             </header>
                                                             <br>
                                                             <div class="input-group"><input type="text" placeholder="Search Here" class="input-sm form-control" style="width: 500px;">
@@ -501,7 +492,6 @@
                                                                     <th style="">Category</th>
                                                                     <th style="">Description</th>
                                                                     <th style="">Date Submitted</th>
-                                                                    <th style="width: 15%; text-align: center">Status</th>
                                                                 </tr>
                                                             </thead>
 
@@ -519,7 +509,6 @@
                                                                     <td class="p-name"><%=p.getType()%></td>
                                                                     <td class="p-name"><%=p.getDescription()%></td>
                                                                     <td class="p-name"><%=p.getDatesubmitted()%></td>
-                                                                    <td class="p-name"><%=p.getStatus()%></td>
                                                                 </tr>
                                                                 <%}
                                                                     }%>
@@ -593,7 +582,7 @@
             $('#goCompile').click(function () {
                 location.reload();
                 $('#compProj').attr('target', '_blank');
-                $('#compProj').attr('action', 'OCPD_CompileProjects').submit();
+                $('#compProj').attr('action', 'OCPD_CompileProposals').submit();
             });
 
         </script>
