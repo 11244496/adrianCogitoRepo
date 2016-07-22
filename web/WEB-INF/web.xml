@@ -292,6 +292,22 @@
         <servlet-name>OCPD_CompileProposals</servlet-name>
         <servlet-class>Servlet.OCPD_CompileProposals</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CityAdmin_ApproveTestimonial</servlet-name>
+        <servlet-class>Servlet.CityAdmin_ApproveTestimonial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CityAdmin_Home</servlet-name>
+        <servlet-class>Servlet.CityAdmin_Home</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CityAdmin_NotificationActivity</servlet-name>
+        <servlet-class>Servlet.CityAdmin_NotificationActivity</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CityAdmin_ViewTestimonialDetails</servlet-name>
+        <servlet-class>Servlet.CityAdmin_ViewTestimonialDetails</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -583,6 +599,22 @@
     <servlet-mapping>
         <servlet-name>OCPD_CompileProposals</servlet-name>
         <url-pattern>/OCPD_CompileProposals</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CityAdmin_ApproveTestimonial</servlet-name>
+        <url-pattern>/CityAdmin_ApproveTestimonial</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CityAdmin_Home</servlet-name>
+        <url-pattern>/CityAdmin_Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CityAdmin_NotificationActivity</servlet-name>
+        <url-pattern>/CityAdmin_NotificationActivity</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CityAdmin_ViewTestimonialDetails</servlet-name>
+        <url-pattern>/CityAdmin_ViewTestimonialDetails</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

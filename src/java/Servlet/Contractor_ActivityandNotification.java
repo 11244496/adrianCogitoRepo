@@ -6,7 +6,7 @@
 package Servlet;
 
 import DAO.ActivityDAO;
-import DAO.NotificationDAO;
+import DAO.NotifDAO;
 import Entity.Activity;
 import Entity.Contractor_User;
 import Entity.Employee;
@@ -43,7 +43,7 @@ public class Contractor_ActivityandNotification extends HttpServlet {
         HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
             ActivityDAO actDAO = new ActivityDAO();
-            NotificationDAO notif = new NotificationDAO();
+            NotifDAO notif = new NotifDAO();
 
             Contractor_User employee = (Contractor_User) session.getAttribute("user");
             int id = employee.getUser().getId();

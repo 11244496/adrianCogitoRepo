@@ -7,7 +7,7 @@ package Servlet;
 
 import DAO.ActivityDAO;
 import DAO.CitizenDAO;
-import DAO.NotificationDAO;
+import DAO.NotifDAO;
 import DAO.OCPDDAO;
 import Entity.Activity;
 import Entity.Citizen;
@@ -53,7 +53,7 @@ public class Citizen_FollowTestimonial extends HttpServlet {
             //DAO
             ActivityDAO actdao = new ActivityDAO();
             CitizenDAO ctDAO = new CitizenDAO();
-            NotificationDAO ntDAO = new NotificationDAO();
+            NotifDAO ntDAO = new NotifDAO();
             OCPDDAO ocpddao = new OCPDDAO();
 
             Testimonial t = ctDAO.getTestimonial(idd);

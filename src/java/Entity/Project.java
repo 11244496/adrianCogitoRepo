@@ -16,7 +16,6 @@ public class Project {
     private String id;
     private String name;
     private String description;
-    private String type;
     private String status;
     private String foldername;
     private Employee employee;
@@ -26,12 +25,11 @@ public class Project {
     private Testimonial mainTestimonial;
 
     private ArrayList<Location> location;
-    private ArrayList<Schedule> schedule;
+    private ArrayList<Task> tasks;
     private ArrayList<Files> files;
     private ArrayList<PWorks> pWorks;
     private Annotation annotation;
     private ArrayList<PComments> pComments;
-    private ArrayList<Testimonial> referredTestimonials;
     private ArrayList<Project> referredProjects;
     private ArrayList<Feedback> feedback;    
     private ArrayList<Project_Inspection> inspection;
@@ -49,24 +47,23 @@ public class Project {
         this.id = id;
     }
 
-    public Project(String id, String name, String description, String type, String status, String foldername, Employee employee, String datesubmitted, float budget, String category, ArrayList<Location> location, ArrayList<Schedule> schedule, ArrayList<Files> files, ArrayList<PWorks> pWorks, Annotation annotation, ArrayList<PComments> pComments, ArrayList<Testimonial> referredTestimonials, ArrayList<Project> referredProjects, ArrayList<Feedback> feedback, ArrayList<Project_Inspection> inspection, Contractor contractor, Contractor_User contractorUser) {
+    public Project(String id, String name, String description, String status, String foldername, Employee employee, String datesubmitted, float budget, String category, Testimonial mainTestimonial, ArrayList<Location> location, ArrayList<Task> tasks, ArrayList<Files> files, ArrayList<PWorks> pWorks, Annotation annotation, ArrayList<PComments> pComments, ArrayList<Project> referredProjects, ArrayList<Feedback> feedback, ArrayList<Project_Inspection> inspection, Contractor contractor, Contractor_User contractorUser) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.type = type;
         this.status = status;
         this.foldername = foldername;
         this.employee = employee;
         this.datesubmitted = datesubmitted;
         this.budget = budget;
         this.category = category;
+        this.mainTestimonial = mainTestimonial;
         this.location = location;
-        this.schedule = schedule;
+        this.tasks = tasks;
         this.files = files;
         this.pWorks = pWorks;
         this.annotation = annotation;
         this.pComments = pComments;
-        this.referredTestimonials = referredTestimonials;
         this.referredProjects = referredProjects;
         this.feedback = feedback;
         this.inspection = inspection;
@@ -74,11 +71,12 @@ public class Project {
         this.contractorUser = contractorUser;
     }
 
-    public Project(String id, String name, String description, String type, String status, String foldername, Employee employee, String datesubmitted, float budget, String category, ArrayList<Location> location, ArrayList<Schedule> schedule, ArrayList<Files> files, ArrayList<PWorks> pWorks, Annotation annotation, ArrayList<PComments> pComments, ArrayList<Testimonial> referredTestimonials, ArrayList<Project> referredProjects, ArrayList<Feedback> feedback, ArrayList<Project_Inspection> inspection, Contractor_User contractorUser) {
+    
+
+    public Project(String id, String name, String description, String status, String foldername, Employee employee, String datesubmitted, float budget, String category, ArrayList<Location> location, ArrayList<Task> tasks, ArrayList<Files> files, ArrayList<PWorks> pWorks, Annotation annotation, ArrayList<PComments> pComments, ArrayList<Project> referredProjects, ArrayList<Feedback> feedback, ArrayList<Project_Inspection> inspection, Contractor_User contractorUser) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.type = type;
         this.status = status;
         this.foldername = foldername;
         this.employee = employee;
@@ -86,12 +84,11 @@ public class Project {
         this.budget = budget;
         this.category = category;
         this.location = location;
-        this.schedule = schedule;
+        this.tasks = tasks;
         this.files = files;
         this.pWorks = pWorks;
         this.annotation = annotation;
         this.pComments = pComments;
-        this.referredTestimonials = referredTestimonials;
         this.referredProjects = referredProjects;
         this.feedback = feedback;
         this.inspection = inspection;
@@ -140,20 +137,6 @@ public class Project {
      */
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     * @return the type
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * @param type the type to set
-     */
-    public void setType(String type) {
-        this.type = type;
     }
 
     /**
@@ -257,15 +240,15 @@ public class Project {
     /**
      * @return the schedule
      */
-    public ArrayList<Schedule> getSchedule() {
-        return schedule;
+    public ArrayList<Task> getTask() {
+        return tasks;
     }
 
     /**
      * @param schedule the schedule to set
      */
-    public void setSchedule(ArrayList<Schedule> schedule) {
-        this.schedule = schedule;
+    public void setTask(ArrayList<Task> tasks) {
+        this.tasks = tasks;
     }
 
     /**
@@ -317,20 +300,6 @@ public class Project {
      */
     public void setpComments(ArrayList<PComments> pComments) {
         this.pComments = pComments;
-    }
-
-    /**
-     * @return the referredTestimonials
-     */
-    public ArrayList<Testimonial> getReferredTestimonials() {
-        return referredTestimonials;
-    }
-
-    /**
-     * @param referredTestimonials the referredTestimonials to set
-     */
-    public void setReferredTestimonials(ArrayList<Testimonial> referredTestimonials) {
-        this.referredTestimonials = referredTestimonials;
     }
 
     /**

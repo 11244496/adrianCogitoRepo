@@ -6,7 +6,7 @@
 package Servlet;
 
 import DAO.ActivityDAO;
-import DAO.NotificationDAO;
+import DAO.NotifDAO;
 import DAO.OCPDDAO;
 import Entity.Activity;
 import Entity.Employee;
@@ -117,7 +117,7 @@ public class OCPD_UploadCDPCLUP extends HttpServlet {
 
             }
 
-            NotificationDAO ndao = new NotificationDAO();
+            NotifDAO ndao = new NotifDAO();
             Notification n = null;
             for (User u : ndao.getEmployeePerDept("GS")) {
                 n = new Notification();

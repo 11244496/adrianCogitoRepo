@@ -6,7 +6,7 @@
 package Servlet;
 
 import DAO.ActivityDAO;
-import DAO.NotificationDAO;
+import DAO.NotifDAO;
 import Entity.Activity;
 import Entity.Employee;
 import Entity.Notification;
@@ -42,7 +42,7 @@ public class BAC_NotificationActivity extends HttpServlet {
         HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
             ActivityDAO actDAO = new ActivityDAO();
-            NotificationDAO notif = new NotificationDAO();
+            NotifDAO notif = new NotifDAO();
 
             Employee employee = (Employee) session.getAttribute("user");
             int id = employee.getUser().getId();

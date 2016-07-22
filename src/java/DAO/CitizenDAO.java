@@ -645,17 +645,14 @@ public class CitizenDAO {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
             String query = "insert into files (FileName, DateUploaded, Type, Status, testimonial_id, uploader,description) values "
-                    + "(?, curdate(),?,?,(select testimonial.ID from testimonial join "
-                    + "citizen on citizen_id = citizen.id join users on Users_ID = users.ID where username = ? "
-                    + "and dateuploaded = (select max(testimonial.dateuploaded)),?,?);";
+                    + "(?, curdate(),?,?,?,?,?);";
             statement = connection.prepareStatement(query);
             statement.setString(1, f.getFileName());
             statement.setString(2, f.getType());
             statement.setString(3, f.getStatus());
-            statement.setString(4, f.getTestimonial().getCitizen().getUser().getUsername());
+            statement.setInt(4, f.getTestimonial().getId());
             statement.setString(5, username);
             statement.setString(6, f.getDescription());
-
             statement.executeUpdate();
             statement.close();
 

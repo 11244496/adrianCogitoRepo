@@ -8,7 +8,7 @@ package Servlet;
 import DAO.CitizenDAO;
 import DAO.GSDAO;
 import DAO.LoginDAO;
-import DAO.NotificationDAO;
+import DAO.NotifDAO;
 import Entity.Citizen;
 import Entity.Employee;
 import Entity.Files;

@@ -7,7 +7,7 @@ package Servlet;
 
 import DAO.CitizenDAO;
 import DAO.LoginDAO;
-import DAO.NotificationDAO;
+import DAO.NotifDAO;
 import Entity.Citizen;
 import Entity.Files;
 import Entity.Notification;
@@ -46,7 +46,7 @@ public class Citizen_RejectContributions extends HttpServlet {
         HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
             CitizenDAO ctDAO = new CitizenDAO();
-            NotificationDAO ntDAO = new NotificationDAO();
+            NotifDAO ntDAO = new NotifDAO();
             LoginDAO ldao = new LoginDAO();
             
             Testimonial t = (Testimonial) session.getAttribute("openTestimonial");
@@ -64,7 +64,7 @@ public class Citizen_RejectContributions extends HttpServlet {
                 f2 = ctDAO.getFile(Integer.parseInt(ids[x]));
                 ntDAO.addNotification(new Notification(0, c2.getFirstName() + " " + c2.getLastName() + " has rejected your request to add additional files to testimonial entitled " + t.getTitle(), null, ldao.getUser(f2.getUploader())));
                 
-                fileURL = "C:\\Users\\AdrianKyle\\Documents\\NetBeansProjects\\Cogito\\Upload\\Citizen\\" + t.getTitle() + "\\" + f2.getFileName();
+                fileURL = "C:\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\CogitoFirst\\Upload\\Citizen\\" + t.getTitle() + "\\" + f2.getFileName();
                 new File(fileURL).delete();
                 ctDAO.disapproveAdded(Integer.parseInt(ids[x]));
                 

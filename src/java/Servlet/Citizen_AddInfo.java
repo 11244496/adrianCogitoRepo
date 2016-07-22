@@ -7,7 +7,7 @@ package Servlet;
 
 import DAO.ActivityDAO;
 import DAO.CitizenDAO;
-import DAO.NotificationDAO;
+import DAO.NotifDAO;
 import Entity.Activity;
 import Entity.Citizen;
 import Entity.Files;
@@ -66,7 +66,7 @@ public class Citizen_AddInfo extends HttpServlet {
 
         try {
             CitizenDAO citizenDAO = new CitizenDAO();
-            NotificationDAO ntDAO = new NotificationDAO();
+            NotifDAO ntDAO = new NotifDAO();
             Citizen c = (Citizen) session.getAttribute("user");
             InputStream inputStream = null;
 
@@ -130,7 +130,7 @@ public class Citizen_AddInfo extends HttpServlet {
                             String root = getServletContext().getRealPath("/");
 
                             //path where the file will be stored
-                            path = new File("D:\\Development\\NetBeans\\Projects\\Cogito\\Upload" + "/Citizen/" + title);
+                            path = new File("C:\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\CogitoFirst\\Upload" + "/Citizen/" + title);
                             if (!path.exists()) {
                                 boolean status = path.mkdirs();
                             }
@@ -165,7 +165,7 @@ public class Citizen_AddInfo extends HttpServlet {
                             f.setStatus("Pending");
                             f.setDescription(videoD);
                             f.setUploader(c.getUser().getUsername());
-
+                            f.setTestimonial(t);
                             citizenDAO.uploadFiles(f, c.getUser().getUsername());
 
                         } //Images
@@ -177,6 +177,7 @@ public class Citizen_AddInfo extends HttpServlet {
                             f.setStatus("Pending");
                             f.setDescription(imageD);
                             f.setUploader(c.getUser().getUsername());
+                            f.setTestimonial(t);
                             citizenDAO.uploadFiles(f, c.getUser().getUsername());
                         } //Documents 
                         else if (extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("docx") || extension.equalsIgnoreCase("doc") || extension.equalsIgnoreCase("pptx") || extension.equalsIgnoreCase("txt") || extension.equalsIgnoreCase("xlsx")) {
@@ -187,6 +188,7 @@ public class Citizen_AddInfo extends HttpServlet {
                             f.setStatus("Pending");
                             f.setDescription(documentD);
                             f.setUploader(c.getUser().getUsername());
+                            f.setTestimonial(t);
                             citizenDAO.uploadFiles(f, c.getUser().getUsername());
                         }
 

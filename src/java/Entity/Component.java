@@ -16,18 +16,22 @@ public class Component {
     private int quantity;
     private Unit unit;
     private PWorks pworks;
+    private Project project;
     
     public Component() {
     }
 
-    public Component(int id, String name, float unitPrice, int quantity, Unit unit, PWorks pworks) {
+    public Component(int id, String name, float unitPrice, int quantity, Unit unit, PWorks pworks, Project project) {
         this.id = id;
         this.name = name;
         this.unitPrice = unitPrice;
         this.quantity = quantity;
         this.unit = unit;
         this.pworks = pworks;
+        this.project = project;
     }
+
+    
     
     /**
      * @return the id
@@ -111,6 +115,14 @@ public class Component {
      */
     public void setPworks(PWorks pworks) {
         this.pworks = pworks;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     

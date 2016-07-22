@@ -23,7 +23,6 @@ public class Testimonial {
     private Citizen citizen;
     private ArrayList<TLocation> tlocation;
     private Project mainproject;
-    private ArrayList<Project> referencedproject;
     private ArrayList<Reply> replies;
     private ArrayList<Files> files;
     private ArrayList<TComments> tcomments;
@@ -45,7 +44,7 @@ public class Testimonial {
     }
     
     
-    public Testimonial(String title, String dateUploaded, String message, String folderName, String category, String status, Citizen citizen, ArrayList<TLocation> tlocation, Project mainproject,ArrayList<Project> referencedproject, ArrayList<Reply> replies, ArrayList<Files> files, ArrayList<TComments> tcomments, ArrayList<Supporter> supporters) {
+    public Testimonial(String title, String dateUploaded, String message, String folderName, String category, String status, Citizen citizen, ArrayList<TLocation> tlocation, Project mainproject,ArrayList<Reply> replies, ArrayList<Files> files, ArrayList<TComments> tcomments, ArrayList<Supporter> supporters) {
         this.title = title;
         this.dateUploaded = dateUploaded;
         this.message = message;
@@ -55,7 +54,6 @@ public class Testimonial {
         this.citizen = citizen;
         this.tlocation = tlocation;
         this.mainproject = mainproject;
-        this.referencedproject = referencedproject;
         this.replies = replies;
         this.files = files;
         this.tcomments = tcomments;
@@ -236,21 +234,6 @@ public class Testimonial {
 
     public void setSupporters(ArrayList<Supporter> supporters) {
         this.supporters = supporters;
-    }
-
-
-    /**
-     * @return the referencedproject
-     */
-    public ArrayList<Project> getReferencedproject() {
-        return referencedproject;
-    }
-
-    /**
-     * @param referencedproject the referencedproject to set
-     */
-    public void setReferencedproject(ArrayList<Project> referencedproject) {
-        this.referencedproject = referencedproject;
     }
 
     /**

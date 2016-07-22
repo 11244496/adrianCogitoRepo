@@ -7,7 +7,7 @@ package Servlet;
 
 import DAO.CitizenDAO;
 import DAO.LoginDAO;
-import DAO.NotificationDAO;
+import DAO.NotifDAO;
 import Entity.Citizen;
 import Entity.Files;
 import Entity.Notification;
@@ -45,7 +45,7 @@ public class Citizen_ApproveContributions extends HttpServlet {
         HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
             CitizenDAO ctDAO = new CitizenDAO();
-            NotificationDAO ntDAO = new NotificationDAO();
+            NotifDAO ntDAO = new NotifDAO();
             LoginDAO ldao = new LoginDAO();
             String[] ids = request.getParameterValues("checked");
 
