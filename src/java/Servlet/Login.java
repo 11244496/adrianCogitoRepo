@@ -64,7 +64,11 @@ public class Login extends HttpServlet {
                 } else if (user.getType().equalsIgnoreCase("Contractor")) {
                     session.setAttribute("user", loginDAO.getContInfo(username));
                     response.sendRedirect("Contractor_Home");
+                }else if (user.getType().equalsIgnoreCase("CityAdmin")) {
+                    session.setAttribute("user", loginDAO.getEmpInfo(username));
+                    response.sendRedirect("CityAdmin_Home");
                 }
+
 
 //                else if (user.getUser_Type().getDescription().equals("BAC")) {
 //                    response.sendRedirect("BAC_Home");

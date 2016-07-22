@@ -159,7 +159,7 @@ public class Citizen_SendTestimonial extends HttpServlet {
 //                            }
 //                        }
 //                    }
-                    Testimonial t = new Testimonial(title, null, message, "chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/Citizen/", category, "Unlinked", c);
+                    Testimonial t = new Testimonial(title, null, message, "chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/Citizen/", category, "Pending", c);
                     //Upload testimonial
                     citizenDAO.submitTestimonial(t);
                     t.setId(citizenDAO.lastID());
