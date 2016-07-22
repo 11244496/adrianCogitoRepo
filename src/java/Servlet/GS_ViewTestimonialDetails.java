@@ -62,10 +62,6 @@ public class GS_ViewTestimonialDetails extends HttpServlet {
             session.setAttribute("openImage", i);
             session.setAttribute("openVideo", v);
             session.setAttribute("openDocument", d);
-            session.setAttribute("hasNoReply", gs.hasNoReply(t));
-            if (!gs.hasNoReply(t)){
-                session.setAttribute("reply", gs.getReply(t));
-            }
             request.setAttribute("supporters", Integer.toString(supporter));
             t.setStatus("Read");
             gs.changeTestiStatus(t);

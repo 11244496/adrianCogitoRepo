@@ -189,6 +189,10 @@
                                     <p>Testimonial Details</p>
                                 </header>
 
+                                <span class="pull-right">
+                                    <a class="btn btn-success btn-sm" data-toggle="modal" href="#gsApproveModal"><i class="fa fa-check"></i> Approve</a>
+                                    <a class="btn btn-danger btn-sm" data-toggle="modal" href="#gsRejectModal"><i class="fa fa-times"></i> Reject</a>
+                                </span>
                             </section>   
                         </div>
                     </div>
@@ -374,15 +378,93 @@
             <script src="unitegallery/themes/default/ug-theme-default.js"></script>
             <script type="text/javascript">
 
-                                jQuery(document).ready(function () {
+                            jQuery(document).ready(function () {
 
-                                    jQuery("#gallery").unitegallery();
+                                jQuery("#gallery").unitegallery();
 
-                                });
+                            });
 
             </script>
 
         </section>
+        <div class="modal fade " id="gsApproveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Approve Testimonial and Send Reply</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="CityAdmin_ReplyToTestimonial">
+                            <input type="hidden" name="testIdR" value="<%=testimonial.getId()%>">
+                            <div class="form-group col-md-12">
+                                <label class="col-md-2"> To: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="toR" readonly value="<%=testimonial.getCitizen().getFirstName() + " " + testimonial.getCitizen().getLastName()%>">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="col-md-2"> From: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="fromR" readonly value="<%=e.getFirstName() + " " + e.getLastName()%>">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="col-md-2"> Message: </label>
+                                <div class="col-md-8">
+                                    <textarea class="form-control" name="messageR"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <center>
+                                    <button data-dismiss="modal" class="btn btn-info" type="button">Cancel</button>
+                                    <button class="btn btn-success" type="submit">Send</button>
+                                </center>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> 
 
+        <div class="modal fade " id="gsRejectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Reject Testimonial and Send Reply</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="CityAdmin_RejectTestimonial">
+                            <input type="hidden" name="testIdR" value="<%=testimonial.getId()%>">
+                            <div class="form-group col-md-12">
+                                <label class="col-md-2"> To: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="toR" readonly value="<%=testimonial.getCitizen().getFirstName() + " " + testimonial.getCitizen().getLastName()%>">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="col-md-2"> From: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="fromR" readonly value="<%=e.getFirstName() + " " + e.getLastName()%>">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="col-md-2"> Message: </label>
+                                <div class="col-md-8">
+                                    <textarea class="form-control" name="messageR"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <center>
+                                    <button data-dismiss="modal" class="btn btn-info" type="button">Cancel</button>
+                                    <button class="btn btn-success" type="submit">Send</button>
+                                </center>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> 
     </body>
 </html>

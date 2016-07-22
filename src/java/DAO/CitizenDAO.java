@@ -146,7 +146,6 @@ public class CitizenDAO {
 
         ArrayList<TLocation> tlocation = new ArrayList<TLocation>();
         Project mainproject = new Project();
-        ArrayList<Project> referencedproject = new ArrayList<Project>();
         ArrayList<Reply> replies = new ArrayList<Reply>();
         ArrayList<Files> files = new ArrayList<Files>();
         ArrayList<TComments> tcomments = new ArrayList<TComments>();
@@ -212,17 +211,6 @@ public class CitizenDAO {
                 mainproject.setId(result.getString("ID"));
             }
             t.setMainproject(mainproject);
-
-            String referencedprojectQuery = ("select * from project_has_reference where Testimonial_ID = ?");
-            statement7 = connection.prepareStatement(referencedprojectQuery);
-            statement7.setInt(1, id);
-            result = statement7.executeQuery();
-            while (result.next()) {
-                Project p = new Project();
-                p.setId(result.getString("Project_ID"));
-                referencedproject.add(p);
-            }
-            t.setReferencedproject(referencedproject);
 
             String repliesQuery = ("select * from reply where Testimonial_ID = ?");
             statement3 = connection.prepareStatement(repliesQuery);

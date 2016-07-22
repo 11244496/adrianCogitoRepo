@@ -13,12 +13,6 @@
 <%Testimonial testimonial = (Testimonial) session.getAttribute("openTestimonial");%>
 <%Employee e = (Employee) session.getAttribute("user");%>
 <%ArrayList<Reply> rList = testimonial.getReplies();%>
-<%boolean hasNoReply = (Boolean) session.getAttribute("hasNoReply");
-    Reply r = new Reply();
-    if (!hasNoReply) {
-        r = (Reply) session.getAttribute("reply");
-    }
-%>
 <%
     ArrayList<Files> image = (ArrayList<Files>) session.getAttribute("openImage");
     ArrayList<Files> video = (ArrayList<Files>) session.getAttribute("openVideo");
@@ -234,13 +228,6 @@
 
                                 <header class="panel-heading" style="width: 30%">
                                     <p>Testimonial Details</p>
-                                    <div style="float: next; width: 100%">
-                                        <%if (hasNoReply) {%>
-                                        <a class="btn btn-info btn-sm" data-toggle="modal" href="#gsReplyModal"><i class="fa fa-envelope"></i> Write a reply</a>
-                                        <%} else {%>
-                                        <a class="btn btn-info btn-sm" data-toggle="modal" href="#gsViewReplyModal"><i class="fa fa-envelope"></i> View Reply</a>
-                                        <%}%>
-                                    </div>
                                 </header>
 
                             </section>   
@@ -357,17 +344,6 @@
                                     <%}%>
 
                                     <br>
-
-                                    <h5 class="bold">Projects that referenced this testimonial</h5>
-                                    <%
-                                        if (testimonial.getReferencedproject().size() > 0) {
-                                            for (int a = 0; a < testimonial.getReferencedproject().size(); a++) {
-                                                System.out.println(testimonial.getReferencedproject().get(a).getName());
-                                            }
-                                        } else {
-                                    %>
-                                    No projects referenced this testimonial yet.
-                                    <%}%>
                                     <br>
 
 
@@ -387,83 +363,6 @@
                 </section>
             </section>
 
-
-            <div class="modal fade " id="gsReplyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Write a Reply</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form action="GS_ReplyToTestimonial">
-                                <input type="hidden" name="testIdR" value="<%=testimonial.getId()%>">
-                                <div class="form-group col-md-12">
-                                    <label class="col-md-2"> To: </label>
-                                    <div class="col-md-8">
-                                        <input class="form-control" name="toR" readonly value="<%=testimonial.getCitizen().getFirstName() + " " + testimonial.getCitizen().getLastName()%>">
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label class="col-md-2"> From: </label>
-                                    <div class="col-md-8">
-                                        <input class="form-control" name="fromR" readonly value="<%=e.getFirstName() + " " + e.getLastName()%>">
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label class="col-md-2"> Message: </label>
-                                    <div class="col-md-8">
-                                        <textarea class="form-control" name="messageR"></textarea>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <center>
-                                        <button data-dismiss="modal" class="btn btn-info" type="button">Cancel</button>
-                                        <button class="btn btn-success" type="submit">Send</button>
-                                    </center>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <%if (!hasNoReply) {%>
-            <div class="modal fade " id="gsViewReplyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">View Reply</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group col-md-12">
-                                <label class="col-md-2"> To: </label>
-                                <div class="col-md-8">
-                                    <input class="form-control" name="toR" readonly value="<%=testimonial.getCitizen().getUser().getUsername()%>">
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label class="col-md-2"> From: </label>
-                                <div class="col-md-8">
-                                    <input class="form-control" name="fromR" readonly value="<%=r.getSender().getUsername()%>">
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label class="col-md-2"> Message: </label>
-                                <div class="col-md-8">
-                                    <textarea class="form-control" name="messageR" readonly><%=r.getMessage()%>></textarea>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <center>
-                                    <button data-dismiss="modal" class="btn btn-info" type="button">Close</button>
-                                </center>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <%}%>
 
             <!--main content end-->
             <!--footer start-->

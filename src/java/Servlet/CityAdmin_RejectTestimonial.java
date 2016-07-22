@@ -6,6 +6,7 @@
 package Servlet;
 
 import DAO.CitizenDAO;
+import DAO.CityAdminDAO;
 import DAO.GSDAO;
 import DAO.LoginDAO;
 import DAO.NotifDAO;
@@ -31,7 +32,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author RoAnn
  */
-public class GS_ReplyToTestimonial extends HttpServlet {
+public class CityAdmin_RejectTestimonial extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,47 +49,26 @@ public class GS_ReplyToTestimonial extends HttpServlet {
         HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
 
-            int id = Integer.parseInt(request.getParameter("testIdR"));
             Employee e = (Employee) session.getAttribute("user");
-
+            int id = Integer.parseInt(request.getParameter("testId"));
+            Testimonial t = new Testimonial();
+            t.setId(id);
             GSDAO gs = new GSDAO();
             Reply r = new Reply();
             r.setMessage(request.getParameter("messageR"));
             r.setSender(e.getUser());
             r.setTestimonial(gs.getTestimonial(id));
             gs.replyToTestimonial(r);
-
-            CitizenDAO ctdao = new CitizenDAO();
-
-            Testimonial t = gs.getTestimonial(id);
-
-            ArrayList<Files> i = ctdao.getFiles(id, t, "Image");
-            ArrayList<Files> v = ctdao.getFiles(id, t, "Video");
-            ArrayList<Files> d = ctdao.getFiles(id, t, "Document");
-
-            int supporter = ctdao.getnumberofsubscribers(t);
-
-            String location = new Gson().toJson(t.getTlocation());
-            session.setAttribute("location", location);
-
-            session.setAttribute("openTestimonial", t);
-            session.setAttribute("openImage", i);
-            session.setAttribute("openVideo", v);
-            session.setAttribute("openDocument", d);
-            request.setAttribute("supporters", Integer.toString(supporter));
-            t.setStatus("Read");
-            gs.changeTestiStatus(t);
-
+            CityAdminDAO ca = new CityAdminDAO();
+            ca.changeStatus(t, "Rejected");
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch;
-            dispatch = context.getRequestDispatcher("/GS_ViewCitizenTestimonialDetails.jsp");
+            RequestDispatcher dispatch = context.getRequestDispatcher("/CityAdmin_Home");
             dispatch.forward(request, response);
 
         }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-
     /**
      * Handles the HTTP <code>GET</code> method.
      *

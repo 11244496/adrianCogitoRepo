@@ -308,6 +308,14 @@
         <servlet-name>CityAdmin_ViewTestimonialDetails</servlet-name>
         <servlet-class>Servlet.CityAdmin_ViewTestimonialDetails</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CityAdmin_ReplyToTestimonial</servlet-name>
+        <servlet-class>Servlet.CityAdmin_ReplyToTestimonial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CityAdmin_RejectTestimonial</servlet-name>
+        <servlet-class>Servlet.CityAdmin_RejectTestimonial</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -615,6 +623,14 @@
     <servlet-mapping>
         <servlet-name>CityAdmin_ViewTestimonialDetails</servlet-name>
         <url-pattern>/CityAdmin_ViewTestimonialDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CityAdmin_ReplyToTestimonial</servlet-name>
+        <url-pattern>/CityAdmin_ReplyToTestimonial</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CityAdmin_RejectTestimonial</servlet-name>
+        <url-pattern>/CityAdmin_RejectTestimonial</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

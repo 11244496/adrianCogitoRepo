@@ -216,7 +216,6 @@
                                                                     <th style="width: 10%">Date Uploaded</th>
                                                                     <th style="width: 17%">Uploader</th>    
                                                                     <th style="width: 15%"></th>   
-                                                                    <th style="width: 15%"></th>
                                                                 </tr>
                                                             </thead>
 
@@ -268,12 +267,7 @@
                                                                         <img  src="img/docicon.png" width="30" height="30" alt="">
                                                                         <%}%>
 
-                                                                    </td>
-
-                                                                    <td>
-                                                                        <a class="btn btn-success btn-sm" data-toggle="modal" href="#gsApproveModal"><i class="fa fa-check"></i> Approve</a>
-                                                                        <a class="btn btn-danger btn-sm" data-toggle="modal" href="#gsRejectModal"><i class="fa fa-times"></i> Reject</a>
-                                                                    </td>    
+                                                                    </td>  
 
 
 
