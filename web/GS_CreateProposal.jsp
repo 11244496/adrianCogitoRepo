@@ -11,7 +11,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-    <% Employee e = (Employee) session.getAttribute("user");
+    <% //Employee e = (Employee) session.getAttribute("user");
         ArrayList<Testimonial> allTestimonials = (ArrayList<Testimonial>) request.getAttribute("allTestimonials");
         ArrayList<PWorks> wList = (ArrayList<PWorks>) request.getAttribute("worksList");
     %>
@@ -227,14 +227,10 @@
                                                 <div>Schedule</div>
                                             </li>
 
-                                            <li id="default-title-5" class="">
-                                                <div>Overview</div>
-                                            </li>
-
                                         </ul>
                                     </div>
 
-                                    <form class="form-horizontal" id="proposalForm" method="post" action="GS_ViewProjectDetails.jsp">
+                                    <form class="form-horizontal" id="proposalForm" method="post" action="GS_SubmitProposal">
 
                                         <fieldset title="Testimonial" class="step" id="default-step-0">
                                             <legend></legend>
@@ -273,10 +269,8 @@
                                                                         <p> <button id="viewDetails" type="button" class="btn btn-info btn-sm viewbutton" value="<%=allTestimonials.get(x).getId()%>"> View details</button></p>
 
                                                                         <%if (allTestimonials.get(x).getMainproject().getId() == null) {%>
-                                                                        <p> <button type="button" class="btn btn-success btn-sm selectmainbtn" value="<%=allTestimonials.get(x).getId()%>">  Select as main</button> </p>
+                                                                        <p> <button type="button"  class="btn btn-success btn-sm selectmainbtn" value="<%=allTestimonials.get(x).getId()%>">  Select as main</button> </p>
                                                                         <%}%>
-
-                                                                        <p> <button type="button" class="btn btn-warning btn-sm selectreferencebtn" value="<%=allTestimonials.get(x).getId()%>"> Use as reference</button> </p>
                                                                     </td>
                                                                 </tr>
                                                                 <%}%>
@@ -286,6 +280,7 @@
                                                         </table>
                                                     </div>
                                                 </section>
+                                                <input type="hidden" name="maintestimonial" id="maintestimonial">
 
                                                 <div class="modal fade" id="viewdetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-lg">
@@ -387,7 +382,7 @@
                                                         <tr class="gradeX">
                                                             <td class="title">Ro</td>
                                                             <td class="date">Jan 14, 2016</td>
-                                                            <td class="message">Maecenas in tincidunt ante. Vestibulum pellentesque dignissim eros, id pellentesque libero egestas sed. Cras eu augue nunc. Donec dictum justo a metus hendrerit pellentesque. Curabitur finibus dolor sit amet eleifend tempor. Suspendisse dignissim molestie dolor non mollis</td>
+                                                            <td class="message">HELLO</td>
                                                             <td class="uploader">rochellesisa@yahoo.com.ph</td>
                                                             <td class="buttons center">
                                                                 <p>
@@ -459,13 +454,6 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label">Target Implementation Date</label>
-                                                <div class="col-md-3 col-xs-11">
-                                                    <input class="form-control form-control-inline input-medium default-date-picker" name="targetimplementationdate" size="16" type="date" id="targetimplementationdate">
-                                                    <span class="help-block">Select date</span>
-                                                </div>
-                                            </div>
                                         </fieldset>
 
                                         <fieldset title="Program" class="step" id="default-step-3" >
@@ -532,7 +520,8 @@
                                                             </tr>
                                                         </tbody>
                                                     </table>
-                                                    <button class="btn btn-success btn-sm pull-right" style="margin-right: 5px" onclick="" type="button"><i class="fa fa-plus"></i> Add </button>
+                                                    <input type="hidden" name="pworks" id="pworks">
+                                                    <button class="btn btn-success btn-sm pull-right" style="margin-right: 5px" onclick="insertWorks()" type="button"><i class="fa fa-plus"></i> Add </button>
 
                                                     <br>
 
@@ -544,15 +533,10 @@
                                                 </div>
                                             </div>
                                         </fieldset>
-
-                                        <fieldset title="Overview" class="step" id="default-step-5" >
-                                            <legend></legend>
-                                        </fieldset>
-
                                         <input type="hidden" name="hiddenlocation" id="location" value="">
                                         <input type="hidden" name="actionI" id="actionI">
                                         <button type="button" onclick ="draftbutton()" class="finish btn btn-info" >Save Draft</button>
-                                        <button type="button" onclick ="finishbutton()" class="finish btn btn-success">Finish</button>
+                                        <button type="submit" onclick="insertWorks()" class="finish btn btn-success">Finish</button>
 
 
 

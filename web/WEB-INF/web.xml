@@ -89,6 +89,10 @@
         <servlet-class>Servlet.AjaxServlet.AJAX_GS_SelectMainTestimonial</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AJAX_Citizen_SearchTestimonialViaMap</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_Citizen_SearchTestimonialViaMap</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>GS_SubmitProposal</servlet-name>
         <servlet-class>Servlet.GS_SubmitProposal</servlet-class>
     </servlet>
@@ -293,10 +297,6 @@
         <servlet-class>Servlet.OCPD_CompileProposals</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CityAdmin_ApproveTestimonial</servlet-name>
-        <servlet-class>Servlet.CityAdmin_ApproveTestimonial</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>CityAdmin_Home</servlet-name>
         <servlet-class>Servlet.CityAdmin_Home</servlet-class>
     </servlet>
@@ -315,6 +315,14 @@
     <servlet>
         <servlet-name>CityAdmin_RejectTestimonial</servlet-name>
         <servlet-class>Servlet.CityAdmin_RejectTestimonial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OCPD_SetForBidding</servlet-name>
+        <servlet-class>Servlet.OCPD_SetForBidding</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Citizen_SendComment</servlet-name>
+        <servlet-class>Servlet.Citizen_SendComment</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -609,10 +617,6 @@
         <url-pattern>/OCPD_CompileProposals</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>CityAdmin_ApproveTestimonial</servlet-name>
-        <url-pattern>/CityAdmin_ApproveTestimonial</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>CityAdmin_Home</servlet-name>
         <url-pattern>/CityAdmin_Home</url-pattern>
     </servlet-mapping>
@@ -631,6 +635,18 @@
     <servlet-mapping>
         <servlet-name>CityAdmin_RejectTestimonial</servlet-name>
         <url-pattern>/CityAdmin_RejectTestimonial</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_Citizen_SearchTestimonialViaMap</servlet-name>
+        <url-pattern>/AJAX_Citizen_SearchTestimonialViaMap</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OCPD_SetForBidding</servlet-name>
+        <url-pattern>/OCPD_SetForBidding</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_SendComment</servlet-name>
+        <url-pattern>/Citizen_SendComment</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

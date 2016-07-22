@@ -137,7 +137,6 @@ public class OCPDDAO {
                 p.setId(result.getString("project.ID"));
                 p.setName(result.getString("name"));
                 p.setDescription(result.getString("description"));
-                p.setType(result.getString("project.type"));
                 p.setStatus(result.getString("status"));
                 p.setFoldername(result.getString("FolderName"));
                 p.setDatesubmitted(result.getString("datesubmitted"));
@@ -164,13 +163,12 @@ public class OCPDDAO {
 
         //List of ArrayList
         ArrayList<Location> projectLocation = new ArrayList<Location>();
-        ArrayList<Schedule> projectSchedule = new ArrayList<Schedule>();
+        ArrayList<Task> projectTask = new ArrayList<Task>();
         ArrayList<Files> projectFiles = new ArrayList<Files>();
         ArrayList<PWorks> projectPWorks = new ArrayList<PWorks>();
-        ArrayList<Testimonial> projectReferencedTestimonial = new ArrayList<Testimonial>();
         ArrayList<Project> projectReferencedProject = new ArrayList<Project>();
 
-        PreparedStatement locationS, scheduleS, filesS, pworksS, referencedtestimonialS, referencedprojectS;
+        PreparedStatement locationS, taskS, filesS, pworksS, referencedtestimonialS, referencedprojectS;
 
         try {
             myFactory = ConnectionFactory.getInstance();
@@ -187,7 +185,6 @@ public class OCPDDAO {
                 project.setId(result.getString("project.ID"));
                 project.setName(result.getString("name"));
                 project.setDescription(result.getString("description"));
-                project.setType(result.getString("project.type"));
                 project.setStatus(result.getString("status"));
                 project.setFoldername(result.getString("FolderName"));
                 project.setDatesubmitted(result.getString("datesubmitted"));
@@ -213,15 +210,14 @@ public class OCPDDAO {
                 loc.setLats(result.getString("latitude"));
                 loc.setLongs(result.getString("Longitude"));
                 Project p = new Project();
-                p.setId(p.getId());
-                p.setName(p.getName());
-                p.setDescription(p.getDescription());
-                p.setType(p.getType());
-                p.setStatus(p.getStatus());
-                p.setFoldername(p.getFoldername());
-                p.setDatesubmitted(p.getDatesubmitted());
-                p.setCategory(p.getCategory());
-                p.setBudget(p.getBudget());
+                p.setId(project.getId());
+                p.setName(project.getName());
+                p.setDescription(project.getDescription());
+                p.setStatus(project.getStatus());
+                p.setFoldername(project.getFoldername());
+                p.setDatesubmitted(project.getDatesubmitted());
+                p.setCategory(project.getCategory());
+                p.setBudget(project.getBudget());
                 loc.setProject(p);
 
                 projectLocation.add(loc);
@@ -241,15 +237,14 @@ public class OCPDDAO {
                 f.setType(result.getString("type"));
                 f.setDescription(result.getString("description"));
                 Project p = new Project();
-                p.setId(p.getId());
-                p.setName(p.getName());
-                p.setDescription(p.getDescription());
-                p.setType(p.getType());
-                p.setStatus(p.getStatus());
-                p.setFoldername(p.getFoldername());
-                p.setDatesubmitted(p.getDatesubmitted());
-                p.setCategory(p.getCategory());
-                p.setBudget(p.getBudget());
+                p.setId(project.getId());
+                p.setName(project.getName());
+                p.setDescription(project.getDescription());
+                p.setStatus(project.getStatus());
+                p.setFoldername(project.getFoldername());
+                p.setDatesubmitted(project.getDatesubmitted());
+                p.setCategory(project.getCategory());
+                p.setBudget(project.getBudget());
                 f.setProject(p);
                 f.setStatus(result.getString("status"));
                 f.setUploader(result.getString("uploader"));
@@ -278,15 +273,14 @@ public class OCPDDAO {
                 pw.setId(result.getInt("pworks.ID"));
                 pw.setName(result.getString("Name"));
                 Project p = new Project();
-                p.setId(p.getId());
-                p.setName(p.getName());
-                p.setDescription(p.getDescription());
-                p.setType(p.getType());
-                p.setStatus(p.getStatus());
-                p.setFoldername(p.getFoldername());
-                p.setDatesubmitted(p.getDatesubmitted());
-                p.setCategory(p.getCategory());
-                p.setBudget(p.getBudget());
+                p.setId(project.getId());
+                p.setName(project.getName());
+                p.setDescription(project.getDescription());
+                p.setStatus(project.getStatus());
+                p.setFoldername(project.getFoldername());
+                p.setDatesubmitted(project.getDatesubmitted());
+                p.setCategory(project.getCategory());
+                p.setBudget(project.getBudget());
                 pw.setProject(p);
 
                 projectPWorks.add(pw);
@@ -295,7 +289,7 @@ public class OCPDDAO {
             //Set Components of each Pworks
             for (PWorks pworks : projectPWorks) {
                 ArrayList<Component> componentList = new ArrayList<Component>();
-                String query = ("select * from components join unit on Unit_ID = unit.id where ProjectHasPWorks_PworksID = ? and ProjectHasPWorks_ProjectID = ?");
+                String query = ("select * from components join unit on Unit_ID = unit.id where Project_has_PWorks_Pworks_ID = ? and Project_has_PWorks_Project_ID = ?");
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.setInt(1, pworks.getId());
                 statement.setString(2, project.getId());
@@ -319,20 +313,6 @@ public class OCPDDAO {
             project.setpWorks(projectPWorks);
 
             //Referenced Testimonial
-            String ReferencedT = ("select Testimonial_ID from project_has_reference where Project_ID = ?");
-            referencedtestimonialS = connection.prepareStatement(ReferencedT);
-            referencedtestimonialS.setString(1, id);
-            result = referencedtestimonialS.executeQuery();
-            while (result.next()) {
-
-                Testimonial t = new Testimonial();
-                t.setId(result.getInt("Testimonial_ID"));
-
-                projectReferencedTestimonial.add(t);
-            }
-            project.setReferredTestimonials(projectReferencedTestimonial);
-
-            //Referenced Testimonial
             String ReferencedP = ("select otherProject_ID from project_has_reference where Project_ID = ?");
             referencedprojectS = connection.prepareStatement(ReferencedP);
             referencedprojectS.setString(1, id);
@@ -345,6 +325,56 @@ public class OCPDDAO {
             }
             project.setReferredProjects(projectReferencedProject);
 
+            //Tasks
+            String taskQuery = ("SELECT * FROM task where Project_ID = ?");
+            taskS = connection.prepareStatement(taskQuery);
+            taskS.setString(1, id);
+            result = taskS.executeQuery();
+            while (result.next()) {
+                Task t = new Task();
+                t.setId(result.getInt("ID"));
+                t.setName(result.getString("Name"));
+                t.setDescription(result.getString("Description"));
+                Project p = new Project();
+                p.setId(project.getId());
+                p.setName(project.getName());
+                p.setDescription(project.getDescription());
+                p.setStatus(project.getStatus());
+                p.setFoldername(project.getFoldername());
+                p.setDatesubmitted(project.getDatesubmitted());
+                p.setCategory(project.getCategory());
+                p.setBudget(project.getBudget());
+                t.setProject(p);
+
+                projectTask.add(t);
+            }
+            
+            for (Task t : projectTask) {
+                ArrayList<Schedule> scheduleList = new ArrayList<Schedule>();
+                String query = ("select * from schedule join task on schedule.Task_ID = task.id where Task_ID = ?");
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setInt(1, t.getId());
+                result = statement.executeQuery();
+                while (result.next()) {
+                    Schedule s = new Schedule();
+                    s.setId(result.getInt("id"));
+                    s.setStartdate(result.getString("StartDate"));
+                    s.setEnddate(result.getString("EndDate"));
+                    s.setStatus(result.getString("status"));
+                    s.setActualenddate(result.getString("ActualEndDate"));
+                    s.setRemarks(result.getString("Remarks"));
+                    Task task = new Task();
+                    task.setId(result.getInt("task.id"));
+                    task.setName(result.getString("task.name"));
+                    task.setDescription(result.getString("task.description"));
+                    s.setTask(task);
+                    scheduleList.add(s);
+                }
+                t.setSchedules(scheduleList);
+            }
+            project.setTask(projectTask);
+            
+            
             //End of Method
         } catch (SQLException ex) {
             Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -445,6 +475,7 @@ public class OCPDDAO {
         return x;
     }
 
+    //FIX
     public void rescheduleMeeting(Schedule s) {
         try {
             myFactory = ConnectionFactory.getInstance();
@@ -463,6 +494,7 @@ public class OCPDDAO {
         }
     }
 
+    //FIX
     public void updateMeetingStatus(Schedule s, String status) {
         try {
             myFactory = ConnectionFactory.getInstance();
@@ -478,6 +510,7 @@ public class OCPDDAO {
         }
     }
 
+    //FIX
     public ArrayList<Task> getAgenda(Schedule s) {
         ArrayList<Task> tList = new ArrayList<>();
         Task t;
@@ -500,6 +533,7 @@ public class OCPDDAO {
         return tList;
     }
 
+    //FIX
     public int getMeetingID(Project p) {
         int x = 0;
         try {
@@ -523,6 +557,7 @@ public class OCPDDAO {
         return x;
     }
 
+    //FIX
     public double getPercentage(Project p) {
 
         PreparedStatement statement2;
@@ -567,6 +602,7 @@ public class OCPDDAO {
         return Percentage;
     }
 
+    //FIX
     public Schedule getMeeting(Project p, String status) {
         Schedule s = null;
         try {
@@ -644,14 +680,13 @@ public class OCPDDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String getID = "select sum(components.quantity*components.unitprice) as cost from components join project_has_pworks on project_has_pworks.PWorks_ID = components.ProjectHasPWorks_PworksID and project_has_pworks.Project_ID = components.ProjectHasPWorks_ProjectID where components.ProjectHasPWorks_ProjectID = ?";
+            String getID = "select sum(components.quantity*components.unitprice) as cost from components join project_has_pworks on project_has_pworks.PWorks_ID = components.Project_has_PWorks_Pworks_ID and project_has_pworks.Project_ID = components.Project_has_PWorks_Project_ID where components.Project_has_PWorks_Project_ID = ?";
             statement = connection.prepareStatement(getID);
             statement.setString(1, p.getId());
             result = statement.executeQuery();
             while (result.next()) {
                 cost = result.getFloat("cost");
             }
-
             statement.close();
             connection.close();
             return cost;
@@ -661,13 +696,13 @@ public class OCPDDAO {
         return cost;
     }
 
-    public void setBudget(Project p) {
+    public void setBudget(Project p, float budget) {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
             String query = "update project set budget = ? where id = ?";
             statement = connection.prepareStatement(query);
-            statement.setFloat(1, p.getBudget());
+            statement.setFloat(1, budget);
             statement.setString(2, p.getId());
             statement.executeUpdate();
             connection.close();

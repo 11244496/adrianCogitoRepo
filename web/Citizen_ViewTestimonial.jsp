@@ -20,6 +20,7 @@
         r = (Reply) session.getAttribute("reply");
     }
     ArrayList<Reply> rList = testimonial.getReplies();
+    ArrayList<Reply> comments = (ArrayList<Reply>) session.getAttribute("comments");
 
     ArrayList<Files> image = (ArrayList<Files>) session.getAttribute("openImage");
     ArrayList<Files> video = (ArrayList<Files>) session.getAttribute("openVideo");
@@ -311,18 +312,6 @@
 
                                 <br>
 
-                                <h5 class="bold">Projects that referenced this testimonial</h5>
-                                <%
-                                    if (testimonial.getReferencedproject().size() > 0) {
-                                        for (int a = 0; a < testimonial.getReferencedproject().size(); a++) {
-                                            System.out.println(testimonial.getReferencedproject().get(a).getName());
-                                        }
-                                    } else {
-                                %>
-                                No projects referenced this testimonial yet.
-                                <%}%>
-                                <br>
-
 
                             </div>
 
@@ -330,26 +319,65 @@
                     </div>
 
                     <br>
+                    <div class="col-md-8">
+                        <section class="panel">
+                            <header class="panel-heading" style="width: 30%">
+                                <p>Write a comment</p>
+
+                            </header>
+                            <form action='Citizen_SendComment'>
+                                <div class="panel-body">
+                                    <div class='col-md-12'>
+                                        <div class='col-md-3'>
+                                            <h4> Write a comment </h4>
+                                            <br>
+                                            <br>
+                                        </div>
+                                        <div class='col-md-8'>
+                                            <textarea class='form-control' name='comment' rows="4"></textarea>
+                                            <input type='hidden' value="<%=testimonial.getId()%>" name="testId">
+                                        </div>
+                                        <div class='col-md-1'>
+                                            <span clas='pull-right'>
+                                                <button type='submit' style='padding-top: 10px; padding-bottom: 10px' class='btn btn-success btn-sm'>Post</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                        
+                                    <div class='col-md-12'  style="margin-top: 5%;">
+                                        <header class="panel-heading">
+                                            <b><p>Comments</p></b>
+                                        </header>
+                                    </div>
+                                        <% for (Reply rep : comments){%>
+                                    <div class='col-md-12'>
+                                        <header class="panel-heading">
+                                            <p><%=rep.getSender().getUsername()%>
+                                            <span class="pull-right">
+                                                <%=rep.getDateSent()%>
+                                            </span>
+                                            </p>
+                                        </header>
+                                        <div class='col-md-12'>
+                                            <textarea class='form-control' readonly style="background: white; cursor: default;"><%=rep.getMessage()%></textarea>
+                                        </div>
+                                    </div>
+                                    <%}%>
+                                </div>    
+                            </form>
+                            <br>
+                            </div>
+                        </section>
+                    </div>
                 </div>
             </section>
         </section>
 
-        <section id="main-content">
-            <section class="wrapper site-min-height">
+        <section id='main-content'>
+            <section class='wrapper site-min-height'>
                 <div class="row">
                     <div class="col-md-12">
                         <section class="panel">
-                            <header class="panel-heading" style="width: 30%">
-                                <p>Comments</p>
-                            </header>
-
-                            <div class="col-md-4">
-                                <label class="col-md-2"> Write a comment</label>
-                            </div>
-                            <div class="col-md-8">
-                                <textarea class="form-control"></textarea>
-                            </div>
-
 
                         </section>   
                     </div>
@@ -381,7 +409,7 @@
                         <div class="form-group col-md-12">
                             <label class="col-md-2"> Message: </label>
                             <div class="col-md-8">
-                                <textarea class="form-control" name="messageR" readonly><%=r.getMessage()%>></textarea>
+                                <textarea class="form-control" name="messageR" readonly><%=r.getMessage()%></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">

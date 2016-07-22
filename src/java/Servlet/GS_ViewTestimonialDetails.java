@@ -63,8 +63,6 @@ public class GS_ViewTestimonialDetails extends HttpServlet {
             session.setAttribute("openVideo", v);
             session.setAttribute("openDocument", d);
             request.setAttribute("supporters", Integer.toString(supporter));
-            t.setStatus("Read");
-            gs.changeTestiStatus(t);
 
             ServletContext context = getServletContext();
             RequestDispatcher dispatch;

@@ -185,14 +185,15 @@
                         <div class="col-md-12">
                             <section class="panel">
 
-                                <header class="panel-heading" style="width: 30%">
+                                <header class="panel-heading" style="width: 100%">
                                     <p>Testimonial Details</p>
-                                </header>
 
+                                </header>
                                 <span class="pull-right">
                                     <a class="btn btn-success btn-sm" data-toggle="modal" href="#gsApproveModal"><i class="fa fa-check"></i> Approve</a>
                                     <a class="btn btn-danger btn-sm" data-toggle="modal" href="#gsRejectModal"><i class="fa fa-times"></i> Reject</a>
                                 </span>
+
                             </section>   
                         </div>
                     </div>

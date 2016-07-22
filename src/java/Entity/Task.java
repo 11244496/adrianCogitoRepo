@@ -16,17 +16,21 @@ public class Task {
     private int id;
     private String name;
     private Project project;
+    private String description;
     private ArrayList<Schedule> schedules;
 
     public Task() {
     }
 
-    public Task(int id, String name, Project project, ArrayList<Schedule> schedules) {
+    public Task(int id, String name, Project project, String description, ArrayList<Schedule> schedules) {
         this.id = id;
         this.name = name;
         this.project = project;
+        this.description = description;
         this.schedules = schedules;
     }
+
+    
 
     public int getId() {
         return id;
@@ -60,5 +64,14 @@ public class Task {
         this.schedules = schedules;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    
+    
 }

@@ -405,6 +405,53 @@ public class CitizenDAO {
         return test;
     }
 
+    public void sendComment(Reply r) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into reply (message, sender, datesent, testimonial_id) values (?,?, now(), ?)";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, r.getMessage());
+            statement.setString(2, r.getSender().getUsername());
+            statement.setInt(3, r.getTestimonial().getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public ArrayList<Reply> getComments(Testimonial t) {
+        ArrayList<Reply> rList = new ArrayList<>();
+        Reply r = null;
+        User u = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "SELECT * FROM reply join users on sender = username where type = ? and testimonial_id = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, "Citizen");
+            statement.setInt(2, t.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                r = new Reply();
+                r.setMessage(result.getString("Message"));
+                r.setDateSent(result.getString("Datesent"));
+                u = new User();
+                u.setUsername(result.getString("Sender"));
+                r.setSender(u);
+                rList.add(r);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            System.out.println("Error in gettestimonialcount()");
+            Logger.getLogger(CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rList;
+    }
+
     public int getunlikedtestimonial(Citizen c) {
         int unlinkedtesti = 0;
         try {

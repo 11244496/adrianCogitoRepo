@@ -5,7 +5,9 @@
  */
 package Servlet;
 
-import DAO.CityAdminDAO;
+import DAO.CitizenDAO;
+import Entity.Citizen;
+import Entity.Reply;
 import Entity.Testimonial;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,12 +17,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author RoAnn
+ * @author AdrianKyle
  */
-public class CityAdmin_ApproveTestimonial extends HttpServlet {
+public class Citizen_SendComment extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,14 +38,20 @@ public class CityAdmin_ApproveTestimonial extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            HttpSession session = request.getSession();
             /* TODO output your page here. You may use following sample code. */
-            int id = Integer.parseInt(request.getParameter("testId"));
+            Citizen c = (Citizen)session.getAttribute("user");
+            Reply r = new Reply();
+            String message = request.getParameter("comment");
             Testimonial t = new Testimonial();
-            t.setId(id);
-            CityAdminDAO ca = new CityAdminDAO();
-            ca.changeStatus(t, "Unlinked");
+            t.setId(Integer.parseInt(request.getParameter("testId")));
+            r.setMessage(message);
+            r.setTestimonial(t);
+            r.setSender(c.getUser());
+            CitizenDAO cd = new CitizenDAO();
+            cd.sendComment(r);
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch = context.getRequestDispatcher("/CityAdmin_Home");
+            RequestDispatcher dispatch = context.getRequestDispatcher("/Citizen_OpenTestimonial?idd=1");
             dispatch.forward(request, response);
         }
     }

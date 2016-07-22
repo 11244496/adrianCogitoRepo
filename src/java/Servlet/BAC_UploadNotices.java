@@ -130,7 +130,7 @@ public class BAC_UploadNotices extends HttpServlet {
                             fileType.add(documentType);
 
                             //path where the file will be stored
-                            path = new File("D:\\Development\\NetBeans\\Projects\\Cogito\\Upload" + "/Bids and Awards Department" + "/Bid Notices/" + title + "/" + contractorName);
+                            path = new File("C:\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\CogitoFirst\\Upload" + "/Bids and Awards Department" + "/Bid Notices/" + title + "/" + contractorName);
                             if (!path.exists()) {
                                 boolean status = path.mkdirs();
                             }

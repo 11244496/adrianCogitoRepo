@@ -4,6 +4,8 @@
     Author     : RoAnn
 --%>
 
+<%@page import="DAO.OCPDDAO"%>
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="Entity.Project"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -56,8 +58,10 @@
 
         <%
             ArrayList<Project> pList = (ArrayList<Project>) request.getAttribute("pList");
+            OCPDDAO oc = new OCPDDAO();
         %>
 
+        <%DecimalFormat df = new DecimalFormat("#,###.00");%>
         <section class="panel">
             <center>
                 <br><br>
@@ -78,45 +82,104 @@
 
                     <div class="panel-body bio-graph-info">
                         <!--<h1>New Dashboard BS3 </h1>-->
-
+                        <br>
                         <div>
                             <p><span class="bold">Description </span>: <%=p.getDescription()%></p>
                         </div><br>
                         <div>
-                            <p><span class="bold">Category </span>: <%=p.getType()%></p>
+                            <p><span class="bold">Category </span>: <%=p.getCategory()%></p>
                         </div><br>
-
-
                         <div>
                             <p><span class="bold">Date Submitted</span> : <%=p.getDatesubmitted()%></p>
-
-
                         </div>
                         <br>
-                        <%}%>
-                        </section>
-                        <div id="printpage">
-                            <button onclick="myFunction()">Print</button>
-                            <button onclick="cancel()">Cancel</button> <br>
+
+                        <div class="col-lg-12">
+                            
+                                <strong>Program of Works</strong>
+                            
+                            <section class="panel">
+                                <div class="panel-body">
+                                    <table class="table" style="width:100%; text-align: center">
+                                        <%for (int y = 0; y < p.getpWorks().size(); y++) {%>
+
+                                        <tr>
+                                            <th colspan="6"><%=p.getpWorks().get(y).getName()%></th>
+                                        </tr>
+                                        <tr>
+                                            <th><center>Name</center></th>
+                                        <th><center>Quantity</center></th>
+                                        <th><center>Unit</center></th>
+                                        <th><center>Unit Price</center></th>
+                                        <th><center>Total</center></th>
+                                        </tr>
+                                        <%for (int z = 0; z < p.getpWorks().get(y).getComponents().size(); z++) {%>
+                                        <tr>
+                                            <td><%=p.getpWorks().get(y).getComponents().get(z).getName()%></td>
+                                            <td><%=p.getpWorks().get(y).getComponents().get(z).getQuantity()%></td>
+                                            <td><%=p.getpWorks().get(y).getComponents().get(z).getUnit().getUnit()%></td>
+                                            <td><%=p.getpWorks().get(y).getComponents().get(z).getUnitPrice()%></td>
+                                            <td><%=p.getpWorks().get(y).getComponents().get(z).getUnitPrice() * p.getpWorks().get(y).getComponents().get(z).getQuantity()%></td>
+                                        </tr>
+
+
+                                        <%}%>
+
+                                        <%}%>
+
+                                    </table>
+                                    <br> 
+                                    <table class="table" style="width:100%; text-align: center">    
+                                        <tr>
+                                            <td colspan="4">Total cost: </td>
+                                            <td>PHP <%=df.format(oc.getCost(p))%></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4">Indirect Cost 17% of Total Cost: </td>
+                                            <td>PHP <%=df.format(oc.getCost(p) * 0.17)%></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4">Tax 5% of Total Cost + Indirect Cost: </td>
+                                            <td>PHP <%=df.format((oc.getCost(p) * 0.17) * .05)%></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="4">Estimated cost: </td>
+                                            <td>PHP <%=df.format(oc.getCost(p) + (oc.getCost(p) * 0.17) + ((oc.getCost(p) * 0.17) * .05))%></td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                            </section>
                         </div>
-                        </center>
 
+                    </div>
+                    <%}%>
                 </section>
-                <!-- page end-->
+                <div id="printpage">
+                    <button onclick="myFunction()">Print</button>
+                    <button onclick="cancel()">Cancel</button> <br>
+                </div>
+            </center>
 
-                <!--main content end-->
-                <script>
-                    function myFunction() {
-                        window.print();
-                    }
+        </section>
+        <!-- page end-->
 
-                    function cancel() {
-                        window.close();
-                    }
-                </script>
+        <!--main content end-->
+        <script>
+            function myFunction() {
+                window.print();
+            }
 
-                </body>
+            function cancel() {
+                window.close();
+            }
+        </script>
+
+    </body>
 
 
 
-                </html>
+</html>

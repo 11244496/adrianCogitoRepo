@@ -118,7 +118,7 @@ public class Contractor_UploadContractorDocuments extends HttpServlet {
                             fileName = item.getName();
                             String root = getServletContext().getRealPath("/");
                             //path where the file will be stored
-                            path = new File("C:\\Users\\AdrianKyle\\Documents\\NetBeansProjects\\Cogito\\Upload" + "/Bids and Awards Department" + "/Eligibility Documents/" + title + "/" + contractor.getName());
+                            path = new File("C:\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\CogitoFirst\\Upload" + "/Bids and Awards Department" + "/Eligibility Documents/" + title + "/" + contractor.getName());
 
                             if (!path.exists()) {
                                 boolean status = path.mkdirs();
@@ -231,7 +231,7 @@ public class Contractor_UploadContractorDocuments extends HttpServlet {
                     Contractor_Has_Project contProject = contDAO.getContractorHasProject(project, contractor);
 
                     for (int x = 0; x < files.size(); x++) {
-                        Eligibility_Document document = new Eligibility_Document(0, files.get(x), "chrome-extension://affgigbpilagplecbaihihkcaddmlkji/" + "Bids and Awards Department" + "/Eligibility Documents/" + title + "/" + contractor.getName(), null, contProject, fileType.get(x), null, "");
+                        Eligibility_Document document = new Eligibility_Document(0, files.get(x), "chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/" + "Bids and Awards Department" + "/Eligibility Documents/" + title + "/" + contractor.getName(), null, contProject, fileType.get(x), null, "");
                         contDAO.uploadEligibilityDocuments(document);
 
                     }

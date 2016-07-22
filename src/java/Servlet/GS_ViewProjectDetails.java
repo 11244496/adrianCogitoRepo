@@ -61,15 +61,7 @@ public class GS_ViewProjectDetails extends HttpServlet {
             project.setMainTestimonial(mainTesti);
             
             //References
-            ArrayList<Testimonial> referencedTList = new ArrayList<Testimonial>();
             ArrayList<Project> referencedPList = new ArrayList<Project>();
-            
-            for(int x = 0; x<project.getReferredTestimonials().size();x++){
-                Testimonial t = gdao.getTestimonial(project.getReferredTestimonials().get(x).getId());
-                referencedTList.add(t);
-            }
-            project.setReferredTestimonials(referencedTList);
-            
             for(int x = 0; x < project.getReferredProjects().size();x++){
                 Project p = oc.getAllProjectDetails(project.getReferredProjects().get(x).getId());
                 referencedPList.add(p);

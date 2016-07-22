@@ -51,7 +51,7 @@ public class BACDAO {
                 project.setId(result.getString("ID"));
                 project.setName(result.getString("Name"));
                 project.setDescription(result.getString("Description"));
-                project.setType(result.getString("Type"));
+                project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
                 project.setBudget(result.getFloat("Budget"));
                 projects.add(project);
@@ -89,7 +89,7 @@ public class BACDAO {
                 project.setId(result.getString("ID"));
                 project.setName(result.getString("Name"));
                 project.setDescription(result.getString("Description"));
-                project.setType(result.getString("Type"));
+                project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
                 project.setResponses(result.getInt("Submissions"));
                 project.setConfirmed(result.getInt("Confirmed"));
@@ -129,7 +129,7 @@ public class BACDAO {
                 project.setId(result.getString("ID"));
                 project.setName(result.getString("Name"));
                 project.setDescription(result.getString("Description"));
-                project.setType(result.getString("Type"));
+                project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
                 project.setResponses(result.getInt("Submissions"));
                 project.setConfirmed(result.getInt("Confirmed"));
@@ -168,7 +168,7 @@ public class BACDAO {
                 project.setId(result.getString("ID"));
                 project.setName(result.getString("Name"));
                 project.setDescription(result.getString("Description"));
-                project.setType(result.getString("Type"));
+                project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
                 project.setBudget(result.getFloat("Budget"));
                 projects.add(project);
@@ -201,7 +201,7 @@ public class BACDAO {
                 project.setId(result.getString("ID"));
                 project.setName(result.getString("Name"));
                 project.setDescription(result.getString("Description"));
-                project.setType(result.getString("Type"));
+                project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
 
                 projects.add(project);
@@ -234,7 +234,7 @@ public class BACDAO {
                 project.setId(result.getString("ID"));
                 project.setName(result.getString("Name"));
                 project.setDescription(result.getString("Description"));
-                project.setType(result.getString("Type"));
+                project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
 
                 projects.add(project);

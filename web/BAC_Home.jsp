@@ -200,7 +200,7 @@
                                                             String id = projects.get(a).getId();
                                                             String name = projects.get(a).getName();
                                                             String description = projects.get(a).getDescription();
-                                                            String type = projects.get(a).getType();
+                                                            String type = projects.get(a).getCategory();
                                                             float budget = projects.get(a).getBudget();
                                                     %>
 
@@ -274,7 +274,7 @@
                                                             String idd = projectsWithInvitation.get(b).getId();
                                                             String name = projectsWithInvitation.get(b).getName();
                                                             String description = projectsWithInvitation.get(b).getDescription();
-                                                            String type = projectsWithInvitation.get(b).getType();
+                                                            String type = projectsWithInvitation.get(b).getCategory();
                                                             String status = projectsWithInvitation.get(b).getStatus();
                                                             int responses = projectsWithInvitation.get(b).getResponses();
                                                             int confirmed = projectsWithInvitation.get(b).getConfirmed();
@@ -357,7 +357,7 @@
                                                             String idd = projectsNego.get(b).getId();
                                                             String name = projectsNego.get(b).getName();
                                                             String description = projectsNego.get(b).getDescription();
-                                                            String type = projectsNego.get(b).getType();
+                                                            String type = projectsNego.get(b).getCategory();
                                                             String status = projectsNego.get(b).getStatus();
                                                             int responses = projectsNego.get(b).getResponses();
                                                             int confirmed = projectsNego.get(b).getConfirmed();
@@ -454,7 +454,7 @@
                                                         for (int m = 0; m < projectsIMPL.size(); m++) {
                                                             String name = projectsIMPL.get(m).getName();
                                                             String desc = projectsIMPL.get(m).getDescription();
-                                                            String typ = projectsIMPL.get(m).getType();
+                                                            String typ = projectsIMPL.get(m).getCategory();
                                                             String stat = projectsIMPL.get(m).getStatus();
                                                             String contractor_Name = projectsIMPL.get(m).getContractor().getName();
 

@@ -12,8 +12,7 @@
 
 
     <% Employee e = (Employee) session.getAttribute("user");
-        ArrayList<Testimonial> noreplyT = (ArrayList<Testimonial>) request.getAttribute("noreplyT");
-        
+
         int PP = (Integer) request.getAttribute("PP");
 
         int OP = (Integer) request.getAttribute("OP");
@@ -246,11 +245,6 @@
                                                 Meetings
                                             </a>
                                         </li>
-                                        <li>
-                                            <a href="#followed" data-toggle="tab">
-                                                Pending Testimonials
-                                            </a>
-                                        </li>
 
                                     </ul>
                                 </header>
@@ -305,33 +299,8 @@
                                             </div>
 
                                         </div>
-
-                                        <div class="tab-pane" id="followed">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Title</th>
-                                                        <th>Citizen</th>
-                                                        <th>Date Submitted</th>
-                                                        <th></th>
-
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-
-                                                    <%for (int x = 0; x < noreplyT.size(); x++) {%>
-                                                    <tr>
-                                                        <td><%out.print(noreplyT.get(x).getTitle());%></td>
-                                                        <td><%out.print(noreplyT.get(x).getCitizen().getFirstName());%></td>
-                                                        <td><%out.print(noreplyT.get(x).getDateUploaded());%></td>
-                                                        <td><a href="project_details.html" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Send a reply</a>
-                                                    </tr>
-                                                    <%}%>
-
-                                                </tbody>
-                                            </table>
-                                        </div>
                                     </div>
+                                </div>
                             </section>
                             <div class="row">
                                 <div class="col-lg-12">

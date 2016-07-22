@@ -112,9 +112,21 @@ $('.selectmainbtn').click(function () {
             $('.selectmainbtn').hide();
         }
     });
-});
+    $('#maintestimonial').val($(this).val());
 
-//Remove the Selected Main Testimonial, detach and put back to testimonial list
+});
+$('#maincategory').change(function () {
+    $.ajax({
+        type: 'post',
+        url: 'AJAX_GS_GenerateProjectID',
+        dataType: 'json',
+        data: {category: $('#maincategory').val()},
+        cache: false,
+        success: function (data) {
+            $('#projectID').val(data);
+        }
+    });
+});
 $('.deselectmainbtn').click(function () {
     mainTestimonial.length = 0;
     $("#TestimonialTableBody").append(detachedMainRow);
@@ -262,6 +274,11 @@ function addRowForWorks() {
     button.setAttribute("name", "works");
     button.setAttribute("type", "button");
 
+    var newWork = document.createElement('input');
+    newWork.setAttribute("id", "newWork-" + powNumber);
+    newWork.setAttribute("class", "form-control");
+    newWork.setAttribute("type", "text");
+
     var delBtn = document.createElement('button');
     delBtn.setAttribute("id", "worksDel-" + powNumber);
     delBtn.setAttribute("class", "btn btn-danger btn-sm");
@@ -290,10 +307,11 @@ function addRowForWorks() {
     option.text = "New...";
     sel.appendChild(option);
 
-    powTableFc(button, sel, powNumber);
+    powTableFc(button, sel, powNumber, newWork);
 
     cell2.appendChild(sel);
     cell2.appendChild(button);
+    cell2.appendChild(newWork);
     cell3.appendChild(delBtn);
     powNumber++;
 }
@@ -321,18 +339,37 @@ function createTble(works, id) {
     $(div).append(brk);
 }
 
-function powTableFc(button, sel, num) {
+function powTableFc(button, sel, num, work) {
     $(button).hide();
+    $(work).hide();
 
     $(sel).change(function () {
-        $(sel).hide();
-        $(button).text($(sel).val());
-        $(button).show();
-        $('#compMain div').each(function () {
-            $(this).hide();
-        });
-        createTble(button.innerHTML, num);
+        if ($(sel).val() === "new") {
+            $(work).show();
+            $(work).keypress(function (e) {
+                var key = e.which;
+                if (key === 13) {
+                    $(work).hide();
+                    $(sel).hide();
+                    $(button).text($(work).val());
+                    $(button).show();
+                    createTble(button.innerHTML, num);
+
+                }
+            });
+        }
+        else {
+            $(sel).hide();
+            $(button).text($(sel).val());
+            $(button).show();
+            $('#compMain div').each(function () {
+                $(this).hide();
+            });
+            createTble(button.innerHTML, num);
+
+        }
     });
+
 
     $(button).dblclick(function () {
         $(button).hide();
@@ -366,24 +403,24 @@ function addComponentsRow(btn) {
     var id = getIdNum(btn.id);
     var tableId = "comp-" + id;
     var row = $('<tr></tr>');
-
+    var x = 1;
     var componenttd = $('<td></td>');
-    var component = $('<input type="text" name="component" class="form-control">');
+    var component = $('<input type="text" name="component" class="form-control component"> ');
     componenttd.append(component);
 
     var quantitytd = $('<td></td>');
-    var quantity = $('<input type="text" name="quantity" class="form-control">');
+    var quantity = $('<input type="text" name="quantity" class="form-control quantity"> ');
     quantitytd.append(quantity);
 
     var unittd = $('<td></td>');
-    var select = $('<select type="text" name="unit" class="form-control"></select>');
+    var select = $('<select type="text" name="unit" class="form-control unit" ></select>');
     for (var i = 0; i < unitList.length; i++) {
-        $(select).append($("<option></option>").val(unitList[i].id).html(unitList[i].unit));
+        $(select).append($("<option></option>").val(unitList[i].unit).html(unitList[i].unit));
     }
     $(unittd).append(select);
 
     var unitCosttd = $('<td></td>');
-    var unitCost = $('<input type="text" name="unitCost" class="form-control">');
+    var unitCost = $('<input type="text" name="unitCost" class="form-control unitCost">');
     unitCosttd.append(unitCost);
 
     var amounttd = $('<td></td>');
@@ -423,7 +460,7 @@ function onchanges(quantity, unitcost, amount, id) {
             cost = parseFloat($(quantity).val() * $(unitcost).val());
             $(amount).val(cost.toFixed(2));
             var total = 0;
-            
+
             $('#comp-' + id + ' .amount').each(function () {
                 total = total + parseFloat($(this).val());
             });
@@ -435,3 +472,33 @@ function onchanges(quantity, unitcost, amount, id) {
 
 
 }
+
+var works = [];
+var pw, comps, compList = [], pworks;
+var n, q, u, c;
+
+function insertWorks() {
+
+    for (var x = 1; x < powNumber; x++) {
+        pw = $('#worksButton-' + 1).text();
+        $('#comp-' + x + ' tbody tr').each(function (row, tr) {
+
+            n = $(tr).find(' .component').val();
+            q = $(tr).find('.quantity').val();
+            u = $(tr).find('.unit').val();
+            c = $(tr).find('.unitCost').val();
+            comps = {cname: n, qty: q, unit: u, cost: c};
+            compList.push(comps);
+        });
+        pworks = {name: pw, component: compList};
+        works.push(pworks);
+    }
+
+//    JSON.stringify(works);
+    $('#pworks').val(JSON.stringify(works));
+    console.log(JSON.stringify(works));
+}
+
+
+
+

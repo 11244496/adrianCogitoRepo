@@ -50,7 +50,7 @@ public class CityAdmin_RejectTestimonial extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
 
             Employee e = (Employee) session.getAttribute("user");
-            int id = Integer.parseInt(request.getParameter("testId"));
+            int id = Integer.parseInt(request.getParameter("testIdR"));
             Testimonial t = new Testimonial();
             t.setId(id);
             GSDAO gs = new GSDAO();

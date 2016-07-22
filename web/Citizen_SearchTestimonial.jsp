@@ -242,7 +242,6 @@
                                                             <tr>
 
                                                                 <th style="width: 15%">Title</th>
-                                                                <th style="width: 10%">Location</th>
                                                                 <th style="width: 25%">Description</th>
                                                                 <th style="width: 10%">Date Uploaded</th>
                                                                 <th style="width: 8%">Project Linked</th>
@@ -263,9 +262,6 @@
 
                                                                 <td>
                                                                     <a href="Citizen_OpenTestimonial?idd=<%=testID1%>"> <%out.print(test1.getTitle());%> </a>
-                                                                </td>
-                                                                <td>
-                                                                    Insert Location Here
                                                                 </td>
                                                                 <td>
                                                                     <%out.print(test1.getMessage());%> 

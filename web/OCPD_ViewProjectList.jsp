@@ -308,7 +308,7 @@
 
                                                             <tr>
                                                                 <td class="p-name"><%=p.getName()%></td>
-                                                                <td class="p-name"><%=p.getType()%></td>
+                                                                <td class="p-name"><%=p.getCategory()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
                                                                 <td>
@@ -366,7 +366,7 @@
 
                                                             <tr>
                                                                 <td class="p-name"><%=p.getName()%></td>
-                                                                <td class="p-name"><%=p.getType()%></td>
+                                                                <td class="p-name"><%=p.getCategory()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
                                                                 <td>
@@ -376,40 +376,7 @@
                                                                     </form>
 
                                                                     <%if (p.getBudget() == 0) {%>
-                                                                    <a class="btn btn-info btn-xs" data-toggle="modal" href="#approvedbudget"> Set Approved Budget </a>
-                                                                    <div class="modal fade in " id="approvedbudget" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
-                                                                        <div class="modal-dialog modal-sm">
-
-                                                                            <div class="modal-content">
-                                                                                <div class="modal-header">
-                                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                                                    <h4 class="modal-title">Set Approved Budget</h4>
-                                                                                </div>
-                                                                                <div class="modal-body">
-
-                                                                                    <div class="panel-body">
-                                                                                        <p>                                    
-                                                                                        </p>
-                                                                                        <div class="content"> 
-                                                                                            <!--<p><input type="text" placeholder="Recipient" class="form-control" style="width: 30%;">,</p>-->
-                                                                                            <p>Approved Budget</p>
-                                                                                            <br>
-                                                                                            <p>PHP <input id="budget" type="text"></p>
-
-                                                                                        </div>
-                                                                                        <br>
-                                                                                    </div>
-
-                                                                                </div>
-                                                                                <div class="modal-footer">
-                                                                                    <input type="hidden" id="projId" value="<%=p.getId()%>">
-                                                                                    <center><button class="btn btn-primary" onclick="setBudget()"> Confirm</button></center>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-
+                                                                    <a href="OCPD_SetForBidding?projId=<%=p.getId()%>" class="btn btn-info btn-xs">Set for Bidding</a>
                                                                     <%}%>
 
                                                                 </td>
@@ -454,7 +421,7 @@
 
                                                             <tr>
                                                                 <td class="p-name"><%=p.getName()%></td>
-                                                                <td class="p-name"><%=p.getType()%></td>
+                                                                <td class="p-name"><%=p.getCategory()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
                                                                 <td>
@@ -506,7 +473,7 @@
                                                                     </td>
 
                                                                     <td class="p-name"><%=p.getName()%></td>
-                                                                    <td class="p-name"><%=p.getType()%></td>
+                                                                    <td class="p-name"><%=p.getCategory()%></td>
                                                                     <td class="p-name"><%=p.getDescription()%></td>
                                                                     <td class="p-name"><%=p.getDatesubmitted()%></td>
                                                                 </tr>

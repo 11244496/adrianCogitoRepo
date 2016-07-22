@@ -325,7 +325,7 @@
 
                                                             <tr>
                                                                 <td class="p-name"><%=p.getName()%></td>
-                                                                <td class="p-name"><%=p.getType()%></td>
+                                                                <td class="p-name"><%=p.getCategory()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
                                                                 <td>
@@ -383,7 +383,7 @@
 
                                                             <tr>
                                                                 <td class="p-name"><%=p.getName()%></td>
-                                                                <td class="p-name"><%=p.getType()%></td>
+                                                                <td class="p-name"><%=p.getCategory()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
                                                                 <td>
@@ -434,7 +434,7 @@
 
                                                             <tr>
                                                                 <td class="p-name"><%=p.getName()%></td>
-                                                                <td class="p-name"><%=p.getType()%></td>
+                                                                <td class="p-name"><%=p.getCategory()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
                                                                 <td>
@@ -484,7 +484,7 @@
 
                                                             <tr>
                                                                 <td class="p-name"><%=p.getName()%></td>
-                                                                <td class="p-name"><%=p.getType()%></td>
+                                                                <td class="p-name"><%=p.getCategory()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
                                                                 <td>
@@ -532,7 +532,7 @@
 
                                                             <tr>
                                                                 <td class="p-name"><%=p.getName()%></td>
-                                                                <td class="p-name"><%=p.getType()%></td>
+                                                                <td class="p-name"><%=p.getCategory()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
                                                                 <td>

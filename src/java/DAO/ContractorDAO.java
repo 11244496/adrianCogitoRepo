@@ -111,7 +111,7 @@ public class ContractorDAO {
                 project.setId(result.getString("ID"));
                 project.setName(result.getString("Name"));
                 project.setDescription(result.getString("Description"));
-                project.setType(result.getString("Type"));
+                project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
 
                 projects.add(project);
@@ -147,7 +147,7 @@ public class ContractorDAO {
                 project.setId(result.getString("ID"));
                 project.setName(result.getString("Name"));
                 project.setDescription(result.getString("Description"));
-                project.setType(result.getString("Type"));
+                project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
 
                 projects.add(project);
@@ -183,7 +183,7 @@ public class ContractorDAO {
                 project.setId(result.getString("ID"));
                 project.setName(result.getString("Name"));
                 project.setDescription(result.getString("Description"));
-                project.setType(result.getString("Type"));
+                project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
                 projects.add(project);
 
@@ -216,7 +216,7 @@ public class ContractorDAO {
                 project.setId(result.getString("project.ID"));
                 project.setName(result.getString("Name"));
                 project.setDescription(result.getString("Description"));
-                project.setType(result.getString("Type"));
+                project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
                 Contractor_Has_Project conProject = new Contractor_Has_Project(result.getInt("contractor_has_project.ID"), project, contractor, result.getString("contractor_has_project.Status"));
 

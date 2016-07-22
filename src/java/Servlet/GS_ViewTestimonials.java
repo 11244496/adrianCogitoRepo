@@ -46,23 +46,8 @@ public class GS_ViewTestimonials extends HttpServlet {
             //Get All Testimonials
             ArrayList<Testimonial> allTestimonials = gs.getAllTestimonials();
             for (int x = 0; x < allTestimonials.size(); x++) {
-                allTestimonials.get(x).setFiles(c.getFilesWithStatus(allTestimonials.get(x).getId(),allTestimonials.get(x), "Approved"));
+                allTestimonials.get(x).setFiles(c.getFilesWithStatus(allTestimonials.get(x).getId(), allTestimonials.get(x), "Approved"));
                 allTestimonials.get(x).setMainproject(gs.getMainProjectOnTestimonial(allTestimonials.get(x).getId()));
-            }
-
-            //Get All Pending Testimonials (Testimonails without reply)
-            ArrayList<Testimonial> allPendingTestimonials = gs.getTestimonialsNR();
-            for (int x = 0; x < allPendingTestimonials.size(); x++) {
-                allPendingTestimonials.get(x).setFiles(c.getFilesWithStatus(allPendingTestimonials.get(x).getId(),allPendingTestimonials.get(x), "Approved"));
-                allPendingTestimonials.get(x).setMainproject(gs.getMainProjectOnTestimonial(allPendingTestimonials.get(x).getId()));
-            }
-
-            //Get All Testimonial With reply
-            ArrayList<Integer> allreplied = gs.getTestimonialsWR();
-
-            ArrayList<Testimonial> allRepliedTestimonials = new ArrayList<Testimonial>();
-            for (int x = 0; x < allreplied.size(); x++) {
-                allRepliedTestimonials.add(gs.getTestimonial(allreplied.get(x)));
             }
 
             //Get All Testimonials with linked projects
@@ -75,8 +60,6 @@ public class GS_ViewTestimonials extends HttpServlet {
 
             //Request set attributes testimonials
             request.setAttribute("allTestimonials", allTestimonials);
-            request.setAttribute("allPendingTestimonials", allPendingTestimonials);
-            request.setAttribute("allRepliedTestimonials", allRepliedTestimonials);
             request.setAttribute("allLinkedTestimonials", allLinkedTestimonials);
 
             ServletContext context = getServletContext();

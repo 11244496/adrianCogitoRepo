@@ -521,7 +521,6 @@
                     cache: false,
                     data: {contprojID: cont},
                     success: function (text) {
-                        console.log(text);
 
                         if (text === "Y") {
 

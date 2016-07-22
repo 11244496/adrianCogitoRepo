@@ -41,6 +41,7 @@ public class OCPD_CompileProposals extends HttpServlet {
             OCPDDAO oc = new OCPDDAO();
             Project p = null;
             ArrayList<Project> pList = new ArrayList<>();
+            
             for (String s : ids) {
                 p = oc.getAllProjectDetails(s);
                 oc.changeProjStatus("Approved", p);

@@ -41,10 +41,6 @@ public class GS_Home extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
 
             GSDAO gsdao = new GSDAO();
-
-            ArrayList<Testimonial> noreplyT = gsdao.getTestimonialsNR();
-            
-                        
             OCPDDAO oc = new OCPDDAO();
 
             //Get Counts
@@ -53,7 +49,6 @@ public class GS_Home extends HttpServlet {
             int FP = gsdao.getProjectCount("Finished");
             int OH = gsdao.getProjectCount("On-Hold");
 
-            request.setAttribute("noreplyT", noreplyT);
             request.setAttribute("PP", PP);
             request.setAttribute("OP", OP);
             request.setAttribute("FP", FP);
