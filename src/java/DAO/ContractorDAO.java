@@ -11,12 +11,15 @@ import Entity.Contractor;
 import Entity.Contractor_Has_Project;
 import Entity.Contractor_User;
 import Entity.Eligibility_Document;
+import Entity.Feedback;
 import Entity.InvitationToBid;
+import Entity.Progress_Report;
 import Entity.Project;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -547,6 +550,126 @@ public class ContractorDAO {
         }
 
         return result2;
+    }
+    
+    public ArrayList<Project> getProjectHistoryList(String input) {
+
+        ArrayList<Project> projectlist = new ArrayList<Project>();    
+        Project project = null;
+        
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from project where Status = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, input);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                project = new Project();
+                project.setId(result.getString("ID"));
+                project.setName(result.getString("Name"));
+                project.setDescription(result.getString("Description"));
+                project.setCategory(result.getString("Category"));
+                project.setStatus(result.getString("Status"));
+                
+                projectlist.add(project);
+                
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return projectlist;
+    }
+    
+    public Feedback getAverage(Project p) {
+        Feedback f = null;
+        DecimalFormat df = new DecimalFormat("#,###.00");
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select project_id, avg(quality) as quality,  avg(promptness) as promptness, avg(convenience) as convenience, avg(safety) as safety,\n"
+                    + "avg(details) as details, avg(details2) as details2, avg(satisfaction) as satisfaction from feedback where project_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                f = new Feedback();
+                f.setQualityave(result.getDouble("quality"));
+                f.setPromptnessave(result.getDouble("promptness"));
+                f.setConvenienceave(result.getDouble("convenience"));
+                f.setSafetyave(result.getDouble("safety"));
+                f.setDetailsave((result.getDouble("details") + result.getDouble("details2")) / 2);
+                f.setSatisfactionave(result.getDouble("satisfaction"));
+            }
+
+            connection.close();
+            return f;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return f;
+    }
+    
+    public void uploadProgressReport(Progress_Report progressreport) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "INSERT INTO progress_report (`Message`, `FileName`, `FolderName`, `DateUploaded`, `Project_ID`, `Contractor_ID`) VALUES (?, ?, ?, now(), ?, ?);";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, progressreport.getMessage());
+            statement.setString(2, progressreport.getFileName());
+            statement.setString(3, progressreport.getFolderName());
+            statement.setString(4, progressreport.getProject().getId());
+            statement.setInt(5, progressreport.getContractor_user().getID());
+            
+            
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    public ArrayList<Progress_Report> getProgress_ReportList(Project project, Contractor_User conuser) {
+
+        ArrayList<Progress_Report> progress_reports = new ArrayList<Progress_Report>();
+        Progress_Report progress_report;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "SELECT * FROM progress_report where Project_ID = ? AND Contractor_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, project.getId());
+            statement.setInt(2, conuser.getID());
+            
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                progress_report = new Progress_Report(result.getInt("ID"), result.getString("Message"),result.getString("FileName"), result.getString("FolderName"), result.getString("DateUploaded"), project, conuser);
+                progress_reports.add(progress_report);
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return progress_reports;
     }
 
 }

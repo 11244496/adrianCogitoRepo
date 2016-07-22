@@ -324,6 +324,50 @@
         <servlet-name>Citizen_SendComment</servlet-name>
         <servlet-class>Servlet.Citizen_SendComment</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Citizen_SubmitReport</servlet-name>
+        <servlet-class>Servlet.Citizen_SubmitReport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Citizen_ViewSubmitReportForm</servlet-name>
+        <servlet-class>Servlet.Citizen_ViewSubmitReportForm</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_GetEvaluation</servlet-name>
+        <servlet-class>Servlet.Contractor_GetEvaluation</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_Profile</servlet-name>
+        <servlet-class>Servlet.Contractor_Profile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_OpenCitizenReport</servlet-name>
+        <servlet-class>Servlet.GS_OpenCitizenReport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_ViewCitizenReportList</servlet-name>
+        <servlet-class>Servlet.GS_ViewCitizenReportList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_ViewImplementedProjects</servlet-name>
+        <servlet-class>Servlet.GS_ViewImplementedProjects</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_ProgressReportPage</servlet-name>
+        <servlet-class>Servlet.Contractor_ProgressReportPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_SubmitProgressReport</servlet-name>
+        <servlet-class>Servlet.Contractor_SubmitProgressReport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_OpenInspectionReport</servlet-name>
+        <servlet-class>Servlet.GS_OpenInspectionReport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_ViewInspectionList</servlet-name>
+        <servlet-class>Servlet.GS_ViewInspectionList</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -647,6 +691,50 @@
     <servlet-mapping>
         <servlet-name>Citizen_SendComment</servlet-name>
         <url-pattern>/Citizen_SendComment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_SubmitReport</servlet-name>
+        <url-pattern>/Citizen_SubmitReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_ViewSubmitReportForm</servlet-name>
+        <url-pattern>/Citizen_ViewSubmitReportForm</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_GetEvaluation</servlet-name>
+        <url-pattern>/Contractor_GetEvaluation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_Profile</servlet-name>
+        <url-pattern>/Contractor_Profile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_OpenCitizenReport</servlet-name>
+        <url-pattern>/GS_OpenCitizenReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_ViewCitizenReportList</servlet-name>
+        <url-pattern>/GS_ViewCitizenReportList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_ViewImplementedProjects</servlet-name>
+        <url-pattern>/GS_ViewImplementedProjects</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_ProgressReportPage</servlet-name>
+        <url-pattern>/Contractor_ProgressReportPage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_SubmitProgressReport</servlet-name>
+        <url-pattern>/Contractor_SubmitProgressReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_OpenInspectionReport</servlet-name>
+        <url-pattern>/GS_OpenInspectionReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_ViewInspectionList</servlet-name>
+        <url-pattern>/GS_ViewInspectionList</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

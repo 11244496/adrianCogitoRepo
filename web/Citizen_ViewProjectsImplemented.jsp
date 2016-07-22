@@ -226,7 +226,7 @@
                                                                     <th style="width: 15%; text-align: center">Category</th>
                                                                     <th style="width: 30%; text-align: center">Description</th>
                                                                     <th style="width: 10%; text-align: center">Date Submitted</th>
-                                                                    <th style="width: 10%; text-align: center">Date Finished</th>
+                                                                    <th style="width: 10%; text-align: center"></th>
                                                                     <th style="width: 10%; text-align: center"></th>
 
                                                                 </tr>
@@ -238,10 +238,10 @@
 
                                                                 <tr>
                                                                     <td class="p-name"><%=p.getName()%></td>
-                                                                    <td class="p-name"><%=p.getType()%></td>
+                                                                    <td class="p-name"><%=p.getCategory()%></td>
                                                                     <td class="p-name"><%=p.getDescription()%></td>
                                                                     <td class="p-name"><%=p.getDatesubmitted()%></td>
-                                                                    <td class="p-name">Insert Date Finished</td>
+                                                                    
                                                                     <td>
                                                                         <form action="Citizen_ViewProjectDetails">
                                                                             <input type="hidden" name="projid" value="<%=p.getId()%>">
@@ -250,6 +250,7 @@
 
                                                                         </form>
                                                                     </td>
+                                                                    
                                                                 </tr>
                                                                 <%
                                                                     }%>
@@ -290,7 +291,7 @@
 
                                                             <tr>
                                                                 <td class="p-name"><%=p.getName()%></td>
-                                                                <td class="p-name"><%=p.getType()%></td>
+                                                                <td class="p-name"><%=p.getCategory()%></td>
                                                                 <td class="p-name"><%=p.getDescription()%></td>
                                                                 <td class="p-name"><%=p.getDatesubmitted()%></td>
                                                                 <td class="p-name"><%=p.getStatus()%></td>
@@ -302,6 +303,14 @@
 
                                                                     </form>
                                                                 </td>
+                                                                <td>
+                                                                        <form action="Citizen_ViewSubmitReportForm">
+                                                                            <input type="hidden" name="projid" value="<%=p.getId()%>">
+
+                                                                            <button type="submit" class="btn btn-success btn-xs" value="View details"><i class="fa fa-eye"></i>Report</button>
+
+                                                                        </form>
+                                                                    </td>
                                                             </tr>
                                                             <%
                                                                     }%>

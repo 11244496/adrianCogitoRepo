@@ -10,6 +10,7 @@ import Entity.Activity;
 import Entity.Address;
 import Entity.Barangay;
 import Entity.Citizen;
+import Entity.Citizen_Report;
 import Entity.Comment;
 import Entity.Employee;
 import Entity.Files;
@@ -17,6 +18,7 @@ import Entity.Location;
 import Entity.Notification;
 import Entity.Project;
 import Entity.Reply;
+import Entity.Report_File;
 import Entity.Supporter;
 import Entity.TComments;
 import Entity.TLocation;
@@ -910,4 +912,88 @@ public class CitizenDAO {
 
     public void commentOnTestimonial() {
     }
+    
+    public void uploadCitizenReport(Citizen_Report rep) {
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            //INSERT INTO `cogitov3`.`citizen_report` (`ID`, `Message`, `FolderName`, `Date_Uploaded`, `Citizen_ID`, `Project_ID`) VALUES ('3', 'vvv', 'v', 'v', 'v', 'v');
+            
+            String query = "INSERT INTO citizen_report (Message, FolderName, Date_Uploaded,Citizen_ID,Project_ID) VALUES (?,?,now(),?,?);";
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, rep.getMessage());
+            statement.setString(2, rep.getFoldername());
+            statement.setInt(3, rep.getCitizen().getId());
+            statement.setString(4, rep.getProject().getId());
+            
+
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public int getRecentPostid(Citizen c , String message) {
+            int id = 0;
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            
+            
+            String query = "select citizen_report.ID from citizen_report join citizen on citizen_report.Citizen_ID = citizen.ID join users on citizen.Users_ID = users.ID where username = ? and citizen_report.Date_Uploaded = (select max(citizen_report.Date_Uploaded) from citizen_report) and citizen_report.Message = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, c.getUser().getUsername());
+            statement.setString(2, message);
+            
+            result = statement.executeQuery();
+            while (result.next()) {
+                id = result.getInt("ID");
+            }
+            
+
+            
+            statement.close();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+    }
+    
+    
+    //Files
+       public void uploadFiles(Report_File rf) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "INSERT INTO report_file (FileName, Date_Uploaded, Type, Uploader, Description, Citizen_ReportID, Project_ID) "
+                    + "VALUES (?,now(),?, ?,?,?,?);";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, rf.getFilename());
+            statement.setString(2, rf.getType());
+            statement.setString(3, rf.getUploader());
+            statement.setString(4, rf.getDescription());
+            statement.setInt(5, rf.getCitizenReport().getId());
+            statement.setString(6, rf.getProject().getId());
+
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
 }

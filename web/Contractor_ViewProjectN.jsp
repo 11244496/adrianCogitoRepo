@@ -125,7 +125,12 @@
                             <span>Home</span>
                         </a>
                     </li>
-
+                    <li>
+                        <a href="Contractor_Profile">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
                     <li class="sub-menu">
                         <a href="javascript:;" >
                             <i class="fa fa-tasks"></i>
@@ -632,69 +637,69 @@
 
         <script src="js/jquery.js"></script>
         <script>
-            function getTestimonial(id) {
-                $.ajax({
-                    type: 'POST',
-                    url: 'AJAX_BAC_gettestimonial',
-                    dataType: 'json',
-                    data: {testId: id}, cache: false,
-                    success: function (f) {
-                        $('#fDisplay').empty();
-                        var url = f.testimonial.folderName + "/" + f.testimonial.title + "/" + f.fileName;
-                        if (f.type === "Video") {
-                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
+                                                    function getTestimonial(id) {
+                                                        $.ajax({
+                                                            type: 'POST',
+                                                            url: 'AJAX_BAC_gettestimonial',
+                                                            dataType: 'json',
+                                                            data: {testId: id}, cache: false,
+                                                            success: function (f) {
+                                                                $('#fDisplay').empty();
+                                                                var url = f.testimonial.folderName + "/" + f.testimonial.title + "/" + f.fileName;
+                                                                if (f.type === "Video") {
+                                                                    $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
 
-                        }
-                        else if (f.type === "Image") {
-                            $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#fDisplay");
+                                                                }
+                                                                else if (f.type === "Image") {
+                                                                    $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#fDisplay");
 
-                        }
+                                                                }
 
-                        else if (f.type === "Document") {
-                            $("#docH").remove();
-                            $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#abcd");
-                        }
-                        $('#testTitle').text("Title: " + f.testimonial.title);
-                        $('#testDate').text("Date Uploaded: " + f.testimonial.dateUploaded);
-                        $('#testLoc').text("Location Details: " + f.testimonial.location + " + " + f.testimonial.locationdetails);
-                        $('#testDesc').text("Description: " + f.testimonial.message);
-                        $('#testModal').modal();
-                    }
-                });
-            }
+                                                                else if (f.type === "Document") {
+                                                                    $("#docH").remove();
+                                                                    $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#abcd");
+                                                                }
+                                                                $('#testTitle').text("Title: " + f.testimonial.title);
+                                                                $('#testDate').text("Date Uploaded: " + f.testimonial.dateUploaded);
+                                                                $('#testLoc').text("Location Details: " + f.testimonial.location + " + " + f.testimonial.locationdetails);
+                                                                $('#testDesc').text("Description: " + f.testimonial.message);
+                                                                $('#testModal').modal();
+                                                            }
+                                                        });
+                                                    }
 
 
-            function getProjectFiles(id) {
-                $.ajax({
-                    type: 'POST',
-                    url: 'AJAX_BAC_getProjectFiles',
-                    dataType: 'json',
-                    data: {testId: id}, cache: false,
-                    success: function (f) {
-                        $('#pfDisplay').empty();
-                        var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
-                        if (f.type === "Video") {
-                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
+                                                    function getProjectFiles(id) {
+                                                        $.ajax({
+                                                            type: 'POST',
+                                                            url: 'AJAX_BAC_getProjectFiles',
+                                                            dataType: 'json',
+                                                            data: {testId: id}, cache: false,
+                                                            success: function (f) {
+                                                                $('#pfDisplay').empty();
+                                                                var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
+                                                                if (f.type === "Video") {
+                                                                    $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
 
-                        }
-                        else if (f.type === "Image") {
-                            $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#pfDisplay");
+                                                                }
+                                                                else if (f.type === "Image") {
+                                                                    $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#pfDisplay");
 
-                        }
+                                                                }
 
-                        else if (f.type === "Document") {
-                            $("#docH").remove();
-                            $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#pfDisplay");
-                        }
-                        $('#projectFiles').modal();
-                    }
-                });
-            }
+                                                                else if (f.type === "Document") {
+                                                                    $("#docH").remove();
+                                                                    $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#pfDisplay");
+                                                                }
+                                                                $('#projectFiles').modal();
+                                                            }
+                                                        });
+                                                    }
 
         </script>
-        
+
         <script>
-           
+
 
             var map;
             var markers = <%=request.getAttribute("location")%>;

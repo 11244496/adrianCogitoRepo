@@ -181,7 +181,7 @@
                             <input type="text" class="form-control search" placeholder="">
                         </li>
                         <!-- user login dropdown start-->
-                           <li class="dropdown">
+                        <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <img alt="" src="img/avatar1_small.jpg">
                                 <span class="username">Hello <b><u><%=c.getName()%></u></b>!</span>
@@ -204,56 +204,61 @@
                 </div>
             </header>
             <!--header end-->
-            
-            
-                    <aside>
-            <div id="sidebar"  class="nav-collapse ">
-                <ul class="sidebar-menu" id="nav-accordion">
-
-                    <li>
-                        <a href="Contractor_Home" class="active">
-                            <i class="fa fa-dashboard"></i>
-                            <span>Home</span>
-                        </a>
-                    </li>
 
 
-                    <li class="sub-menu">
-                        <a href="javascript:;" >
-                            <i class="fa fa-tasks"></i>
-                            <span>Bidding</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a  href="Contractor_HandleInvitations">&nbsp; &nbsp; &nbsp; &nbsp;Handle Invitations</a></li>
-                            <li><a  href="Contractor_ViewHistory">&nbsp; &nbsp; &nbsp; &nbsp; View History</a></li>
-                        </ul>
-                    </li>
+            <aside>
+                <div id="sidebar"  class="nav-collapse ">
+                    <ul class="sidebar-menu" id="nav-accordion">
 
-                    <li class="sub-menu">
-                        <a href="javascript:;" >
-                            <i class="fa fa-tasks"></i>
-                            <span>Implementation</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a  href="Contractor_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp;Monitor Projects</a></li>
-                            <li><a  href="Contractor_ViewAR">&nbsp; &nbsp; &nbsp; &nbsp; View Accomplishment Reports</a></li>
-                        </ul>
-                    </li>
+                        <li>
+                            <a href="Contractor_Home" class="active">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
 
-                    <li>
-                        <a href="Contractor_ActivityandNotification">
-                            <i class="fa fa-dashboard"></i>
-                            <span>View Activity and Notifications</span>
-                        </a>
-                    </li>
+                        <li>
+                            <a href="Contractor_Profile">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Profile</span>
+                            </a>
+                        </li>
+                        <li class="sub-menu">
+                            <a href="javascript:;" >
+                                <i class="fa fa-tasks"></i>
+                                <span>Bidding</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a  href="Contractor_HandleInvitations">&nbsp; &nbsp; &nbsp; &nbsp;Handle Invitations</a></li>
+                                <li><a  href="Contractor_ViewHistory">&nbsp; &nbsp; &nbsp; &nbsp; View History</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="sub-menu">
+                            <a href="javascript:;" >
+                                <i class="fa fa-tasks"></i>
+                                <span>Implementation</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a  href="Contractor_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp;Monitor Projects</a></li>
+                                <li><a  href="Contractor_ViewAR">&nbsp; &nbsp; &nbsp; &nbsp; View Accomplishment Reports</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="Contractor_ActivityandNotification">
+                                <i class="fa fa-dashboard"></i>
+                                <span>View Activity and Notifications</span>
+                            </a>
+                        </li>
 
 
 
-                </ul>
-            </div>
-        </aside>
-            
-            
+                    </ul>
+                </div>
+            </aside>
+
+
 
             <section id="main-content">
                 <section class="wrapper site-min-height">

@@ -8,18 +8,22 @@ package DAO;
 import DB.ConnectionFactory;
 import Entity.Annotation;
 import Entity.Citizen;
+import Entity.Citizen_Report;
 import Entity.Component;
 import Entity.Contractor_User;
 import Entity.Employee;
 import Entity.Feedback;
 import Entity.Files;
+import Entity.Inspection_Report;
 import Entity.Location;
 import Entity.PComments;
 import Entity.PWorks;
 import Entity.PlanningDocument;
 import Entity.Project;
 import Entity.Project_Inspection;
+import Entity.Project_has_Pwork;
 import Entity.Reply;
+import Entity.Report_File;
 import Entity.Schedule;
 import Entity.Supporter;
 import Entity.TComments;
@@ -1005,5 +1009,225 @@ public class GSDAO {
         return a;
     }
 
+    //New method for the list of citizen reports
+    public ArrayList<Citizen_Report> getCitizenReports(String projectId) {
+        ArrayList<Citizen_Report> cRepList = new ArrayList<>();
+        Citizen_Report citreport = null;
+        Citizen citizen = null;
+        Project project = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from citizen_report join citizen on citizen_ID = citizen.id join address on address_id =  address.ID join barangay on barangay_ID = barangay.ID  where citizen_report.Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, projectId);
+            result = statement.executeQuery();
+            while (result.next()) {
+                citizen = new Citizen();
+                citizen.setId(result.getInt("Citizen_ID"));
+                citizen.setFirstName(result.getString("FirstName"));
+                citizen.setMiddleName(result.getString("MiddleName"));
+                citizen.setLastName(result.getString("LastName"));
+
+                project = new Project();
+                project.setId(result.getString("Project_ID"));
+
+                citreport = new Citizen_Report(result.getInt("ID"), result.getString("Message"), result.getString("FolderName"), result.getString("Date_Uploaded"), citizen, project);
+                cRepList.add(citreport);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return cRepList;
+    }
+
+    //New method for opening the details regarding a specific citizen report
+    public ArrayList<Report_File> getCitizen_ReportFiles(int id) {
+
+        ArrayList<Report_File> reportList = new ArrayList<Report_File>();
+        Report_File report;
+
+        Citizen_Report creport;
+        Project project;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from citizen_report join report_file on report_file.Citizen_ReportID = citizen_report.ID where citizen_ReportID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                creport = new Citizen_Report();
+                creport.setId(result.getInt("Citizen_ReportID"));
+                creport.setMessage(result.getString("Message"));
+                creport.setDate(result.getString("citizen_report.Date_Uploaded"));
+                creport.setFoldername(result.getString("FolderName"));
+
+                project = new Project();
+                project.setId(result.getString("Project_ID"));
+
+                report = new Report_File(result.getInt("report_file.ID"), result.getString("FileName"), result.getString("report_file.Date_Uploaded"), result.getString("Type"), result.getString("Uploader"), result.getString("Description"), creport, project);
+
+                reportList.add(report);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return reportList;
+    }
+
+    public ArrayList<Project> getImplementedProjects() {
+        ArrayList<Project> plist = new ArrayList<Project>();
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String getID = "select * from project where status = ?";
+            statement = connection.prepareStatement(getID);
+            statement.setString(1, "Implementation");
+            result = statement.executeQuery();
+            while (result.next()) {
+
+                Project p = new Project();
+
+                p.setId(result.getString("ID"));
+                p.setName(result.getString("Name"));
+                p.setDescription(result.getString("Description"));
+                p.setCategory(result.getString("Category"));
+
+                plist.add(p);
+            }
+
+            statement.close();
+            connection.close();
+            return plist;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return plist;
+    }
+
+    public ArrayList<Project> getFinishedProjects() {
+        ArrayList<Project> plist = new ArrayList<Project>();
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String getID = "select * from project where status = ?";
+            statement = connection.prepareStatement(getID);
+            statement.setString(1, "Finished");
+            result = statement.executeQuery();
+            while (result.next()) {
+
+                Project p = new Project();
+
+                p.setId(result.getString("ID"));
+                p.setName(result.getString("Name"));
+                p.setDescription(result.getString("Description"));
+                p.setCategory(result.getString("Category"));
+
+                plist.add(p);
+            }
+
+            statement.close();
+            connection.close();
+            return plist;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return plist;
+    }
+
+    public ArrayList<Project_Inspection> getInspection(Project p) {
+        ArrayList<Project_Inspection> projectinspection = new ArrayList<Project_Inspection>();
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String getID = "SELECT * FROM project_inspection join task on Task_ID = task.id join schedule on Schedule_ID = schedule.id where schedule.Project_ID = ?;";
+            statement = connection.prepareStatement(getID);
+            statement.setString(1, p.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                Schedule s = new Schedule();
+                s.setId(result.getInt("schedule.ID"));
+                s.setStartdate(result.getString("schedule.StartDate"));
+                s.setEnddate(result.getString("schedule.EndDate"));
+                s.setStatus(result.getString("schedule.Status"));
+                s.setTime(result.getString("schedule.Time"));
+                s.setActualenddate(result.getString("schedule.ActualEndDate"));
+
+                Task t = new Task();
+                t.setId(result.getInt("task.ID"));
+                t.setName(result.getString("task.Name"));
+                t.setDescription(result.getString("task.description"));
+
+                Project_Inspection pi = new Project_Inspection();
+                pi.setID(result.getInt("project_inspection.ID"));
+                pi.setDateOfInspection(result.getString("project_inspection.DateOfInspection"));
+                pi.setTask(t);
+                pi.setRemark(result.getString("project_inspection.Remark"));
+                pi.setStatus(result.getString("project_inspection.Status"));
+
+                projectinspection.add(pi);
+            }
+
+            statement.close();
+            connection.close();
+            return projectinspection;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return projectinspection;
+    }
+
+    public ArrayList<Project_has_Pwork> getProject_has_PworkInfo(String id, String date) {
+
+        ArrayList<Project_has_Pwork> reportList = new ArrayList<Project_has_Pwork>();
+        Project_has_Pwork proj_pwork;
+        PWorks pwork;
+        Inspection_Report inspection;
+        Project p;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from project_has_pworks \n"
+                    + "join pworks on Pwork_ID = pworks.id\n"
+                    + "join inspection_report on proj_pworks_id = project_has_pworks.id\n"
+                    + "where project_has_pworks.Project_ID = ? AND DateUploaded = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, id);
+            statement.setString(2, date);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                pwork = new PWorks();
+                pwork.setId(result.getInt("pworks.ID"));
+                pwork.setName(result.getString("pworks.Name"));
+                p = new Project();
+                p.setId(id);
+
+                inspection = new Inspection_Report(result.getInt("inspection_report.ID"), result.getString("Remark"), result.getString("DateUploaded"));
+
+                proj_pwork = new Project_has_Pwork(result.getInt("project_has_pworks.ID"), p, pwork);
+                proj_pwork.setInspection(inspection);
+                reportList.add(proj_pwork);
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return reportList;
+    }
 
 }

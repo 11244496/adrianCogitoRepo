@@ -170,7 +170,7 @@
                                 <span>Project Proposals</span>
                             </a>
                             <ul class="sub">
-                                <li><a  href="GS_CreateProposal">&nbsp; &nbsp; &nbsp; &nbsp; Create Proposal</a></li>
+                                <li><a  href="GS_CreateProposal.jsp">&nbsp; &nbsp; &nbsp; &nbsp; Create Proposal</a></li>
                                 <li><a  href="GS_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
                                 <li><a  href="GS_ViewImplementedProjects" class="active">&nbsp; &nbsp; Monitor Implemented Projects</a></li>
                             </ul>
@@ -193,12 +193,6 @@
                             <a href="GS_ViewAR.jsp">
                                 <i class="fa fa-book"></i>
                                 <span>View Accomplishment Report</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="GS_NotificationActivity">
-                                <i class="fa fa-book"></i>
-                                <span>Notification and Activity</span>
                             </a>
                         </li>
 
@@ -260,10 +254,12 @@
                                                             <tr>
                                                                 <th style="width: 10%;">Name</th>
                                                                 <th style="width: 30%;">Description</th>
-                                                                <th style="width: 30%;">Percentage</th>
-                                                                <th style="width: 10%;">Task</th>
-                                                                <th style="width: 15%;">Progress</th>
-                                                                <th style="width: 10%;">Inspection</th>
+                                                                <th style="width: 10%;"></th>
+                                                                <th style="width: 10%;"></th>
+                                                                <th style="width: 10%;"></th>
+
+                                                                <th style="width: 10%;"></th>
+                                                                
                                                             </tr>
                                                         </thead>
 
@@ -273,7 +269,7 @@
                                                                     for (int x = 0; x < implemented.size(); x++) {
                                                                         String name = implemented.get(x).getName();
                                                                         String description = implemented.get(x).getDescription();
-                                                                        String type = implemented.get(x).getType();
+                                                                        String type = implemented.get(x).getCategory();
                                                                         String id = implemented.get(x).getId();
 
 
@@ -285,47 +281,31 @@
                                                                 <td>
                                                                     <%out.print(description);%>
                                                                 </td>
+                                                               
                                                                 <td class="p-name">   
-                                                                    <a class="btn btn-success btn-sm" href="GS_ProjectStatusReport?projid=<%=implemented.get(x).getId()%>">View Status Report</a>
+                                                                    <a class="btn btn-success btn-sm" href="GS_ProjectTimeline.jsp">Gantt Chart</a>
                                                                 </td>
-
-                                                                <td class="p-name">   
-                                                                    <a class="btn btn-success btn-sm" href="GS_ViewTasks?projid=<%=implemented.get(x).getId()%>">View Task</a>
+                                                                <td>
+                                                                <form action="GS_ViewInspectionList">
+                                                                    <input type="hidden" name="projectId" value="<%=id%>">
+                                                                    <button type="submit" class="btn btn-success" style="width: 90%" value="View progress repors">Inspection Report</button>
+                                                                </form>
                                                                 </td>
-                                                                <td class="p-name">
-                                                                    <a class="btn btn-success btn-sm" href="GS_OpenProgressReport?projectid=<%=id%>">Progress Report</a>  
+                                                                <td>
+                                                                <form action="">
+                                                                    <input type="hidden" name="projectId1" value="<%=id%>">
+                                                                    <button type="submit" class="btn btn-success" style="width: 90%" value="View progress repors">Progress Reports</button>
+                                                                </form>
                                                                 </td>
-
-                                                                <td class="p-name">
-                                                                    <!--Insert Code to check if theres an in-->
-                                                                    <% //if (implemented.get(x).getInspection().size() != 0) {
-
-                                                                            //boolean inspectiontoday = false;
-                                                                        //Date d = new Date();
-                                                                        //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                                                                            //for (int y = 0; y < implemented.get(x).getInspection().size(); y++) {
-                                                                        //    if (implemented.get(x).getInspection().get(y).getDateOfInspection().equalsIgnoreCase(df.format(d))) {
-                                                                        //        inspectiontoday = true;
-                                                                        //    }
-                                                                        //}
-                                                                        //if (inspectiontoday = false) {
-%>
-
-                                                                    <a class="btn btn-success btn-sm" href="GS_CreateInspection?projid=<%=implemented.get(x).getId()%>">Inspection Report</a>  
-
-                                                                    <%//}else if(inspectiontoday = true){
-
-                                                                        //out.print("Inspection submitted");
-                                                                        //}
-                                                                        //}%>
-
-                                                                    <% //if (implemented.get(x).getInspection().size() == 0) {
-                                                                    %>
-
-                                                                    <!--<a class="btn btn-success btn-sm" href="GS_CreateInspection?projid=<%//=implemented.get(x).getId()%>">Inspection Report</a>-->  
-
-                                                                    <%//}%>
+                                                                <td>
+                                                                <form action="GS_ViewCitizenReportList">
+                                                                    <input type="hidden" name="projectId2" value="<%=id%>">
+                                                                    <button type="submit" class="btn btn-success" style="width: 90%" value="View citizen repors">Citizen Reports</button>
+                                                                </form>
                                                                 </td>
+                                                                
+
+                                                                
                                                             </tr>
                                                             <%
                                                                     }
@@ -374,7 +354,7 @@
                                                                     for (int x = 0; x < completed.size(); x++) {
                                                                         String name = completed.get(x).getName();
                                                                         String description = completed.get(x).getDescription();
-                                                                        String type = completed.get(x).getType();
+                                                                        String type = completed.get(x).getCategory();
                                                             %>
                                                             <tr>
                                                                 <td>
