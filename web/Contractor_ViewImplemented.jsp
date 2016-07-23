@@ -243,7 +243,7 @@
                                                             String id = projects.get(a).getId();
                                                             String name = projects.get(a).getName();
                                                             String description = projects.get(a).getDescription();
-                                                            String type = projects.get(a).getType();
+                                                            String type = projects.get(a).getCategory();
                                                             String status = projects.get(a).getStatus();
                                                     %>
 
@@ -336,7 +336,7 @@
                                                             String id = completed.get(a).getId();
                                                             String name1 = completed.get(a).getName();
                                                             String description1 = completed.get(a).getDescription();
-                                                            String type1 = completed.get(a).getType();
+                                                            String type1 = completed.get(a).getCategory();
                                                             String status = completed.get(a).getStatus();
                                                     %>
 
