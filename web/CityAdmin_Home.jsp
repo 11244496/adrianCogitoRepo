@@ -199,6 +199,19 @@
                                 <div class="panel-body">
                                     <div class="tab-content tasi-tab">
                                         <div class="tab-pane active" id="all">
+                                            <style>
+                                                .okaylegend {color: green;}
+                                                .semiokaylegend {color: orange;}
+                                                .notokaylegend {color: red;}
+                                            </style>
+
+                                            <div class="pull-right">
+                                                <i class="fa fa-square okaylegend" style="margin-left: 7px"></i> Less than 10 days without reply
+                                                <br>
+                                                <i class="fa fa-square semiokaylegend" style="margin-left: 7px"></i>  More than 10 days and less than 30 days without reply
+                                                <br>
+                                                <i class="fa fa-square notokaylegend" style="margin-left: 7px"></i>  Warning! More than 15 days without reply 
+                                            </div>
                                             <div>
                                                 <input size="30" type="text" placeholder="Type to search" id="all-testimonial">
                                             </div>
@@ -235,9 +248,32 @@
                                                                         <%out.print(test1.getMessage());%> 
                                                                     </td>
 
+                                                                    <%String color = null;
+                                                                        Date d = new Date();
+                                                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                                                        String startdate = sdf.format(d);
+                                                                        LocalDate start = LocalDate.parse(startdate);
+
+                                                                        String dateonly = allPendingTestimonials.get(x).getDateUploaded().substring(0, 10);
+                                                                        LocalDate end = LocalDate.parse(dateonly);
+
+                                                                        long days = ChronoUnit.DAYS.between(end, start);
+                                                                        if (days < 10) {
+                                                                            color = "green";
+                                                                        } else if (days > 10 && days < 30) {
+                                                                            color = "orange";
+                                                                        } else if (days > 15) {
+                                                                            color = "red";
+                                                                        }
+
+                                                                    %>
+
                                                                     <td>
-                                                                        <%out.print(test1.getDateUploaded());%>
+                                                                        <p style="color:<%=color%>">
+                                                                            <%out.print(test1.getDateUploaded());%>
+                                                                        </p>
                                                                     </td>
+
                                                                     <td>
                                                                         <%out.print(test1.getCitizen().getUser().getUsername());%> 
                                                                     </td> 

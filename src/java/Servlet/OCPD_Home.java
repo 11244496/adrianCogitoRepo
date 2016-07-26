@@ -44,19 +44,7 @@ public class OCPD_Home extends HttpServlet {
             OCPDDAO odao = new OCPDDAO();
 
 //            ArrayList<Schedule> unconfirmedMeeting = gsdao.getAllMeetings("Unconfirmed");
-            ArrayList<Schedule> unconfirmedMeeting = new ArrayList<>();
-            ArrayList<Project> unconfirmedMProjects = new ArrayList<>();
-            OCPDDAO oc = new OCPDDAO();
-                for (int x = 0; x < unconfirmedMeeting.size(); x++) {
-//                    unconfirmedMProjects.add(odao.getBasicProjectDetails(unconfirmedMeeting.get(x).getProjectID()));
-//                    unconfirmedMeeting.get(x).setTasks(oc.getAgenda(unconfirmedMeeting.get(x)));
-//                
-            }
-
-            //Get Counts
-
-            request.setAttribute("unconfirmedMeeting", unconfirmedMeeting);
-            request.setAttribute("unconfirmedMProjects", unconfirmedMProjects);
+            request.setAttribute("meetings", gsdao.getAllMeetings("OCPending"));
 
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/OCPD_Home.jsp");

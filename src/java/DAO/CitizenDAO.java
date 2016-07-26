@@ -101,7 +101,6 @@ public class CitizenDAO {
             result = statement.executeQuery();
             while (result.next()) {
                 u = new User(result.getInt("users.id"), result.getString("username"), result.getString("password"), result.getString("type"));
-
             }
 
             connection.close();

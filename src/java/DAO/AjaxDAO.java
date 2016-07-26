@@ -6,6 +6,7 @@
 package DAO;
 
 import DB.ConnectionFactory;
+import Entity.Agenda;
 import Entity.Citizen;
 import Entity.Contractor;
 import Entity.Files;
@@ -64,19 +65,19 @@ public class AjaxDAO {
 
         return new ArrayList(idList);
     }
-    
+
     public ArrayList<TLocation> getSearchedTestimonial(String searchQuery) {
-        
+
         ArrayList<TLocation> tlocation = new ArrayList<TLocation>();
-        
+
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "SELECT * FROM testimonial join TLocation on testimonial.ID = tlocation.Testimonial_ID where Title like \"%"+searchQuery+"%\" or Category like \"%"+searchQuery+"%\" or Message like \"%"+searchQuery+"%\";";
+            String query = "SELECT * FROM testimonial join TLocation on testimonial.ID = tlocation.Testimonial_ID where Title like \"%" + searchQuery + "%\" or Category like \"%" + searchQuery + "%\" or Message like \"%" + searchQuery + "%\";";
             statement = connection.prepareStatement(query);
             result = statement.executeQuery();
             while (result.next()) {
-            TLocation loc = new TLocation();
+                TLocation loc = new TLocation();
                 loc.setId(result.getInt("tlocation.ID"));
                 loc.setLatitude(result.getString("latitude"));
                 loc.setLongitude(result.getString("longitude"));
@@ -95,8 +96,7 @@ public class AjaxDAO {
 
                 tlocation.add(loc);
             }
-            
-            
+
             connection.close();
         } catch (SQLException ex) {
             Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in retrieving IDs", ex);
@@ -134,7 +134,7 @@ public class AjaxDAO {
 
         return id;
     }
-    
+
     public Files getFile(int id) {
         Files f = null;
         Testimonial t;
@@ -165,8 +165,6 @@ public class AjaxDAO {
         return f;
 
     }
-    
-    
 
     public Files getProjectFile(int id) {
         Files f = null;
@@ -195,7 +193,7 @@ public class AjaxDAO {
         return f;
 
     }
-    
+
     public ArrayList<Contractor> getIdle() {
         ArrayList<Contractor> cList = new ArrayList<>();
         Contractor c;
@@ -220,59 +218,60 @@ public class AjaxDAO {
 
     }
 
+    public ArrayList<Agenda> getAgenda(int id) {
+        ArrayList<Agenda> aList = new ArrayList<>();
+        Agenda a = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from agenda where task_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                a = new Agenda();
+                a.setAgenda(result.getString("agenda"));
+                aList.add(a);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting agenda", ex);
+        }
+        return aList;
+    }
 
+    public void updateMeeting(int s, String status) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "update schedule set status = ? where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, status);
+            statement.setInt(2, s);
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in updating meeting schedule", ex);
+        }
+    }
 
+    public void updateMeeting(int s, String status, Schedule sc) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "update schedule set status = ?, startdate = ?, enddate = ?, time = ?, remarks = ? where id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, status);
+            statement.setString(2, sc.getStartdate());
+            statement.setString(3, sc.getEnddate());
+            statement.setString(4, sc.getTime());
+            statement.setString(5, sc.getRemarks());
+            statement.setInt(6, s);
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in updating meeting schedule", ex);
+        }
+    }
 
-//        Random r = new Random();
-//        int num = r.nextInt(8999);
-//        ArrayList<String> ids = new ArrayList<>();
-//        String finalid = null;
-//        String category = null;
-//
-//        Date d = new Date();
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(d);
-//        int year = cal.get(Calendar.YEAR);
-//        int month = cal.get(Calendar.MONTH);
-//
-//        String finalyear = Integer.toString(year).substring(2, 4);
-//        String finalmonth;
-//        String finaldate;
-//
-//        if (month < 10) {
-//            finalmonth = "0" + Integer.toString(month + 1);
-//        } else {
-//            finalmonth = Integer.toString(month + 1);
-//        }
-//
-//        finaldate = finalmonth + finalyear;
-//
-//        if (Maincategory.equalsIgnoreCase("Vertical")) {
-//            category = "VE";
-//        } else if (Maincategory.equalsIgnoreCase("Horizontal")) {
-//            category = "HO";
-//        } else if (Maincategory.equalsIgnoreCase("Maintenance")) {
-//            category = "MA";
-//        }
-//
-//        finalid = category + finaldate + (num + 1000);
-//
-//        try {
-//            myFactory = ConnectionFactory.getInstance();
-//            connection = myFactory.getConnection();
-//            String query = "select id from project";
-//            statement = connection.prepareStatement(query);
-//            result = statement.executeQuery();
-//            while (result.next()) {
-//                ids.add(result.getString("id"));
-//            }
-//            statement.close();
-//            connection.close();
-//
-//            while (ids.contains(finalid)) {
-//                num = r.nextInt(8999);
-//                finalid = category + finaldate + (num + 1000);
-//            }
-//
-//            return finalid;
 }

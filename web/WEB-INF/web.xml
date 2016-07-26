@@ -368,6 +368,18 @@
         <servlet-name>GS_ViewInspectionList</servlet-name>
         <servlet-class>Servlet.GS_ViewInspectionList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AJAX_GetAgenda</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_GetAgenda</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_OCPD_UpdateMeeting</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_OCPD_UpdateMeeting</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_UpdateMeeting</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_UpdateMeeting</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -735,6 +747,18 @@
     <servlet-mapping>
         <servlet-name>GS_ViewInspectionList</servlet-name>
         <url-pattern>/GS_ViewInspectionList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_GetAgenda</servlet-name>
+        <url-pattern>/AJAX_GetAgenda</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_OCPD_UpdateMeeting</servlet-name>
+        <url-pattern>/AJAX_OCPD_UpdateMeeting</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_UpdateMeeting</servlet-name>
+        <url-pattern>/AJAX_UpdateMeeting</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

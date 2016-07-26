@@ -6,6 +6,7 @@
 package Servlet;
 
 import DAO.OCPDDAO;
+import Entity.Agenda;
 import Entity.Annotation;
 import Entity.Project;
 import Entity.Schedule;
@@ -46,22 +47,26 @@ public class OCPD_PutOnHold extends HttpServlet {
             Project p = new Project(projId);
             
             Annotation an = new Annotation();
-            an.setTestimonials(request.getParameter("mainTestTA"));
-            an.setProjects(request.getParameter("projectRefTA"));
             an.setDetails(request.getParameter("detailsTA"));
-            an.setProgram(request.getParameter("materialsTA"));
+            an.setPworks(request.getParameter("pworksTA"));
+            an.setSchedule(request.getParameter("scheduleTA"));
+            an.setTestimonial(request.getParameter("testimonialTA"));
+            an.setFiles(request.getParameter("filesTA"));
+            an.setGeneral(request.getParameter("general"));
             an.setProject(p);
             an.setStatus("Pending");
             oc.setAnnotations(an);
 
+            
             ArrayList<Schedule> sList = new ArrayList();
             Schedule meetingSchedule = new Schedule();
             meetingSchedule.setStartdate(request.getParameter("date"));
             meetingSchedule.setEnddate(request.getParameter("date"));
             meetingSchedule.setTime(request.getParameter("time"));
-            meetingSchedule.setRemarks(request.getParameter("addtcomments"));
-            meetingSchedule.setStatus("Pending");
+            meetingSchedule.setRemarks(request.getParameter("remarks"));
+            meetingSchedule.setStatus("GSPending");
             sList.add(meetingSchedule);
+            
             Task meeting = new Task();
             meeting.setName("Meeting with OCPD");
             meeting.setProject(p);
@@ -71,6 +76,15 @@ public class OCPD_PutOnHold extends HttpServlet {
             for (Schedule s : meeting.getSchedules()) {
                 s.setTask(meeting);
                 oc.insertToSchedule(s);
+            }
+            
+            Agenda a = null;
+            String[] aList = request.getParameterValues("meetingagenda");
+            for (String a2 : aList){
+                a = new Agenda();
+                a.setAgenda(a2);
+                a.setTask(meeting);
+                oc.insertAgenda(a);
             }
 
             oc.changeProjStatus("On-Hold", p);

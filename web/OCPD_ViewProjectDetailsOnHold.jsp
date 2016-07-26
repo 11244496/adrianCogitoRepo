@@ -1,9 +1,13 @@
 <%-- 
-    Document   : OCPD_ViewProjectDetailsOnHold
-    Created on : 07 19, 16, 5:48:56 PM
+    Document   : GS_ViewProjectDetails
+    Created on : 03 18, 16, 9:57:47 AM
     Author     : RoAnn
 --%>
 
+<%@page import="Entity.Agenda"%>
+<%@page import="Entity.Annotation"%>
+<%@page import="com.google.gson.Gson"%>
+<%@page import="Entity.Task"%>
 <%@page import="Entity.Testimonial"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="Entity.Files"%>
@@ -14,10 +18,15 @@
 <%@page import="Entity.Employee"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<%Employee e = (Employee) session.getAttribute("user");%>
 <%Project p = (Project) session.getAttribute("project");%>
 <%float cost = (Float) session.getAttribute("cost");%>
 <%ArrayList<PWorks> pworks = p.getpWorks();%>
-<%ArrayList<Schedule> schedule = p.getSchedule();%>
+<%ArrayList<Task> tasks = p.getTask();
+    String tasksJSON = new Gson().toJson(tasks);
+Annotation annotation = (Annotation) session.getAttribute("annotations");
+Task meeting = (Task) session.getAttribute("meeting");
+%>
 <%ArrayList<Files> files = p.getFiles();%>
 <%DecimalFormat df = new DecimalFormat("#,###.00");%>
 <%ArrayList<Files> pfiles = (ArrayList<Files>) session.getAttribute("pFiles");%>
@@ -51,6 +60,11 @@
         <script src ='calendar/jquery.min.js'></script>
         <script src ='calendar/fullcalendar.js'></script>
         <script src ='calendar/scheduler.js'></script>
+        <script src='amcharts/amcharts.js'></script>
+        <script src='amcharts/serial.js'></script>
+        <script src='amcharts/themes/dark.js'></script>
+        <script src='amcharts/gantt.js'></script>
+
         <style>
             .DocumentList2
             {
@@ -80,152 +94,133 @@
         </style>
         <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
     </head>
-    <body>
+<body>
 
-        <section id="container" class="">
-            <!--header start-->
-            <header class="header green-bg">
-                <div class="sidebar-toggle-box">
-                    <div data-original-title="Toggle Navigation" data-placement="right" class="fa fa-bars tooltips"></div>
-                </div>
-                <!--logo start-->
-                <a href="index.html" class="logo" >COGITO<span></span></a>
-                <!--logo end-->
-                <div class="nav notify-row" id="top_menu">
-                    <!--  notification start -->
-                    <ul class="nav top-menu">
-                        <!-- settings start -->
-                        <li class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <i class="fa fa-tasks"></i>
-                                <span class="badge bg-success"><!--NUMBER OF TASKS--></span>
-                            </a>
-                            <ul class="dropdown-menu extended tasks-bar">
-                                <div class="notify-arrow notify-arrow-green"></div>
-                                <li>
-                                    <p class="green">You have __ pending tasks</p>
-                                </li>
-                                <!--REFER TO RIGHT SIDEBAR FOR SAMPLE CODE OF TASK + PROGRESS BAR
-      
-                          ADD THE CODE BELOW IF AT LEAST ONE(?) TASK IS LISTED
-                          
-                          <li class="external">
-          <a href="#">See All Tasks</a>
-      </li>
-                          
-                                -->
-                            </ul>
-                        </li>
-                        <!-- settings end -->
-                        <!-- inbox dropdown start-->
-                        <li id="header_inbox_bar" class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <i class="fa fa-envelope-o"></i>
-                                <span class="badge bg-important"><!--NUMBER OF MESSAGES UNREAD--></span>
-                            </a>
-                            <ul class="dropdown-menu extended inbox">
-                                <div class="notify-arrow notify-arrow-red"></div>
-                                <li>
-                                    <p class="red">You have __ new messages</p>
-                                </li>
-                            </ul>
-                        </li>
-                        <li id="header_notification_bar" class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+    <section id="container" class="">
+        <!--header start-->
+        <header class="header green-bg">
+            <div class="sidebar-toggle-box">
+                <div data-original-title="Toggle Navigation" data-placement="right" class="fa fa-bars tooltips"></div>
+            </div>
+            <!--logo start-->
+            <a href="index.html" class="logo" >COGITO<span></span></a>
+            <!--logo end-->
+            <div class="nav notify-row" id="top_menu">
+                <!--  notification start -->
+                <ul class="nav top-menu">
+                    <!-- notification dropdown start-->
+                    <li id="header_notification_bar" class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
 
-                                <i class="fa fa-bell-o"></i>
-                                <span class="badge bg-warning"><!--NUMBER OF NOTIFICATIONS--></span>
-                            </a>
-                            <ul class="dropdown-menu extended notification">
-                                <div class="notify-arrow notify-arrow-yellow"></div>
-                                <li>
-                                    <p class="yellow">You have XX notifications</p>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                <div class="top-nav ">
-                    <ul class="nav pull-right top-menu">
-                        <li>
-                            <input type="text" class="form-control search" placeholder="">
-                        </li>
-                        <!-- user login dropdown start-->
-                        <li class="dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <img alt="" src="img/avatar1_small.jpg">
-                                <span class="username">Hello <b><u><%//out.print(e.getFirstName());%></u></b>!</span>
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu extended logout">
-                                <div class="log-arrow-up"></div>
-                                <li><a href="#"><i class=" fa fa-suitcase"></i>Profile</a></li>
-                                <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
-                                <li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
-                                <li><a href="Logout"><i class="fa fa-key"></i> Log Out</a></li>
-                            </ul>
-                        </li>
+                            <i class="fa fa-bell-o"></i>
+                            <span class="badge bg-warning"></span>
+                        </a>
+                        <ul class="dropdown-menu extended notification">
+                            <div class="notify-arrow notify-arrow-yellow"></div>
+                            <li>
 
-                        <!-- user login dropdown end -->
-                        <li class="sb-toggle-right">
-                            <i class="fa  fa-align-right"></i>
-                        </li>
-                    </ul>
-                </div>
-            </header>
-            <!--header end-->
-            <!--sidebar start-->
-            <aside>
-                <div id="sidebar"  class="nav-collapse ">
-                    <!-- sidebar menu start-->
-                    <ul class="sidebar-menu" id="nav-accordion">
-                        <li>
-                            <a href="OCPD_Home">
-                                <i class="fa fa-dashboard"></i>
-                                <span>Home</span>
-                            </a>
-                        </li>
+                            </li>
+                            <!--
+                            SAMPLE CODE FOR NOTIFICATION
+        <li>
+            <a href="#">
+                <span class="label label-danger"><i class="fa fa-bolt"></i></span>
+                Server #3 overloaded.
+                <span class="small italic">34 mins</span>
+            </a>
+        </li>
+
+                           ADD THE CODE BELOW IF AT LEAST ONE(?) NOTIFICATION IS LISTED
+
+        <li>
+            <a href="#">See all notifications</a>
+        </li>
+                            -->
+                        </ul>
+                    </li>
+                    <!-- notification dropdown end -->
+                </ul>
+            </div>
+            <div class="top-nav ">
+                <ul class="nav pull-right top-menu">
+                    <li>
+                        <input type="text" class="form-control search" placeholder="">
+                    </li>
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <img alt="" src="img/avatar1_small.jpg">
+                            <span class="username">Hello <b><u><%out.print(e.getFirstName());%></u></b>!</span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li><a href="#"><i class=" fa fa-suitcase"></i>Profile</a></li>
+                            <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
+                            <li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
+                            <li><a href="Logout"><i class="fa fa-key"></i> Log Out</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- user login dropdown end -->
+                    <li class="sb-toggle-right">
+                        <i class="fa  fa-align-right"></i>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <!--header end-->
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar"  class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu" id="nav-accordion">
+                    <li>
+                        <a href="OCPD_Home" class="active">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
 
 
-                        <li>
-                            <a href="OCPD_ViewPlanningDocument">
-                                <i class="fa fa-book"></i>
-                                <span>CLUP and CDP</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="OCPD_ViewPlanningDocument">
+                            <i class="fa fa-book"></i>
+                            <span>CLUP and CDP</span>
+                        </a>
+                    </li>
 
-                        <!--multi level menu start-->
-                        <li class="sub-menu">
-                            <a href="javascript:;" >
-                                <i class="fa fa-tasks"></i>
-                                <span>Project Proposals</span>
-                            </a>
-                            <ul class="sub">
-                                <li><a  href="OCPD_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
-                                <li class="sub-menu">
-                                    <a  href="">&nbsp; &nbsp; &nbsp; &nbsp; Monitor Projects</a>
-                                    <ul class="sub">
-                                        <li><a  href="OCPD_Timeline.jsp">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Timeline</a></li>
-                                        <li class="sub-menu">
-                                            <a  href="OCPD_ViewProjectStatus">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Project Status</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <!--multi level menu end-->
-                        <li>
-                            <a href="OCPD_NotificationActivity">
-                                <i class="fa fa-book"></i>
-                                <span>Notification and Activity</span>
-                            </a>
-                        </li>
+                    <!--multi level menu start-->
+                    <li class="sub-menu">
+                        <a href="javascript:;" >
+                            <i class="fa fa-tasks"></i>
+                            <span>Project Proposals</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a  href="OCPD_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
+                            <li class="sub-menu">
+                                <a  href="">&nbsp; &nbsp; &nbsp; &nbsp; Monitor Projects</a>
+                                <ul class="sub">
+                                    <li><a  href="OCPD_Timeline.jsp">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Timeline</a></li>
+                                    <li class="sub-menu">
+                                        <a  href="OCPD_ViewProjectStatus">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Project Status</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <!--multi level menu end-->
+                    <li>
+                        <a href="OCPD_NotificationActivity">
+                            <i class="fa fa-book"></i>
+                            <span>Notification and Activity</span>
+                        </a>
+                    </li>
 
-                    </ul>
-                    <!-- sidebar menu end-->
-                </div>
-            </aside>
-            <!--sidebar end-->
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>            <!--sidebar end-->
 
 
             <section id="main-content">
@@ -237,9 +232,8 @@
                             View Project
 
                             <span class="pull-right">
-                                <button class="btn btn-success btn-sm"><i class="fa fa-eye"></i> View meeting details</button>
+                                <button type="button" id="submitModal" class="btn btn-info btn-sm" data-toggle="modal"><i class="fa fa-eye"></i> View Meeting Details</button>
                             </span>
-
                         </header>
                     </section>
 
@@ -250,11 +244,17 @@
                                 <div class="bio-graph-heading project-heading">
                                     <strong><%=p.getName()%> </strong>
                                 </div><p>
+                                    <span class="pull-right" style="margin-right: 3%">
+                                        <br>
+                                        <button class="btn btn-success" data-toggle="modal" type="button" value="Details" id="detailsB"><i class="fa fa-plus"></i> Show Comment</button>
+                                        <br>
+                                    </span>
+
                                 <div class="panel-body bio-graph-info">
                                     <!--<h1>New Dashboard BS3 </h1>-->
+
                                     <div class="row">
-                                        <span class="pull-right" style="margin-right: 3%">
-                                            <button class="btn btn-success btn-sm" data-toggle="modal" value="Project Details" type="button" id="detailsB"><b>+</b> Show Comment</button>                                        </span>
+
                                         <div class="col-lg-5" >
                                             <section class="panel">
                                                 <div class="panel-body">
@@ -273,7 +273,7 @@
 
                                                     <div>
                                                         <p><span class="bold">Category </span>:</p>
-                                                        <p><%=p.getType()%>&nbsp;-&nbsp;<%=p.getCategory()%></p>
+                                                        <p><%=p.getCategory()%></p>
                                                     </div><br>
                                                     <div>
                                                         <p><span class="bold">Date Submitted</span> :</p>
@@ -321,25 +321,22 @@
                             </section>
                             <div class="row">
 
-                                <!------------------------------------------------------MATERIALS------------------------------------------>
+                                <!------------------------------------------------------PROGRAM OF WORKS------------------------------------------>
 
                                 <section class="panel">
 
                                     <div class="col-lg-12">
-
                                         <div class="bio-graph-heading project-heading">
                                             <strong>Program Works</strong>
                                         </div>
+                                        <span class="pull-right" style="margin-right: 3%">
+                                            <br>
+                                            <button class="btn btn-success" data-toggle="modal" type="button" value="Pworks" id="pworksB"><i class="fa fa-plus"></i> Show Comment</button>
+                                            <br>
+                                        </span>
 
                                         <section class="panel">
-                                            <span class="pull-right" style="margin-right: 3%">
-                                                <br>
-                                                <button class="btn btn-success" data-toggle="modal" type="button" value="Materials" id="materialsB"><b>+</b> Show Comment</button>
-                                                <br>
-                                            </span>
-                                            <br>
                                             <div class="panel-body">
-                                                <br>
                                                 <table class="table" style="width:100%; text-align: center">
                                                     <%for (int x = 0; x < pworks.size(); x++) {%>
 
@@ -397,17 +394,48 @@
                                 </section>                                                 
                             </div>
 
+                            <div class="row">
+
+                                <!------------------------------------------------------GANTT CHART------------------------------------------>
+
+                                <section class="panel">
+
+                                    <div class="col-lg-12">
+                                        <div class="bio-graph-heading project-heading">
+                                            <strong>Project Task</strong>
+                                        </div>
+                                        <span class="pull-right" style="margin-right: 3%">
+                                            <br>
+                                            <button class="btn btn-success" data-toggle="modal" type="button" value="Schedule" id="scheduleB"><i class="fa fa-plus"></i> Show Comment</button>
+                                            <br>
+                                        </span>
+
+                                        <section class="panel">
+                                            <div class="panel-body">
+                                                <div id="chartdiv" style="width: 100%; height: 400px;"></div>
+                                            </div>
+
+                                            <div id="submitEntryEdit">
+
+                                            </div>
+
+                                        </section>
+                                    </div>
+                                </section>                                                 
+                            </div>                        
+
                             <!-------------------------------------------------MAIN TESTIMONIAL UPLOADS------------------------------------------>
                             <section class="panel">
                                 <div class="bio-graph-heading project-heading">
                                     <strong>Project Main Testimonial</strong>
                                 </div>
+                                <span class="pull-right" style="margin-right: 3%">
+                                    <br>
+                                    <button class="btn btn-success" data-toggle="modal" type="button" value="Testimonial" id="testimonialB"><i class="fa fa-plus"></i> Show Comment</button>
+                                    <br>
+                                </span>
+
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
-                                    <span class="pull-right" style="margin-right: 3%">
-                                        <button class="btn btn-success" data-toggle="modal" type="button" value="MainTest" id="mainTestB"><b>+</b> Show Comment</button>                                        
-                                        <br>
-                                        <br>
-                                    </span>
                                     <div class="DocumentList2">
                                         <div class="row2">
                                             <%String url = null;%>
@@ -447,72 +475,18 @@
                                 </div>
                             </section>                        
 
-                            <!---------------------------------------------------REFERENCED TESTIMONIAL UPLOADS------------------------------------------>
-                            <section class="panel">
-                                <div class="bio-graph-heading project-heading">
-                                    <strong>Project Referenced Testimonial Files</strong>
-                                </div>
-                                <div class="panel-body bio-graph-info" style="height: 250px;">
-                                    <div class="DocumentList2">
-                                        <span class="pull-right" style="margin-right: 3%">
-                                            <button class="btn btn-success" data-toggle="modal" type="button" value="ProjectRef" id="projectRefB"><b>+</b> Show Comment</button>
-                                            <br>
-                                            <br>
-                                        </span>
-
-                                        <div class="row2">
-
-                                            <%String url2 = null;%>
-                                            <%for (Testimonial testi : p.getReferredTestimonials()) {
-                                                    for (Files f : testi.getFiles()) {
-                                                        url2 = testi.getFolderName() + "/" + testi.getTitle() + "/" + f.getFileName();
-                                                        if (f.getType().equalsIgnoreCase("image")) {%>
-
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="<%=url2%>" style="width:100%; height:100%">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
-
-                                            <%} else if (f.getType().equalsIgnoreCase("video")) {%>
-
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
-                                                    <source src="<%=url2%>" type="video/mp4">
-                                                </video>
-                                                <br/>
-                                                <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getTestimonial(<%=f.getId()%>)">View Details</button>                                        
-                                            </div>
-
-                                            <%} else if (f.getType().equalsIgnoreCase("document")) {%>
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
-
-                                            <%}
-
-                                                    }
-                                                }%>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-
                             <!------------------------------------------------------GS UPLOADS------------------------------------------>
                             <section class="panel">
                                 <div class="bio-graph-heading project-heading">
                                     <strong>Project Files</strong>
                                 </div>
+                                <span class="pull-right" style="margin-right: 3%">
+                                    <br>
+                                    <button class="btn btn-success" data-toggle="modal" type="button" value="Files" id="filesB"><i class="fa fa-plus"></i> Show Comment</button>
+                                    <br>
+                                </span>
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
                                     <div class="DocumentList2">
-                                        <span class="pull-right" style="margin-right: 3%">
-                                            <button class="btn btn-success" data-toggle="modal" type="button" value="Files" id="filesB"><b>+</b> Show Comment</button>
-                                            <br>
-                                            <br>
-                                        </span>
-
                                         <div class="row2">
                                             <%
                                                 for (Files f : pfiles) {
@@ -605,36 +579,114 @@
             </div>
         </section>
 
-        <div class="modal fade full-width-modal-right" id="addComments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content-wrap">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                            <h4 class="modal-title" id="comHead">Title</h4>
+            <input type="hidden" name="projectid" value="<%=p.getId()%>">
+            <div class="modal fade full-width-modal-right" id="addComments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content-wrap">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                <h4 class="modal-title" id="comHead">Title</h4>
+                            </div>
+                            <div class="modal-body">
+                                <label class="panel-heading">Comments:</label>
+                                <textarea rows="10" style="background: white; cursor:default; border:0px;" class="wysihtml5 form-control" id="detailsTA" readonly name="detailsTA"><%=annotation.getDetails()%></textarea>
+                                <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="pworksTA" readonly name="pworksTA"><%=annotation.getPworks()%></textarea>
+                                <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="scheduleTA" readonly name="scheduleTA"><%=annotation.getSchedule()%></textarea>
+                                <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="testimonialTA" readonly name="testimonialTA"><%=annotation.getTestimonial()%></textarea>
+                                <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="filesTA" readonly name="filesTA"><%=annotation.getFiles()%></textarea>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <label class="panel-heading">Comments:</label>
-                            <textarea rows="10" style="background: white; border:0px;" readonly class="wysihtml5 form-control" id="detailsTA" name="detailsTA"><%//=p.getAnnotations().getDescription()%></textarea>
-                            <textarea rows="10" style="background: white; border:0px;" readonly class="wysihtml5 form-control" id="materialsTA" name="materialsTA"><%//=p.getAnnotations().getMaterials()%></textarea>
-                            <textarea rows="10" style="background: white; border:0px;" readonly class="wysihtml5 form-control" id="mainTestTA" name="mainTestTA"><%//=p.getAnnotations().getSchedule()%></textarea>
-                            <textarea rows="10" style="background: white; border:0px;" readonly class="wysihtml5 form-control" id="projectRefTA" name="projectRefTA"><%//=p.getAnnotations().getUpload()%></textarea>
-                            <textarea rows="10" style="background: white; border:0px;" readonly class="wysihtml5 form-control" id="filesTA" name="filesTA"><%//=p.getAnnotations().getUpload()%></textarea>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade " id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" >
+                    <div class="modal-content" style="width: 50%;">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Meeting Details</h4>
+                        </div>
+
+                        <div class="modal-body form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <label class="control-label">Additional Comments </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <textarea type="text" name="general" style="background: white; cursor:default; border:0px;"  class="form-control" rows="3" placeholder=""><%=annotation.getGeneral()%></textarea><br>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+
+
+                                <div class="col-md-2">
+                                    <label class="control-label">Date: </label>
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="text" style="background: white; cursor:default; border:0px;" value="<%=meeting.getSchedules().get(0).getStartdate()%>" class="form-control" name="date">
+                                    <br>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label class="control-label">Time: </label>
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="text" style="background: white; cursor:default; border:0px;" value="<%=meeting.getSchedules().get(0).getTime()%>" class="form-control" name="time">
+                                    <br>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label class="control-label">Agenda </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div id="agendaDiv">
+                                    <br>
+                                    <table class="table table-bordered table-striped table-condensed" style="background: white; cursor:default; border:0px;"  id="agendaTable">
+                                        <% for (Agenda a : meeting.getAgenda()){%>
+                                        <tr>
+                                            <td><%=a.getAgenda()%></td>
+                                        </tr>
+                                        <%}%>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label class="control-label">Remarks </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <textarea type="text" style="background: white; cursor:default; border:0px;" name="remarks"  class="form-control" rows="3" placeholder=""> <%=meeting.getSchedules().get(0).getRemarks()%></textarea>
+                                </div>
+                            </div>
+
 
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
                         </div>
                     </div>
-
                 </div>
-            </div>
-        </div>
-
+            </div>               
 
         <script>
             function getTestimonial(id) {
-                $.ajax({type: 'POST',
+                $.ajax({
+                    type: 'POST',
                     url: 'AJAX_BAC_gettestimonial',
                     dataType: 'json',
                     data: {testId: id}, cache: false,
@@ -663,12 +715,13 @@
                 });
             }
 
+
             function getProjectFiles(id) {
                 $.ajax({
                     type: 'POST',
                     url: 'AJAX_BAC_getProjectFiles',
                     dataType: 'json',
-                    data: {testId: id}, cache: fa lse,
+                    data: {testId: id}, cache: false,
                     success: function (f) {
                         $('#pfDisplay').empty();
                         var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
@@ -688,7 +741,9 @@
                         $('#projectFiles').modal();
                     }
                 });
-            }</script>
+            }
+
+        </script>
 
         <!-- js placed at the end of the document so the pages load faster -->
         <!--<script src="js/jquery.js"></script>-->
@@ -713,7 +768,7 @@
 
                 markers.forEach(function (coor) {
                     var geocoder = new google.maps.Geocoder;
-                    var latLng = new google.maps.LatLng(coor.longs, coor.lats);
+                    var latLng = new google.maps.LatLng(coor.lats, coor.longs);
                     var marker = new google.maps.Marker({
                         position: latLng,
                         map: map
@@ -727,6 +782,7 @@
                 });
 
             }
+
             function geocodeLatLng(geocoder, map, infowindow, latLng) {
                 var latlng = latLng;
                 geocoder.geocode({'location': latlng}, function (results, status) {
@@ -746,58 +802,232 @@
                     }
                 });
             }
-            
+
+        </script>
+        <script>
+            //These are the properties of the chart, you set what it  will look like here
+            var chartD;
+            var chartVal = Object.create(null);
+            var chart = AmCharts.makeChart("chartdiv", {
+                "type": "gantt",
+                "period": "DD",
+                "theme": "dark",
+                "valueAxis": {
+                    "type": "date"
+                },
+                "brightnessStep": 10,
+                "graph": {
+                    "fillAlphas": 1,
+                    "balloonText": "[[open]] - [[value]]"
+                },
+                "rotate": true,
+                "categoryField": "name",
+                "segmentsField": "schedules",
+                "dataDateFormat": "YYYY-MM-DD",
+                "startDateField": "startdate",
+                "endDateField": "enddate",
+                "dataProvider": <%=tasksJSON%>,
+                "chartCursor": {
+                    "valueBalloonsEnabled": false,
+                    "cursorAlpha": 0,
+                    "valueLineBalloonEnabled": true,
+                    "valueLineEnabled": true,
+                    "valueZoomable": true,
+                    "zoomable": false
+                },
+                "valueScrollbar": {
+                    "position": "top",
+                    "autoGridCount": true,
+                    "color": "#000000"
+                },
+            });
+
+
+            //Event method: click item
+            //Once you click one of the bars in the gantt chart, this method will execute
+            var index = 0;
+            var clickItemEvent = function (event) {
+                index = 0;
+
+                $.map(event.item.dataContext, function (val, i) {
+                    //When the index is referring to the category of the selected value
+                    if (i == "name") {
+
+                        //Place the name of the selected value on the textfield 
+                        $("#category").val(event.item.dataContext.name);
+
+
+                    }
+                    //Else, if the index is referring to the segments of that particular value selected
+                    else {
+
+
+                        var name = i.indexOf("start") != -1 ? "startdate" : "enddate";
+                        var labelName = i.indexOf("start") != -1 ? "Start date: " : "End date: ";
+
+
+
+                        var divInd = "#" + "div-" + index;
+
+
+                        //Creates a div that will store the start date and end date for a particular Task   
+                        if (i.indexOf("start") != -1) {
+
+
+                            //Creates a label and then pushes it  to the div
+                            var div = $("<div></div>");
+                            div.prop("id", "div-" + index);
+                            div.prop("class", "divinput");
+                            div.appendTo("#submitEntryEdit");
+
+                        }
+                        //Creates a label and then pushes it  to the div
+                        var label = $("<label/>");
+                        label.html(labelName);
+                        label.prop("id", name + index);
+                        label.appendTo("#" + "div-" + index);
+
+                        //Creates a textfield then puts it to the div
+                        var newStart = $("<label/>");
+                        newStart.prop("id", name + '-' + index);
+                        newStart.appendTo("#" + "div-" + index);
+                        newStart.val(formatDate(new Date(val)));
+
+                        $("<br>").appendTo("#" + "div-" + index);
+
+
+                        if (i.indexOf("end") != -1) {
+                            index++;
+                        }
+                    }
+                });
+            };
+            //var index = 0;
+            var addSegment = function (event) {
+                $.map(event.item.dataContext, function (val, i) {
+
+                    //When the index is referring to the category of the selected value
+                    if (i == "name") {
+
+                        //Place the name of the selected value on the textfield 
+                        $("#category").val(event.item.dataContext.category);
+
+
+                    }
+                    //Else, if the index is referring to the segments of that particular value selected
+                    else {
+
+
+                        var name = i.indexOf("start") != -1 ? "startdate" : "enddate";
+                        var labelName = i.indexOf("start") != -1 ? "Start date: " : "End date: ";
+                        var divInd = "#" + "div-" + index;
+
+                        //Creates a div that will store the start date and end date for a particular Task   
+                        if (i.indexOf("start") != -1) {
+                            //Creates a div and then pushes it  to the div
+                            var div = $("<div></div>");
+                            div.prop("id", "div-" + index);
+                            div.prop("class", "divinput");
+                            div.appendTo("#submitEntryEdit");
+                        }
+
+                        //Creates a label and then pushes it  to the div
+                        var label = $("<label/>");
+                        label.html(labelName);
+                        label.prop("id", name + index);
+                        label.appendTo("#" + "div-" + index);
+                        //Creates a label then puts it to the div
+                        var newStart = $("<input type='text'/>");
+                        newStart.prop("id", name + index);
+                        newStart.appendTo("#" + "div-" + index);
+                        newStart.val(new Date(val));
+                        $("<br>").appendTo("#" + "div-" + index);
+
+
+                        if (i.indexOf("end") != -1) {
+                            index++;
+
+                        }
+                    }
+                });
+
+            };
+
+            function formatDate(date) {
+                var d = new Date(date),
+                        month = '' + (d.getMonth() + 1),
+                        day = '' + d.getDate(),
+                        year = d.getFullYear();
+
+                if (month.length < 2)
+                    month = '0' + month;
+                if (day.length < 2)
+                    day = '0' + day;
+
+                return [year, month, day].join('-');
+            }
+
+            function getId(str) {
+                var spl = str.split("-");
+                return spl[1];
+            }
+            ;
+
+            function getUpdatedChartVal() {
+                return chartVal;
+            }
+            ;
+
             $('#detailsB').click(function () {
                 $('#comHead').text("Project Details");
                 $('#detailsTA').show();
-                $('#materialsTA').hide();
-                $('#mainTestTA').hide();
-                $('#projectRefTA').hide();
+                $('#pworksTA').hide();
+                $('#scheduleTA').hide();
+                $('#testimonialTA').hide();
                 $('#filesTA').hide();
                 $('#addComments').modal();
             });
 
-            $('#materialsB').click(function () {
-                $('#comHead').text("Materials");
+            $('#pworksB').click(function () {
+                $('#comHead').text("Program of Works");
                 $('#detailsTA').hide();
-                $('#materialsTA').show();
-                $('#mainTestTA').hide();
-                $('#projectRefTA').hide();
+                $('#pworksTA').show();
+                $('#scheduleTA').hide();
+                $('#testimonialTA').hide();
                 $('#filesTA').hide();
                 $('#addComments').modal();
             });
 
-            $('#mainTestB').click(function () {
+            $('#scheduleB').click(function () {
                 $('#comHead').text("Schedule");
                 $('#detailsTA').hide();
-                $('#materialsTA').hide();
-                $('#mainTestTA').show();
-                $('#projectRefTA').hide();
+                $('#pworksTA').hide();
+                $('#scheduleTA').show();
+                $('#testimonialTA').hide();
                 $('#filesTA').hide();
                 $('#addComments').modal();
             });
-            $('#projectRefB').click(function () {
-                $('#comHead').text("Citizen Testimonial");
+            $('#testimonialB').click(function () {
+                $('#comHead').text("Testimonial");
                 $('#detailsTA').hide();
-                $('#materialsTA').hide();
-                $('#mainTestTA').hide();
-                $('#projectRefTA').show();
+                $('#pworksTA').hide();
+                $('#scheduleTA').hide();
+                $('#testimonialTA').show();
                 $('#filesTA').hide();
                 $('#addComments').modal();
             });
             $('#filesB').click(function () {
-                $('#comHead').text("Citizen Testimonial");
+                $('#comHead').text("Files");
                 $('#detailsTA').hide();
-                $('#materialsTA').hide();
-                $('#mainTestTA').hide();
-                $('#projectRefTA').hide();
+                $('#pworksTA').hide();
+                $('#scheduleTA').hide();
+                $('#testimonialTA').hide();
                 $('#filesTA').show();
                 $('#addComments').modal();
             });
-
+            $('#submitModal').click(function () {
+                $('#myModal3').modal();
+            });
         </script>
-
-
-</body>
-
+    </body>
 </html>

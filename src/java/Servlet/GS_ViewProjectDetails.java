@@ -8,9 +8,11 @@ package Servlet;
 import DAO.BACDAO;
 import DAO.GSDAO;
 import DAO.OCPDDAO;
+import Entity.Annotation;
 import Entity.Files;
 import Entity.Location;
 import Entity.Project;
+import Entity.Task;
 import Entity.Testimonial;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -74,7 +76,16 @@ public class GS_ViewProjectDetails extends HttpServlet {
             session.setAttribute("project", project);
             ServletContext context = getServletContext();
             RequestDispatcher dispatch;
-            if (project.getStatus().equalsIgnoreCase("On-hold")){
+            if (project.getStatus().equalsIgnoreCase("On-hold")) {
+                project.setAnnotation(oc.getAnnotations(project, "Pending"));
+                Annotation a = oc.getAnnotations(project, "Pending");
+                Task t = new Task();
+                if (oc.getMeeting("Pending", project) != null) {
+                    t.setAgenda(oc.getAgenda(t.getId()));
+                }
+                session.setAttribute("annotations", a);
+                session.setAttribute("meeting", t);
+                session.setAttribute("isEditable", gdao.isEditable(project));
                 dispatch = context.getRequestDispatcher("/GS_ViewProjectDetailsOnHold.jsp");
             } else {
                 dispatch = context.getRequestDispatcher("/GS_ViewProjectDetails.jsp");

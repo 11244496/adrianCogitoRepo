@@ -11,10 +11,11 @@ package Entity;
  */
 public class Annotation {
     private int id;
-    private String testimonials;
-    private String projects;
     private String details;
-    private String program;
+    private String pworks;
+    private String schedule;
+    private String testimonial;
+    private String files;
     private String general;
     private String status;
     private String date;
@@ -23,127 +24,85 @@ public class Annotation {
     public Annotation() {
     }
     
-    public String getGeneral() {
-        return general;
-    }
-
-    /**
-     * @return the id
-     */
     public int getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(int id) {
         this.id = id;
     }
 
-    /**
-     * @return the testimonials
-     */
-    public String getTestimonials() {
-        return testimonials;
-    }
-
-    /**
-     * @param testimonials the testimonials to set
-     */
-    public void setTestimonials(String testimonials) {
-        this.testimonials = testimonials;
-    }
-
-    /**
-     * @return the projects
-     */
-    public String getProjects() {
-        return projects;
-    }
-
-    /**
-     * @param projects the projects to set
-     */
-    public void setProjects(String projects) {
-        this.projects = projects;
-    }
-
-    /**
-     * @return the details
-     */
     public String getDetails() {
         return details;
     }
 
-    /**
-     * @param details the details to set
-     */
     public void setDetails(String details) {
         this.details = details;
     }
 
-    /**
-     * @return the program
-     */
-    public String getProgram() {
-        return program;
+    public String getPworks() {
+        return pworks;
     }
 
-    /**
-     * @param program the program to set
-     */
-    public void setProgram(String program) {
-        this.program = program;
+    public void setPworks(String pworks) {
+        this.pworks = pworks;
     }
 
-    /**
-     * @param general the general to set
-     */
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
+    }
+
+    public String getTestimonial() {
+        return testimonial;
+    }
+
+    public void setTestimonial(String testimonial) {
+        this.testimonial = testimonial;
+    }
+
+    public String getFiles() {
+        return files;
+    }
+
+    public void setFiles(String files) {
+        this.files = files;
+    }
+
+    public String getGeneral() {
+        return general;
+    }
+
     public void setGeneral(String general) {
         this.general = general;
     }
 
-    /**
-     * @return the status
-     */
     public String getStatus() {
         return status;
     }
 
-    /**
-     * @param status the status to set
-     */
     public void setStatus(String status) {
         this.status = status;
     }
 
-    /**
-     * @return the date
-     */
     public String getDate() {
         return date;
     }
 
-    /**
-     * @param date the date to set
-     */
     public void setDate(String date) {
         this.date = date;
     }
 
-    /**
-     * @return the project
-     */
     public Project getProject() {
         return project;
     }
 
-    /**
-     * @param project the project to set
-     */
     public void setProject(Project project) {
         this.project = project;
     }
 
+    
 }

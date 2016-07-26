@@ -7,6 +7,8 @@ package Servlet;
 
 import DAO.CitizenDAO;
 import DAO.GSDAO;
+import DAO.OCPDDAO;
+import Entity.Project;
 import Entity.Testimonial;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -43,19 +45,29 @@ public class GS_CreateProposal extends HttpServlet {
         try {
             GSDAO gs = new GSDAO();
             CitizenDAO c = new CitizenDAO();
-
+            OCPDDAO oc = new OCPDDAO();
+            
             //Get All Testimonials
             ArrayList<Testimonial> allTestimonials = gs.getAllTestimonials();
             for (int x = 0; x < allTestimonials.size(); x++) {
                 allTestimonials.get(x).setFiles(c.getFilesWithStatus(allTestimonials.get(x).getId(),allTestimonials.get(x), "Approved"));
                 allTestimonials.get(x).setMainproject(gs.getMainProjectOnTestimonial(allTestimonials.get(x).getId()));
             }
+            
+            ArrayList<Project> allProject = new ArrayList<Project>();
+            ArrayList<String> allProjectID = oc.getAllFinishedProjectIDs();
 
+            for(String id: allProjectID){
+                allProject.add(oc.getBasicProjectDetails(id));
+            }
+            
             //Request set attributes testimonials
             request.setAttribute("allTestimonials", allTestimonials);
             request.setAttribute("worksList", gs.getWorks());
             request.setAttribute("works", new Gson().toJson(gs.getWorks()));
             request.setAttribute("unitGson", new Gson().toJson(gs.getAllUnits()));
+            request.setAttribute("allProject", allProject);
+            
             
             ServletContext context = getServletContext();
 

@@ -53,6 +53,8 @@ public class GS_Home extends HttpServlet {
             request.setAttribute("OP", OP);
             request.setAttribute("FP", FP);
             request.setAttribute("OH", OH);
+            request.setAttribute("meetings", gsdao.getAllMeetings("GSPending"));
+            request.setAttribute("pending", gsdao.getAllMeetings("Pending"));
 
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/GS_Home.jsp");

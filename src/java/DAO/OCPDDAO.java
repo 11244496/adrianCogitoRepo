@@ -6,6 +6,7 @@
 package DAO;
 
 import DB.ConnectionFactory;
+import Entity.Agenda;
 import Entity.Annotation;
 import Entity.Component;
 import Entity.Contractor_User;
@@ -263,7 +264,7 @@ public class OCPDDAO {
             project.setFiles(projectFiles);
 
             //Pworks
-            String pworksQuery = ("select * from project_has_pworks join pworks on PWorks_ID = pworks.ID where Project_ID = ?");
+            String pworksQuery = ("select * from project_has_works join pworks on PWorks_ID = pworks.ID where Project_ID = ?");
             pworksS = connection.prepareStatement(pworksQuery);
             pworksS.setString(1, id);
             result = pworksS.executeQuery();
@@ -401,6 +402,27 @@ public class OCPDDAO {
         }
         return AllProjectID;
     }
+    
+    public ArrayList<String> getAllFinishedProjectIDs() {
+        ArrayList<String> AllProjectID = new ArrayList<String>();
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String detailsQuery = ("select id from project where status = ?");
+            statement = connection.prepareStatement(detailsQuery);
+            statement.setString(1, "Finished");
+            result = statement.executeQuery();
+            while (result.next()) {
+                String id = result.getString("id");
+                AllProjectID.add(id);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return AllProjectID;
+    }
 
     public void changeProjStatus(String s, Project p) {
         try {
@@ -455,6 +477,156 @@ public class OCPDDAO {
         } catch (SQLException ex) {
             Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting meeting", ex);
         }
+    }
+    
+    public void insertAgenda(Agenda a) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into agenda (agenda, task_id) values (?,?)";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, a.getAgenda());
+            statement.setInt(2, a.getTask().getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting agenda", ex);
+        }
+    }
+
+    public ArrayList<Agenda> getAgenda(int id){
+        ArrayList<Agenda> aList = new ArrayList<>();
+        Agenda a = new Agenda();
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from agenda where task_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+            while (result.next()){
+                a = new Agenda();
+                a.setAgenda(result.getString("agenda"));
+                aList.add(a);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting agenda", ex);
+        }
+        return aList;
+    }
+    
+    public Task getMeeting(String status, Project p){
+        Task t = null;
+        Schedule s = null;
+        ArrayList<Schedule> sList = new ArrayList<>();
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "SELECT max(startdate), task.id, task.name, schedule.startdate, schedule.enddate, schedule.time, schedule.remarks, schedule.remarks FROM task join schedule on task.id = task_id where status = ? and project_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, status);
+            statement.setString(2, p.getId());
+            result = statement.executeQuery();
+            while(result.next()){
+                t = new Task();
+                s = new Schedule();
+                t.setId(result.getInt("ID"));
+                t.setName(result.getString("Name"));
+                s.setStartdate(result.getString("startdate"));
+                s.setEnddate(result.getString("enddate"));
+                s.setTime(result.getString("time"));
+                s.setRemarks(result.getString("remarks"));
+                s.setStatus(result.getString("status"));
+                sList.add(s);
+                t.setSchedules(sList);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting meeting", ex);
+        }
+        return t;
+    }
+    public Task getMeeting( Project p){
+        Task t = null;
+        Schedule s = null;
+        ArrayList<Schedule> sList = new ArrayList<>();
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "SELECT max(startdate), task.id, task.name, schedule.startdate, schedule.enddate, schedule.time, schedule.remarks, schedule.remarks FROM task join schedule on task.id = task_id where project_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            result = statement.executeQuery();
+            while(result.next()){
+                t = new Task();
+                s = new Schedule();
+                t.setId(result.getInt("ID"));
+                t.setName(result.getString("Name"));
+                s.setStartdate(result.getString("startdate"));
+                s.setEnddate(result.getString("enddate"));
+                s.setTime(result.getString("time"));
+                s.setRemarks(result.getString("remarks"));
+                s.setStatus(result.getString("status"));
+                sList.add(s);
+                t.setSchedules(sList);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting meeting", ex);
+        }
+        return t;
+    }
+    //=======================================ALL ANNOTATION CODES=========================================
+
+    public void setAnnotations(Annotation a) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into annotations (details, pworks, schedule, testimonial, files, status, general, project_id, date) values (?,?,?,?,?,?,?,?,now())";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, a.getDetails());
+            statement.setString(2, a.getPworks());
+            statement.setString(3, a.getSchedule());
+            statement.setString(4, a.getTestimonial());
+            statement.setString(5, a.getFiles());
+            statement.setString(6, a.getStatus());
+            statement.setString(7, a.getGeneral());
+            statement.setString(8, a.getProject().getId());
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting annotations", ex);
+        }
+    }
+
+    public Annotation getAnnotations(Project p, String status) {
+        Annotation a = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from annotations where project_id = ? and status = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            statement.setString(2, status);
+            result = statement.executeQuery();
+            while (result.next()) {
+                a = new Annotation();
+                a.setId(result.getInt("ID"));
+                a.setDetails(result.getString("Details"));
+                a.setPworks(result.getString("Pworks"));
+                a.setSchedule(result.getString("Schedule"));
+                a.setTestimonial(result.getString("Testimonial"));
+                a.setFiles(result.getString("Files"));
+                a.setStatus(result.getString("Status"));
+                a.setGeneral(result.getString("General"));
+                a.setDate(result.getString("Date"));
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting annotations", ex);
+        }
+        return a;
     }
 
     public int getTaskID() {
@@ -625,62 +797,13 @@ public class OCPDDAO {
         return s;
     }
 
-    //=======================================ALL ANNOTATION CODES=========================================
-    public void setAnnotations(Annotation a) {
-        try {
-            myFactory = ConnectionFactory.getInstance();
-            connection = myFactory.getConnection();
-            String query = "insert into annotations (testimonials, projects, details, program, status, date, project_id) values (?,?,?,?,?,now(),?)";
-            statement = connection.prepareStatement(query);
-            statement.setString(1, a.getTestimonials());
-            statement.setString(2, a.getProjects());
-            statement.setString(3, a.getDetails());
-            statement.setString(4, a.getProgram());
-            statement.setString(5, a.getStatus());
-            statement.setString(6, a.getProject().getId());
-            statement.executeUpdate();
-            connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting annotations", ex);
-        }
-    }
-
-    public Annotation getAnnotations(Project p, String status) {
-        Annotation a = null;
-        try {
-            myFactory = ConnectionFactory.getInstance();
-            connection = myFactory.getConnection();
-            String query = "select * from annotation where project_id = ? and status = ?";
-            statement = connection.prepareStatement(query);
-            statement.setString(1, a.getProject().getId());
-            statement.setString(2, status);
-            result = statement.executeQuery();
-            while (result.next()) {
-                a = new Annotation();
-                a.setId(result.getInt("ID"));
-                a.setTestimonials(result.getString("Testimonials"));
-                a.setProjects(result.getString("Projects"));
-                a.setDetails(result.getString("Details"));
-                a.setProgram(result.getString("Program"));
-                a.setGeneral(result.getString("General"));
-                a.setStatus(status);
-                a.setDate(result.getString("Date"));
-                a.setProject(p);
-            }
-            connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting annotations", ex);
-        }
-        return a;
-    }
-
     //=======================================UTILITY CODES================================================
     public float getCost(Project p) {
         float cost = 0;
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String getID = "select sum(components.quantity*components.unitprice) as cost from components join project_has_pworks on project_has_pworks.PWorks_ID = components.Project_has_PWorks_Pworks_ID and project_has_pworks.Project_ID = components.Project_has_PWorks_Project_ID where components.Project_has_PWorks_Project_ID = ?";
+            String getID = "select sum(components.quantity*components.unitprice) as cost from components join project_has_works on project_has_works.PWorks_ID = components.Project_has_PWorks_Pworks_ID and project_has_works.Project_ID = components.Project_has_PWorks_Project_ID where components.Project_has_PWorks_Project_ID = ?";
             statement = connection.prepareStatement(getID);
             statement.setString(1, p.getId());
             result = statement.executeQuery();

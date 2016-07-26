@@ -4,6 +4,7 @@
     Author     : User
 --%>
 
+<%@page import="Entity.Project"%>
 <%@page import="Entity.PWorks"%>
 <%@page import="Entity.Testimonial"%>
 <%@page import="java.util.ArrayList"%>
@@ -14,6 +15,8 @@
     <% //Employee e = (Employee) session.getAttribute("user");
         ArrayList<Testimonial> allTestimonials = (ArrayList<Testimonial>) request.getAttribute("allTestimonials");
         ArrayList<PWorks> wList = (ArrayList<PWorks>) request.getAttribute("worksList");
+        ArrayList<Project> allProject = (ArrayList<Project>) request.getAttribute("allProject");
+
     %>
 
     <head>
@@ -326,37 +329,6 @@
                                                 <br>
 
                                             </div>
-
-                                            <div class="col-md-12" style="display: none" id="ReferenceTestimonialList">
-                                                <section class="panel">
-                                                    <header class="panel-heading">
-                                                        Referenced testimonials
-                                                    </header>
-                                                    <div id="RTestimonialList">
-                                                        <table id="RTestimonialTable" class="table table-hover" id="mainTest" data-search-field="#TRview-testimonial">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th class="title">Title</th>
-                                                                    <th class="message">Description/Message</th>
-                                                                    <th class="date">Date Uploaded</th>
-                                                                    <th class="uploader">Uploader</th>
-                                                                    <th class="buttons"></th>
-                                                                </tr>
-                                                            </thead>
-
-
-
-                                                            <tbody id="RTestimonialTableBody">
-
-                                                            </tbody>
-
-
-                                                        </table>
-                                                    </div>
-                                                </section>
-
-                                            </div>
-
                                             <br>
                                             <br><br><br><br>
                                         </fieldset> 
@@ -372,33 +344,46 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Title</th>
-                                                            <th>Date Sent</th>
-                                                            <th>Message/Description</th>
-                                                            <th>Uploader</th>
+                                                            <th>Description</th>
+                                                            <th>Budget</th>
+                                                            <th>Date Finished</th>
+                                                            <th>Rating</th>
                                                             <th></th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
-                                                        <tr class="gradeX">
-                                                            <td class="title">Ro</td>
-                                                            <td class="date">Jan 14, 2016</td>
-                                                            <td class="message">HELLO</td>
-                                                            <td class="uploader">rochellesisa@yahoo.com.ph</td>
-                                                            <td class="buttons center">
-                                                                <p>
-                                                                    <button type="button" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View Details</button>
-                                                                </p>
-                                                                <p>
-                                                                <div class="btn-group dropdown">
-                                                                    <button data-toggle="dropdown" class="btn btn-success btn-sm dropdown-toggle" type="button"><i class="fa fa-plus"></i> Add as... <span class="caret"></span></button>
-                                                                    <ul role="menu" class="dropdown-menu">
-                                                                        <li><a href="#">Main testimonial</a></li>
-                                                                        <li><a href="#">Reference</a></li>
-                                                                    </ul>
-                                                                </div>
-                                                                </p>
+                                                    <tbody id="projectlistTable">
+                                                        <%for (int x = 0; x < allProject.size(); x++) {%>
+
+                                                        <tr>
+                                                            <td><%=allProject.get(x).getName()%></td>
+                                                            <td><%=allProject.get(x).getDescription()%></td>
+                                                            <td><%=allProject.get(x).getBudget()%></td>
+                                                            <td>Insert Date finished here</td>
+                                                            <td>Insert Rating Here</td>
+                                                            <td>
+                                                                <a class="btn btn-info btn-sm" target="_blank" href="GS_ViewProjectDetails?projid=<%=allProject.get(x).getId()%>">View Details</a>
+                                                                <p> <button type="button"  class="btn btn-success btn-sm selectprojectbtn" value="<%=allProject.get(x).getId()%>">Select Project</button> </p>
                                                             </td>
                                                         </tr>
+                                                        <%}%>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="adv-table" id="selectedprojectTable">
+                                                <table  class="display table table-bordered table-striped" id="dynamic-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Title</th>
+                                                            <th>Description</th>
+                                                            <th>Budget</th>
+                                                            <th>Date Finished</th>
+                                                            <th>Rating</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="selectedprojectlistTable">
+                                                        
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -490,7 +475,7 @@
                                         <fieldset title="Schedule" class="step" id="default-step-4" >
                                             <legend></legend>
                                             <header class="panel-heading no-border">
-                                                Works
+                                                Schedule
                                             </header>
 
                                             <div class="col-md-12">
@@ -499,37 +484,19 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>Task/s</th>
-                                                                <th></th>
+                                                                <!--<th></th>-->
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <button type="button" style="width: 100%; background: transparent; border: none;">
-                                                                        <input type="text" class="form-control inactive" readonly style="font-size: 15px; font-weight: bold" value="Task Name">
-                                                                        <input type="text" class="form-control inactive" id="datesText" readonly value="2016-07-19 to 2016-07-22">
-                                                                        <input type="date" class="form-control inactive dates" value="2016-07-19">
-                                                                        <input type="date" class="form-control inactive dates" value="2016-07-22">
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <label class="panel-heading" style="font-size: 14px;">Task Name</label>
-                                                                </td>
-                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                     <input type="hidden" name="pworks" id="pworks">
-                                                    <button class="btn btn-success btn-sm pull-right" style="margin-right: 5px" onclick="insertWorks()" type="button"><i class="fa fa-plus"></i> Add </button>
+                                                    <!--<button class="btn btn-success btn-sm pull-right" style="margin-right: 5px" type="button"><i class="fa fa-plus"></i> Add </button>-->
 
                                                     <br>
-
-
-
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <!--<div id="chart_div"></div>-->
+                                                    <div id="ganttDiv"></div>
                                                 </div>
                                             </div>
                                         </fieldset>
@@ -537,7 +504,7 @@
                                         <input type="hidden" name="actionI" id="actionI">
                                         <button type="button" onclick ="draftbutton()" class="finish btn btn-info" >Save Draft</button>
                                         <button type="submit" onclick="insertWorks()" class="finish btn btn-success">Finish</button>
-
+                                        <input type="hidden" name="schedule" id="schedule">
 
 
                                     </form>
@@ -578,6 +545,45 @@
                     </div>
                 </div>
 
+                <div class="modal fade" id="schedModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Add Schedule</h4>
+                            </div>
+                            <div class="modal-body panel-body" id="scheduleDetails">
+                                <div class="col-md-12 form-group">
+                                    <div class="col-md-3">
+                                        <label class="control-label pull-left">Task </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" id="taskNameMod" readonly style="background: white; border:none; cursor: default">
+                                    </div>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <div class="col-md-3">
+                                        <label class="control-label pull-left ">Start Date: </label>                                    
+                                    </div>    
+                                    <div class="col-md-9">
+                                        <input type="date" class="form-control" id="startDate">
+                                    </div>    
+                                </div>
+                                <div class="col-md-12 ">
+                                    <div class="col-md-3">
+                                        <label class="control-label pull-left">End Date:</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="date" class="form-control" id="endDate">
+                                    </div>
+                                </div>
+                                <br>
+                                <button class="btn btn-success pull-right btn-sm"  data-dismiss="modal" id="addDate" onclick="addScheduleToArray()">Add Date</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
 
                 <div id="testModal" class="modal fade " data-keyboard="false" data-backdrop="static">
                     <div class="modal-dialog">
@@ -608,9 +614,8 @@
 
         </section>
 
-
         <!-- js placed at the end of the document so the pages load faster -->
-        <!--        <script src="js/jquery.js"></script>-->
+        <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script class="include" type="text/javascript" src="js/jquery.dcjqaccordion.2.7.js"></script>
         <script src="js/jquery.scrollTo.min.js"></script>
@@ -647,6 +652,10 @@
         <script src="js/GS_CreateProposal.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"
         async defer></script> 
+        <script src="amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="amcharts/serial.js" type="text/javascript"></script>
+        <script src="amcharts/themes/dark.js"></script>
+        <script src="amcharts/gantt.js" type="text/javascript"></script>
 
     </body>
 </html>

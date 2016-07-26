@@ -7,9 +7,11 @@ package Servlet;
 
 import DAO.GSDAO;
 import DAO.OCPDDAO;
+import Entity.Annotation;
 import Entity.Files;
 import Entity.Location;
 import Entity.Project;
+import Entity.Task;
 import Entity.Testimonial;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -73,7 +75,13 @@ public class OCPD_ViewProjectDetails extends HttpServlet {
             session.setAttribute("project", project);
             ServletContext context = getServletContext();
             RequestDispatcher dispatch;
-            if (project.getStatus().equalsIgnoreCase("On-hold")){
+            if (project.getStatus().equalsIgnoreCase("On-hold")) {
+                project.setAnnotation(oc.getAnnotations(project, "Pending"));
+                Annotation a = oc.getAnnotations(project, "Pending");
+                Task t = oc.getMeeting(project);
+                t.setAgenda(oc.getAgenda(t.getId()));
+                session.setAttribute("annotations", a);
+                session.setAttribute("meeting", t);
                 dispatch = context.getRequestDispatcher("/OCPD_ViewProjectDetailsOnHold.jsp");
             } else {
                 dispatch = context.getRequestDispatcher("/OCPD_ViewProjectDetails.jsp");

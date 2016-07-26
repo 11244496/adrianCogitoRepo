@@ -682,7 +682,7 @@ public class GSDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "insert into project_has_pworks (pworks_id, project_id) values (?,?)";
+            String query = "insert into project_has_works (pworks_id, project_id) values (?,?)";
             statement = connection.prepareStatement(query);
             statement.setInt(1, pw.getId());
             statement.setString(2, p.getId());
@@ -775,30 +775,33 @@ public class GSDAO {
     }
 
     //================================ALL CODES ON MEETINGS========================================================
-    //FIX
-    public ArrayList<Schedule> getAllMeetings(String status) {
-        ArrayList<Schedule> meetingList = new ArrayList<Schedule>();
+    
+    public ArrayList<Task> getAllMeetings(String status) {
+        ArrayList<Task> meetingList = new ArrayList<>();
+        ArrayList<Schedule> sList = new ArrayList<>();
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String getID = "select * from task join schedule on task.id = schedule.Task_ID where task.name = ? and Status = ?";
+            String getID = "select project.id, project.name, startdate, time, remarks, task.id, schedule.id from project join task on project_id = project.id join schedule on task_id = task.id where schedule.status = ? and task.name = ?";
             statement = connection.prepareStatement(getID);
-            statement.setString(1, "Meeting with OCPD");
-            statement.setString(2, status);
+            statement.setString(1, status);
+            statement.setString(2, "Meeting with OCPD");
             result = statement.executeQuery();
             while (result.next()) {
+                Project p = new Project();
+                Task t = new Task();
                 Schedule s = new Schedule();
-                s.setId(result.getInt("ID"));
-                s.setEvent(result.getString("Event"));
-                s.setStartdate(result.getString("StartDate"));
-                s.setEnddate(result.getString("EndDate"));
-                s.setStatus(result.getString("Status"));
-                s.setStage(result.getString("Stage"));
-                s.setDept(result.getString("Department"));
-                s.setTime(result.getString("Time"));
-                s.setProjectID(result.getString("Project_ID"));
-                s.setRemarks(result.getString("Remarks"));
-                meetingList.add(s);
+                p.setId(result.getString("project.id"));
+                p.setName(result.getString("project.name"));
+                t.setId(result.getInt("task.id"));
+                s.setId(result.getInt("schedule.id"));
+                s.setStartdate(result.getString("startdate"));
+                s.setTime(result.getString("time"));
+                s.setRemarks(result.getString("remarks"));
+                sList.add(s);
+                t.setProject(p);
+                t.setSchedules(sList);
+                meetingList.add(t);
             }
 
             statement.close();
@@ -810,7 +813,7 @@ public class GSDAO {
         return meetingList;
     }
 
-    //FIX
+    
     public ArrayList<Task> getAgenda(Schedule s) {
         ArrayList<Task> tList = new ArrayList<>();
         Task t;
@@ -832,6 +835,56 @@ public class GSDAO {
             Logger.getLogger(OCPDDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return tList;
+    }
+    
+    public void insertTask(Task t, Project p) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into task (name, project_id) values (?,?)";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, t.getName());
+            statement.setString(2, p.getId());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in inserting pworks per project", ex);
+        }
+    }
+
+    public void insertSchedule(Task t, Schedule s) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into schedule (startdate, enddate, status, task_id) values (?,?,?,?)";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, s.getStartdate());
+            statement.setString(2, s.getEnddate());
+            statement.setString(3, s.getStatus());
+            statement.setInt(4, t.getId());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in inserting pworks per project", ex);
+        }
+    }
+    
+    public int getTaskID() {
+        int x = 0;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select max(id) i from task";
+            statement = connection.prepareStatement(query);
+            result = statement.executeQuery();
+            while (result.next()) {
+                x = result.getInt("i");
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting meeting", ex);
+        }
+        return x;
     }
 
     //===============================ALL CODES ON DOCUMENTS================================================
@@ -985,22 +1038,22 @@ public class GSDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "select * from annotation where project_id = ? and status = ?";
+            String query = "select * from annotations where project_id = ? and status = ?";
             statement = connection.prepareStatement(query);
-            statement.setString(1, a.getProject().getId());
+            statement.setString(1, p.getId());
             statement.setString(2, status);
             result = statement.executeQuery();
             while (result.next()) {
                 a = new Annotation();
                 a.setId(result.getInt("ID"));
-                a.setTestimonials(result.getString("Testimonials"));
-                a.setProjects(result.getString("Projects"));
                 a.setDetails(result.getString("Details"));
-                a.setProgram(result.getString("Program"));
+                a.setPworks(result.getString("Pworks"));
+                a.setSchedule(result.getString("Schedule"));
+                a.setTestimonial(result.getString("Testimonial"));
+                a.setFiles(result.getString("Files"));
+                a.setStatus(result.getString("Status"));
                 a.setGeneral(result.getString("General"));
-                a.setStatus(status);
                 a.setDate(result.getString("Date"));
-                a.setProject(p);
             }
             connection.close();
         } catch (SQLException ex) {
@@ -1198,10 +1251,10 @@ public class GSDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "select * from project_has_pworks \n"
+            String query = "select * from project_has_works \n"
                     + "join pworks on Pwork_ID = pworks.id\n"
-                    + "join inspection_report on proj_pworks_id = project_has_pworks.id\n"
-                    + "where project_has_pworks.Project_ID = ? AND DateUploaded = ?";
+                    + "join inspection_report on proj_pworks_id = project_has_works.id\n"
+                    + "where project_has_works.Project_ID = ? AND DateUploaded = ?";
             statement = connection.prepareStatement(query);
             statement.setString(1, id);
             statement.setString(2, date);
@@ -1217,7 +1270,7 @@ public class GSDAO {
 
                 inspection = new Inspection_Report(result.getInt("inspection_report.ID"), result.getString("Remark"), result.getString("DateUploaded"));
 
-                proj_pwork = new Project_has_Pwork(result.getInt("project_has_pworks.ID"), p, pwork);
+                proj_pwork = new Project_has_Pwork(result.getInt("project_has_works.ID"), p, pwork);
                 proj_pwork.setInspection(inspection);
                 reportList.add(proj_pwork);
 
@@ -1228,6 +1281,27 @@ public class GSDAO {
         }
 
         return reportList;
+    }
+    
+    public boolean isEditable(Project p) {
+        boolean isEditable = false;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select max(startdate), status from schedule join task on task_id = task.id where project_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                if (result.getString("status").equalsIgnoreCase("Done")) {
+                    isEditable = true;
+                }
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting latest meeting", ex);
+        }
+        return isEditable;
     }
 
 }

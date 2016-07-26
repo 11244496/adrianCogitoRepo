@@ -18,6 +18,7 @@ public class Task {
     private Project project;
     private String description;
     private ArrayList<Schedule> schedules;
+    private ArrayList<Agenda> agenda;
 
     public Task() {
     }
@@ -70,6 +71,14 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public ArrayList<Agenda> getAgenda() {
+        return agenda;
+    }
+
+    public void setAgenda(ArrayList<Agenda> agenda) {
+        this.agenda = agenda;
     }
 
     

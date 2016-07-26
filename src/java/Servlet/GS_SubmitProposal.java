@@ -11,7 +11,9 @@ import Entity.Employee;
 import Entity.Location;
 import Entity.PWorks;
 import Entity.Project;
+import Entity.Schedule;
 import Entity.TLocation;
+import Entity.Task;
 import Entity.Testimonial;
 import Entity.Unit;
 import java.io.IOException;
@@ -117,6 +119,8 @@ public class GS_SubmitProposal extends HttpServlet {
                 }
             }
 
+            setSchedule(request, p);
+            
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/GS_ViewProjectList");
             dispatch.forward(request, response);
@@ -169,6 +173,41 @@ public class GS_SubmitProposal extends HttpServlet {
 
         p.setLocation(locList);
     }
+    
+    private void setSchedule(HttpServletRequest request, Project p) {
+        JSONArray schedule = new JSONArray(request.getParameter("schedule"));
+        Task t = null;
+        Schedule s = null;
+        ArrayList<Schedule> sList;
+        ArrayList<Task> tList = new ArrayList<>();
+        
+        for (Object obj : schedule) {
+            t = new Task();
+            JSONObject j = new JSONObject(obj.toString());
+            t.setName(j.getString("name"));
+            JSONArray ja = j.getJSONArray("details");
+            sList = new ArrayList<>();
+            for (int x = 0; x < ja.length(); x++) {
+                JSONObject co = ja.getJSONObject(x);
+                s = new Schedule();
+                s.setStartdate(co.getString("start"));
+                s.setEnddate(co.getString("end"));
+                s.setStatus("Pending");
+                sList.add(s);
+            }
+            t.setSchedules(sList);
+            tList.add(t);
+        }
+        
+        for (Task task : tList){
+            gs.insertTask(t, p);
+            task.setId(gs.getTaskID());
+            for (Schedule sched : t.getSchedules()){
+                gs.insertSchedule(t, s);
+            }
+        }
+    }
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

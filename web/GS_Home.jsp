@@ -12,7 +12,8 @@
 
 
     <% Employee e = (Employee) session.getAttribute("user");
-
+        ArrayList<Task> meetings = (ArrayList<Task>) request.getAttribute("meetings");
+        ArrayList<Task> pMeetings = (ArrayList<Task>) request.getAttribute("pending");
         int PP = (Integer) request.getAttribute("PP");
 
         int OP = (Integer) request.getAttribute("OP");
@@ -242,7 +243,7 @@
                                         </li>
                                         <li>
                                             <a href="#all" data-toggle="tab">
-                                                Meetings
+                                                Confirmed Meetings
                                             </a>
                                         </li>
 
@@ -256,19 +257,34 @@
                                             <div class="form-group">
 
                                                 <div class="directory-info-row">
-                                                    <div class="row"> <table class="table">
+                                                    <div class="row"> 
+                                                        <table class="table">
                                                             <thead>
                                                                 <tr>
                                                                     <th>Project</th>
                                                                     <th>Scheduled Date</th>
                                                                     <th>Scheduled Time</th>
-                                                                    <th>Agenda</th>
                                                                     <th>Remarks</th>
                                                                     <th></th>
 
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
+                                                                <% for (int x = 0; x < meetings.size(); x++) {
+                                                                        Task t = meetings.get(x);%>
+                                                                <tr>
+                                                                    <td><%=t.getProject().getName()%></td>
+                                                                    <td><%=t.getSchedules().get(0).getStartdate()%></td>
+                                                                    <td><%=t.getSchedules().get(0).getTime()%></td>
+                                                                    <td><%=t.getSchedules().get(0).getRemarks()%></td>
+                                                                    <td>
+                                                                        <button data-toggle="modal" class="btn btn-success btn-sm" value="<%=t.getSchedules().get(0).getId()%>" type="button" onclick="approveMeeting(this)">Approve</button>  
+                                                                        <button data-toggle="modal" class="btn btn-danger btn-sm" value="<%=t.getSchedules().get(0).getId()%>" type="button" onclick="reschedule(this)">Reschedule</button>  
+                                                                        <button data-toggle="modal" class="btn btn-info btn-sm" value="<%=t.getId()%>" type="button" onclick="viewAgenda(this)">View Agenda</button>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <%}%>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -285,13 +301,30 @@
                                                     <div class="row"> <table class="table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Date</th>
                                                                     <th>Project</th>
+                                                                    <th>Scheduled Date</th>
+                                                                    <th>Scheduled Time</th>
+                                                                    <th>Remarks</th>
                                                                     <th></th>
 
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
+                                                                <% for (int x = 0; x < pMeetings.size(); x++) {
+                                                                        Task t = pMeetings.get(x);%>
+                                                                <tr>
+                                                                    <td><%=t.getProject().getName()%></td>
+                                                                    <td><%=t.getSchedules().get(0).getStartdate()%></td>
+                                                                    <td><%=t.getSchedules().get(0).getTime()%></td>
+                                                                    <td><%=t.getSchedules().get(0).getRemarks()%></td>
+                                                                    <td>
+                                                                        <button data-toggle="modal" class="btn btn-success btn-sm" value="<%=t.getSchedules().get(0).getId()%>" type="button" onclick="setToDone(this)">Done</button>  
+                                                                        <button data-toggle="modal" class="btn btn-danger btn-sm" value="<%=t.getSchedules().get(0).getId()%>" type="button" onclick="reschedule(this)">Reschedule</button>  
+                                                                        <button data-toggle="modal" class="btn btn-info btn-sm" value="<%=t.getId()%>" type="button" onclick="viewAgenda(this)">View Agenda</button>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <%}%>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -349,26 +382,21 @@
             </section>
         </section>
 
-        <div class="modal fade" id="adjustModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal fade" id="displayAgenda" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="adjMheader"></h4>
+                        <h4 class="modal-title">Agenda</h4>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="control-label pull-left regFieldTitle">Set Date: </label>
-                            <input type="date" class="form-control" name="SetDate" id="startDM">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label pull-left regFieldTitle">Set Time: </label>
-                            <input type="time" class="form-control" name="timeDM" id="timeDM">
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-success" type="button" id="submitadjustModal"> Save</button>
+                    <div class="modal-body panel-body">
+                        <div class="col-md-12">
+                            <div id="agendaDiv">
+                                <br>
+                                <table class="table table-bordered table-striped table-condensed" style="background: white; cursor:default; border:0px;"  id="agendaTable">
+                                </table>
+                            </div>
+                        </div>                    
                     </div>
                 </div>
             </div>
@@ -397,12 +425,15 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-success" type="button" onclick="submitReschedule()"> Submit</button>
+                        <input type="hidden" id="reschedId">
+                        <button class="btn btn-success" type="button" onclick="rescheduleMeeting()"> Submit</button>
                         <button class="btn btn-default" type="button" data-dismiss="modal"> Close</button>
                     </div>
                 </div>
             </div>
         </div>
+
+
         <!--main content end-->
         <!--footer start-->
         <footer class="site-footer">
@@ -414,93 +445,7 @@
             </div>
         </footer>
 
-        <script>
-            function setScheduleDone(Data) {
-                $.ajax({
-                    type: 'post',
-                    url: 'SetMeetingDone',
-                    dataType: 'json',
-                    data:
-                            {
-                                scheduleID: Data
-                            },
-                    cache: false,
-                    success: function () {
-                        alert("Schedule is now set to done");
-                        window.location.reload();
-                    }
-                });
-            }
 
-            function resched(id) {
-                $('#adjustModal').modal();
-
-                $('#submitadjustModal').click(function () {
-                    $.ajax({
-                        type: 'post',
-                        url: 'UpdateMeetingSched',
-                        dataType: 'json',
-                        data:
-                                {
-                                    setDate: $('#startDM').val(),
-                                    setTime: $('#timeDM').val(),
-                                    schedID: id,
-                                    remarks: $('#remarksSched').val()
-                                },
-                        cache: false,
-                        success: function (newdate) {
-                            alert("Meeting has been rescheduled on " + newdate + ". Please wait for a confirmation from the OCPD");
-                            window.location.reload();
-                        }
-                    });
-                });
-
-
-            }
-
-            function rescheduleModal(button) {
-                $('#rescheduleModal').modal();
-                $('#unconId').val(button.id);
-            }
-
-            function approveMeeting(button) {
-                $.ajax({
-                    type: 'post',
-                    url: 'confirmschedule',
-                    dataType: 'json',
-                    data:
-                            {
-                                scheduleID: button.id
-                            },
-                    cache: false,
-                    success: function () {
-                        alert("Meeting has been confirmed.");
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function submitReschedule() {
-                $.ajax({
-                    type: 'post',
-                    url: 'UpdateMeetingSched',
-                    dataType: 'json',
-                    data:
-                            {
-                                setDate: $('#preferredDate').val(),
-                                setTime: $('#preferredTime').val(),
-                                schedID: $('#unconId').val(),
-                                remarks: $('#remarksSched').val()
-                            },
-                    cache: false,
-                    success: function (newdate) {
-                        alert("Meeting has been rescheduled on " + newdate + ". Please wait for a confirmation from the OCPD");
-                        window.location.reload();
-                    }
-                });
-            }
-
-        </script>   
 
         <!--footer end-->
         <!-- js placed at the end of the document so the pages load faster -->
@@ -524,5 +469,81 @@
 
         <!--common script for all pages-->
         <script src="js/common-scripts.js"></script>
+        <script>
+                            function reschedule(btn) {
+                                $('#rescheduleModal').modal();
+                                $('#reschedId').val($(btn).val());
+                            }
+
+                            function approveMeeting(btn) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'AJAX_UpdateMeeting',
+                                    dataType: 'json',
+                                    data: {
+                                        schedId: $(btn).val(),
+                                        action: "approve"
+                                    },
+                                    success: function () {
+                                        alert("Meeting successfully approved");
+                                        location.reload();
+                                    }
+                                });
+                            }
+
+                            function setToDone(btn) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'AJAX_UpdateMeeting',
+                                    dataType: 'json',
+                                    data: {
+                                        schedId: $(btn).val(),
+                                        action: "settodone"
+                                    },
+                                    success: function () {
+                                        alert("Meeting successfully approved");
+                                        location.reload();
+                                    }
+                                });
+                            }
+
+                            function rescheduleMeeting() {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'AJAX_UpdateMeeting',
+                                    dataType: 'json',
+                                    data: {
+                                        schedId: $('#reschedId').val(),
+                                        start: $('#preferredDate').val(),
+                                        end: $('#preferredDate').val(),
+                                        time: $('#preferredTime').val(),
+                                        remarks: $('#remarksSched').val(),
+                                        action: "reschedule"
+                                    },
+                                    success: function () {
+                                        alert("Meeting successfully rescheduled. Please wait for confirmation.");
+                                        location.reload();
+                                    }
+                                });
+                            }
+
+                            function viewAgenda(btn) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'AJAX_GetAgenda',
+                                    dataType: 'json',
+                                    data: {taskId: $(btn).val()},
+                                    success: function (f) {
+                                        $.each(f, function (i) {
+                                            var tr = $('<tr></tr>');
+                                            var td = $('<td>' + f[i].agenda + '</td>');
+                                            tr.append(td);
+                                            $('#agendaTable').append(tr);
+                                        });
+                                        $('#displayAgenda').modal();
+                                    }
+                                });
+                            }
+        </script>
     </body>
 </html>
