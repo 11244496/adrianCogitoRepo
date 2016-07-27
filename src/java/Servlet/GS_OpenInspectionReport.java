@@ -54,7 +54,7 @@ public class GS_OpenInspectionReport extends HttpServlet {
             
                 
                 
-            String json = new Gson().toJson(proj_pwork);
+            String json = new Gson().toJson(inspectionReport);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(json);
