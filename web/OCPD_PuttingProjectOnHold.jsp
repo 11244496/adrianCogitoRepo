@@ -189,53 +189,42 @@
                     <!-- sidebar menu start-->
                     <ul class="sidebar-menu" id="nav-accordion">
                         <li>
-                            <a href="GS_Home">
+                            <a href="OCPD_Home" class="active">
                                 <i class="fa fa-dashboard"></i>
                                 <span>Home</span>
                             </a>
                         </li>
 
+
                         <li>
-                            <a href="GS_ViewTestimonials">
-                                <i class="fa fa-dashboard"></i>
-                                <span>View Citizen Testimonials</span>
+                            <a href="OCPD_ViewPlanningDocument">
+                                <i class="fa fa-book"></i>
+                                <span>CLUP and CDP</span>
                             </a>
-                        </li>	
+                        </li>
 
                         <!--multi level menu start-->
                         <li class="sub-menu">
-                            <a href="javascript:;">
+                            <a href="javascript:;" >
                                 <i class="fa fa-tasks"></i>
                                 <span>Project Proposals</span>
                             </a>
                             <ul class="sub">
-                                <li><a  href="GS_CreateProposal">&nbsp; &nbsp; &nbsp; &nbsp; Create Proposal</a></li>
-                                <li><a  href="GS_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
-                                <li><a  href="GS_ViewImplementedProjects">&nbsp; &nbsp; Monitor Implemented Projects</a></li>
+                                <li><a  href="OCPD_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
+                                <li class="sub-menu">
+                                    <a  href="">&nbsp; &nbsp; &nbsp; &nbsp; Monitor Projects</a>
+                                    <ul class="sub">
+                                        <li><a  href="OCPD_Timeline.jsp">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Timeline</a></li>
+                                        <li class="sub-menu">
+                                            <a  href="OCPD_ViewProjectStatus">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Project Status</a>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
-                        </li>
-                        <li>
-                            <a href="GS_ScheduleChange">
-                                <i class="fa fa-dashboard"></i>
-                                <span>Schedule Change Requests</span>
-                            </a>
                         </li>
                         <!--multi level menu end-->
                         <li>
-                            <a href="GS_DisplayCDPCLUP">
-                                <i class="fa fa-book"></i>
-                                <span>View CLUP and CDP</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="GS_ViewAR.jsp">
-                                <i class="fa fa-book"></i>
-                                <span>View Accomplishment Report</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="GS_NotificationActivity">
+                            <a href="OCPD_NotificationActivity">
                                 <i class="fa fa-book"></i>
                                 <span>Notification and Activity</span>
                             </a>

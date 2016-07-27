@@ -12,6 +12,7 @@ import Entity.Barangay;
 import Entity.Citizen;
 import Entity.Citizen_Report;
 import Entity.Comment;
+import Entity.Contractor;
 import Entity.Employee;
 import Entity.Files;
 import Entity.Location;
@@ -911,7 +912,7 @@ public class CitizenDAO {
 
     public void commentOnTestimonial() {
     }
-    
+
     public void uploadCitizenReport(Citizen_Report rep) {
 
         try {
@@ -919,7 +920,7 @@ public class CitizenDAO {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
             //INSERT INTO `cogitov3`.`citizen_report` (`ID`, `Message`, `FolderName`, `Date_Uploaded`, `Citizen_ID`, `Project_ID`) VALUES ('3', 'vvv', 'v', 'v', 'v', 'v');
-            
+
             String query = "INSERT INTO citizen_report (Message, FolderName, Date_Uploaded,Citizen_ID,Project_ID) VALUES (?,?,now(),?,?);";
 
             statement = connection.prepareStatement(query);
@@ -927,7 +928,6 @@ public class CitizenDAO {
             statement.setString(2, rep.getFoldername());
             statement.setInt(3, rep.getCitizen().getId());
             statement.setString(4, rep.getProject().getId());
-            
 
             statement.executeUpdate();
             statement.close();
@@ -937,28 +937,25 @@ public class CitizenDAO {
             Logger.getLogger(DAO.CitizenDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public int getRecentPostid(Citizen c , String message) {
-            int id = 0;
+
+    public int getRecentPostid(Citizen c, String message) {
+        int id = 0;
         try {
 
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            
-            
+
             String query = "select citizen_report.ID from citizen_report join citizen on citizen_report.Citizen_ID = citizen.ID join users on citizen.Users_ID = users.ID where username = ? and citizen_report.Date_Uploaded = (select max(citizen_report.Date_Uploaded) from citizen_report) and citizen_report.Message = ?";
 
             statement = connection.prepareStatement(query);
             statement.setString(1, c.getUser().getUsername());
             statement.setString(2, message);
-            
+
             result = statement.executeQuery();
             while (result.next()) {
                 id = result.getInt("ID");
             }
-            
 
-            
             statement.close();
             connection.close();
 
@@ -967,14 +964,12 @@ public class CitizenDAO {
         }
         return id;
     }
-    
-    
-    //Files
-       public void uploadFiles(Report_File rf) {
+
+    public void uploadFiles(Report_File rf) {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "INSERT INTO report_file (FileName, Date_Uploaded, Type, Uploader, Description, Citizen_ReportID, Project_ID) "
+            String query = "INSERT INTO report_file (FileName, Date_Uploaded, Type, Uploader, Description, Citizen_Report_ID, Project_ID) "
                     + "VALUES (?,now(),?, ?,?,?,?);";
             statement = connection.prepareStatement(query);
             statement.setString(1, rf.getFilename());
@@ -994,5 +989,74 @@ public class CitizenDAO {
         }
 
     }
-    
+
+    public Project getBasicProjectDetails(String id) {
+        Project p = new Project();
+        Employee e;
+        User u;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String detailsQuery = ("select * from project join employee on employee.id = employee_id join users on users.id = users_id where project.id = ?");
+            statement = connection.prepareStatement(detailsQuery);
+            statement.setString(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                u = new User();
+                e = new Employee();
+                p.setId(result.getString("project.ID"));
+                p.setName(result.getString("name"));
+                p.setDescription(result.getString("description"));
+                p.setCategory(result.getString("project.category"));
+                p.setStatus(result.getString("status"));
+                p.setFoldername(result.getString("FolderName"));
+                p.setDatesubmitted(result.getString("datesubmitted"));
+                e.setId(result.getInt("employee.id"));
+                u.setUsername(result.getString("username"));
+                p.setEmployee(e);
+                p.setCategory(result.getString("Category"));
+                p.setBudget(result.getFloat("budget"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return p;
+    }
+
+    public ArrayList<Project> getProjectsForImplementation(String input) {
+        ArrayList<Project> projects = new ArrayList<Project>();
+        Project project;
+        Contractor contractor;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from project JOIN contractor ON project.Contractor_ID = contractor.ID where status = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, input);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                contractor = new Contractor(result.getInt("contractor.ID"), result.getString("contractor.Name"));
+                project = new Project();
+                project.setId(result.getString("ID"));
+                project.setName(result.getString("Name"));
+                project.setDescription(result.getString("Description"));
+                project.setCategory(result.getString("Category"));
+                project.setStatus(result.getString("Status"));
+                project.setContractor(contractor);
+
+                projects.add(project);
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return projects;
+    }
+
 }

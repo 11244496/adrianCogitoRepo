@@ -7,6 +7,7 @@ package Servlet;
 
 import DAO.GSDAO;
 import DAO.OCPDDAO;
+import Entity.Inspection_Report;
 import Entity.Project;
 import Entity.Project_has_Pwork;
 import java.io.IOException;
@@ -50,12 +51,12 @@ public class GS_ViewInspectionList extends HttpServlet {
             String projectID = request.getParameter("projectId");
             
             Project project = oc.getBasicProjectDetails(projectID);
-            ArrayList<Project_has_Pwork> proj_pwork = gsDAO.getProject_has_PworkList(project);
-            
+            //ArrayList<Project_has_Pwork> proj_pwork = gsDAO.getProject_has_PworkList(project);
+            ArrayList<Inspection_Report> listDate = gsDAO.getInspectionDate(project);
             
             
             request.setAttribute("project", project);
-            request.setAttribute("proj_pwork", proj_pwork);
+            request.setAttribute("listDate", listDate);
                 
                 
                 

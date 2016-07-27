@@ -12,9 +12,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%Contractor_User c = (Contractor_User) session.getAttribute("user");%>
 <%
-             ArrayList<Progress_Report> progressList = (ArrayList<Progress_Report>) request.getAttribute("reportList");                 
-             Project project = (Project) request.getAttribute("project");
-                                
+    ArrayList<Progress_Report> progressList = (ArrayList<Progress_Report>) request.getAttribute("reportList");
+    Project project = (Project) request.getAttribute("project");
+
 %>
 
 <!DOCTYPE html>
@@ -127,7 +127,7 @@
                             <span>Profile</span>
                         </a>
                     </li>
-                    
+
                     <li>
                         <a href="Contractor_ViewProjectList">
                             <i class="fa fa-dashboard"></i>
@@ -176,156 +176,152 @@
                 </ul>
             </div>
         </aside>
-                                
+
 
         <!--main content start-->
- <section id="main-content">
+        <section id="main-content">
             <section class="wrapper site-min-height">
                 <section class="panel">
                     <header class="panel-heading">
-                       <b> Project: </b> <%=project.getName()%> <br><br>
+                        <b> Project: </b> <%=project.getName()%> <br><br>
                         <b>Description: </b> <%=project.getDescription()%> 
-                        
+
                         <button id="" style="float: right;"type="button" class="btn btn-default btn-danger" data-toggle="modal" href="#submitProgress">Submit Progress Report</button>
-                    <br>
-                     <br>
+                        <br>
+                        <br>
                     </header>
                     <br>
-                    
-                        
-                        
-                        
-                        <div class="col-sm-12 panel">
-                            <div class="col-sm-4">
-                               
-                                <table class="table table-striped table-advance table-hover">
-                                     <thead>
-                                     <th>Date posted</th>
-                                     <th></th>
-                                     
-                                     </thead>    
-                                    <tbody>
-                                        <%
-                                        for(int x= 0; x < progressList.size();x++){
+
+
+
+
+                    <div class="col-sm-12 panel">
+                        <div class="col-sm-4">
+
+                            <table class="table table-striped table-advance table-hover">
+                                <thead>
+                                <th>Date posted</th>
+                                <th></th>
+
+                                </thead>    
+                                <tbody>
+                                    <%
+                                        for (int x = 0; x < progressList.size(); x++) {
                                             int repid = progressList.get(x).getID();
-                                       
-                                        %>
-                                        
-                                        <tr>
-                                            
-                                            <td>
-                                              <%=progressList.get(x).getDateUploaded()%>
-                                            </td>
-                                            <td>
-                                                <button id="viewMedia" type="button" class="btn btn-round btn-info" onClick='javascript:getReport(<%=repid%>)'>Open report</button>
-                                            </td>    
-                                        </tr>    
-                                        
-                                        
-                                        
-                                        <%
+
+                                    %>
+
+                                    <tr>
+
+                                        <td>
+                                            <%=progressList.get(x).getDateUploaded()%>
+                                        </td>
+                                        <td>
+                                            <button id="viewMedia" type="button" class="btn btn-round btn-info" onClick='javascript:getReport(<%=repid%>)'>Open report</button>
+                                        </td>    
+                                    </tr>    
+
+
+
+                                    <%
                                         }
-                                        
-                                        
-                                        %>
-                                        
-                                    </tbody>    
-                                    
-                                    
-                                </table>    
-                                
-                               
-
-                                
-                            </div>
 
 
-                            <div class="col-sm-8">
-                                
-                               
-                                <div id="fileFeed" class="modal-body">
-                                    
+                                    %>
+
+                                </tbody>    
 
 
-                                </div>
-                                
-                                
-                                
-                                <div class="col-sm-12">
-                                    
-                                </div>
-                            </div>
-                        </div>
+                            </table>    
 
-                        
-                        
-                        <br>
-                        <br>
+
+
+
                         </div>
 
 
-                  
+                        <div class="col-sm-8">
+
+
+                            <div id="fileFeed" class="modal-body">
+
+
+
+                            </div>
+
+
+
+                            <div class="col-sm-12">
+
+                            </div>
+                        </div>
                     </div>
+
+
+
+                    <br>
+                    <br>
+
                 </section>
             </section>
-                                        
-                                                               <form action="Contractor_SubmitProgressReport" class="form-horizontal tasi-form" method="POST" enctype="multipart/form-data">
-                    
-              <div class="modal fade " id="submitProgress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                  
-                                 
-                                  
-                                  
-                                   
-                                  
-                                  <div class="modal-dialog">
-                                      <div class="modal-content">
-                                          <div class="modal-header">
-                                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                              <h4 class="modal-title">Submit Progress Report</h4>
-                                          </div>
-                                          <div class="modal-body">
-                                              
-                                              <br>
-                                                  <label class="col-sm-2 col-sm-2 control-label">Update:<i class="formAsterisk">*</i></label>
-                                                  <div class="col-sm-10">
-                                                      <textarea class="wysihtml5 form-control" required rows="5" name="reportdescription"></textarea>
-                                                      <span class="help-block">Provide necessary updates regarding the progress of the project</span>
-                                                      <br>
-                                                  </div>
-                                                  <br>
-                                                  <br>
-                                                  <label class="col-sm-2 col-sm-2 control-label">Attach report: </label>
-                                                  <br>
-                                                  <div class="col-sm-10">
-                                                      <input name="Document" type="file" class="default form-control" multiple style="border:0"/>
 
-                                                      <br>
-                                                  </div>
+            <form action="Contractor_SubmitProgressReport" class="form-horizontal tasi-form" method="POST" enctype="multipart/form-data">
 
-                                              
-                                              
-                                             
-                                          </div>
-                                          
-        <!-- Modal -->
-                                          <input type="hidden" value="<%=project.getId()%>" name="projectID"/>
-                                          <div class="modal-footer">
-                                              
-                                              <button class="btn btn-success" type="submit">Submit</button>
-                                              <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-                                          </div>
-                                         
-                                      </div>
-                                  </div>
-                                   
-                              </div>
-                              <!-- modal -->
-                                  
-                                </form>         
-                                        
-                                        
-                                        
+                <div class="modal fade " id="submitProgress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+
+
+
+
+
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Submit Progress Report</h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <br>
+                                <label class="col-sm-2 col-sm-2 control-label">Update:<i class="formAsterisk">*</i></label>
+                                <div class="col-sm-10">
+                                    <textarea class="wysihtml5 form-control" required rows="5" name="reportdescription"></textarea>
+                                    <span class="help-block">Provide necessary updates regarding the progress of the project</span>
+                                    <br>
+                                </div>
+                                <br>
+                                <br>
+                                <label class="col-sm-2 col-sm-2 control-label">Attach report: </label>
+                                <br>
+                                <div class="col-sm-10">
+                                    <input name="Document" type="file" class="default form-control" multiple style="border:0"/>
+
+                                    <br>
+                                </div>
+
+
+
+
+                            </div>
+
+                            <!-- Modal -->
+                            <input type="hidden" value="<%=project.getId()%>" name="projectID"/>
+                            <div class="modal-footer">
+
+                                <button class="btn btn-success" type="submit">Submit</button>
+                                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <!-- modal -->
+
+            </form>         
+
+
+
         </section>
         <!--main content end-->
 
@@ -338,53 +334,50 @@
                 </a>
             </div>
         </footer>
-        
-                  <script>
+
+        <script>
             function getReport(repId) {
-                console.log("-------" + repId);
+                //console.log("-------" + repId);
                 $.ajax({
                     type: 'POST',
-                    url: 'GS_OpenCitizenReport',
+                    url: 'Contractor_GetProgressReport',
                     dataType: 'json',
                     cache: false,
-                   data: {reportId: repId},
+                    data: {reportId: repId},
                     success: function (file) {
-                        
+
                         $("#fileFeed").empty();
-                        
+
                         var label = $("<label/>");
-                          label.text("Message: ")
-                          label.prop("id", "label");
-                          label.appendTo("#fileFeed");
-                          
-                          $("<br>").appendTo("#fileFeed");
-                          
-                          var label2 = $("<label/>");
-                          label2.text(file[0].citizenReport.message);
-                          label2.prop("id", "label2");
-                          label2.appendTo("#fileFeed");
-                          
-                          $("<br>").appendTo("#fileFeed");
-                          $("<br>").appendTo("#fileFeed");
-                          
-                        
-                        $.each( file, function( i, l ){
-                            
-                          
-                          var frame = $("<iframe/>");
-                          frame.prop("id", "iframe" + i);
-                          frame.prop("src", file[i].citizenReport.foldername + "/" + file[i].filename);
-                          frame.prop("height","300");
-                          frame.prop("width","700");
-                                                   
-                          frame.appendTo("#fileFeed");
-                          
-                          $("<br>").appendTo("#fileFeed");
-                          $("<br>").appendTo("#fileFeed");
-                          
-                          
-                          
-                        });
+                        label.text("Message: ")
+                        label.prop("id", "label");
+                        label.appendTo("#fileFeed");
+
+                        $("<br>").appendTo("#fileFeed");
+
+                        var label2 = $("<label/>");
+                        label2.text(file.Message);
+                        label2.prop("id", "label2");
+                        label2.appendTo("#fileFeed");
+
+                        $("<br>").appendTo("#fileFeed");
+                        $("<br>").appendTo("#fileFeed");
+
+
+                        var frame = $("<iframe/>");
+                        frame.prop("id", "iframe");
+                        frame.prop("src", file.FolderName + "/" + file.FileName);
+                        frame.prop("height", "300");
+                        frame.prop("width", "700");
+
+                        frame.appendTo("#fileFeed");
+
+                        $("<br>").appendTo("#fileFeed");
+                        $("<br>").appendTo("#fileFeed");
+
+
+
+
 
 //                        $.each(file, function (i) {
 //                                    
@@ -404,8 +397,8 @@
 
             }
         </script>
-                              
-        
+
+
 
         <!-- js placed at the end of the document so the pages load faster -->
         <script src="js/jquery.js"></script>

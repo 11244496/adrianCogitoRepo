@@ -419,7 +419,7 @@
                                             </div>
 
                                             <div id="submitEntryEdit">
-                                                
+
                                             </div>
 
                                         </section>
@@ -713,7 +713,7 @@
                 "dataDateFormat": "YYYY-MM-DD",
                 "startDateField": "startdate",
                 "endDateField": "enddate",
-                "dataProvider": <%=tasksJSON%>,
+        "dataProvider": <%=tasksJSON%>,
                 "chartCursor": {
                     "valueBalloonsEnabled": false,
                     "cursorAlpha": 0,
@@ -727,7 +727,6 @@
                     "autoGridCount": true,
                     "color": "#000000"
                 },
-                
             });
 
 
@@ -867,7 +866,6 @@
             ;
 
         </script>
-
 
     </body>
 

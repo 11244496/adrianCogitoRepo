@@ -5,9 +5,12 @@
 --%>
 
 
+<%@page import="Entity.Timeline_Update"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="Entity.Project"%>
 <%@page import="Entity.Contractor_User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<%Contractor_User c = (Contractor_User) session.getAttribute("user");%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -33,18 +36,27 @@
 
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-        <link rel="stylesheet" href="/Cogito/samples/style.css" type="text/css">
-        <script src="/Cogito/amcharts/amcharts.js" type="text/javascript"></script>
-        <script src="/Cogito/amcharts/serial.js" type="text/javascript"></script>
-        <script src="/Cogito/amcharts/themes/dark.js"></script>
-        <script src="/Cogito/amcharts/gantt.js" type="text/javascript"></script>
+        <script src='amcharts/amcharts.js'></script>
+        <script src='amcharts/serial.js'></script>
+        <script src='amcharts/themes/dark.js'></script>
+        <script src='amcharts/gantt.js'></script>
 
     </head>
 
 
 
 
+
+
     <body>
+
+
+        <%
+
+            Project project = (Project) request.getAttribute("project");
+            ArrayList<Timeline_Update> tList = (ArrayList<Timeline_Update>) request.getAttribute("tList");
+
+        %>
 
         <section id="container" class="">
             <header class="header green-bg">
@@ -97,7 +109,7 @@
                         <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <img alt="" src="img/avatar1_small.jpg">
-                                <span class="username">Hello <b><u></u></b>!</span>
+                                <span class="username">Hello <b><u><%=c.getName()%></u></b>!</span>
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu extended logout">
@@ -186,12 +198,12 @@
                 <!-- page start-->
                 <section class="panel">
                     <header class="panel-heading">
-                        Panel 1 for project description
+                        Project description
                     </header>
                     <div class="panel-body">
+                        <label><%=project.getName()%></label><br>
 
-
-
+                        <label><%=project.getDescription()%></label>
 
 
 
@@ -200,9 +212,9 @@
                 </section>
 
 
-                <section class="panel" style="height:  900px;">
+                <section class="panel" style="height:  900px; overflow: scroll;">
                     <header class="panel-heading">
-                        Panel 2 for the timeline
+                        Timeline
                     </header>
 
                     <div class="panel-body" style="margin-bottom: 10px; height: 80%">
@@ -217,9 +229,7 @@
                             </tr>    
                             <tr>
 
-                            <div> 
-                                <b>Category:</b> <input id="category" type="text">
-                            </div><br>
+                            <div> <b>Category:</b> <input id="category" type="text"></input></div><br>
 
                             </tr> 
                             <tr>
@@ -248,12 +258,81 @@
                             <tr>
 
                             <button id="submitGData" class="btn btn-success">Submit</button>
+                            <button id="prvBtn" class="btn btn-danger" style="display: none;">Submit</button>
                             <button id="addSegment" class="btn btn-warning" style="display: none;">Add date</button>
-                            <button id="prvBtn" class="btn btn-danger" style="display: none;">Preview</button>
-
+                            <button id="backBtn" class="btn btn-default" style="display: none;">Back</button>
                             </tr>    
 
                         </table>    
+                        <br>
+
+
+
+                        <hr>
+
+
+                        <div class="col-sm-12 panel">
+                            <div class="col-sm-6">
+
+
+                                <form action="Contractor_RequestForChange">
+
+                                    <div>
+                                        <input type="hidden" name="projectID" value="<%=project.getId()%>">
+                                        <h4><label>Contact city engineer</label></h4><br>
+                                        <textarea class="wysihtml5 form-control" required rows="5" name="contractormessage"></textarea>
+
+
+                                    </div>
+                                    <br>
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                </form>
+
+
+
+                            </div>
+
+
+                            <div class="col-sm-6">
+
+
+                                <table class="table table-striped table-advance table-hover">
+                                    <thead>
+                                    <th>Date posted</th>
+                                    <th></th>
+
+                                    </thead>    
+                                    <tbody>
+                                        <%
+                                            for (int x = 0; x < tList.size(); x++) {
+                                           // int repid = tList.get(x).getID();
+
+                                        %>
+
+                                        <tr>
+
+                                            <td>
+                                                <%=tList.get(x).getMessage()%>
+                                            </td>
+                                            <td>
+                                                <button id="viewMedia" type="button" class="btn btn-round btn-info" onClick='javascript:getReport("<%=tList.get(x).getID()%>")'>Read</button>
+                                            </td>    
+                                        </tr>    
+
+
+
+                                        <%
+                                            }
+
+
+                                        %>
+
+                                    </tbody>    
+
+
+                                </table>   
+                            </div>
+                        </div>
 
 
 
@@ -262,14 +341,7 @@
 
 
                     </div>
-                    <div class="panel-body">
 
-
-                        <p>For the table</p>
-
-
-
-                    </div>
 
 
 
@@ -277,8 +349,41 @@
 
                 </section>
 
+                <div class="modal fade" id="timelineupdate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-md">
+                        <div class="modal-content">
 
-                <!-- page end-->
+
+
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                                <h5>New Inspection</h5>
+                            </div>
+                            <div class="modal-body">
+
+
+                                <div id="itemField">
+
+
+
+                                </div>    
+
+
+
+                            </div>
+                            <div class="modal-footer">
+
+
+                                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>   
             </section>
         </section>
         <!--main content end-->
@@ -292,6 +397,41 @@
                 </a>
             </div>
         </footer>
+
+
+        <script>
+            function getReport(updateId) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'Contractor_OpenMessage',
+                    dataType: 'json',
+                    cache: false,
+                    data: {updateId: updateId},
+                    success: function (file) {
+
+                        $("#itemField").empty();
+
+                        var txtArea = $("<textarea/>");
+                        txtArea.prop("style", "width: 100%");
+                        txtArea.val(file.message);
+                        txtArea.appendTo("#itemField");
+
+
+                        $('#timelineupdate').modal();
+
+
+
+                    }
+                });
+
+            }
+        </script>
+
+
+
+
+
 
         <!-- js placed at the end of the document so the pages load faster -->
         <script src="js/jquery.js"></script>
@@ -317,322 +457,688 @@
         <script>
 
 
-            //These are the properties of the chart, you set what it  will look like here
-            var chartD;
-            var chartVal = Object.create(null);
-            var chart = AmCharts.makeChart("chartdiv", {
-                "type": "gantt",
-                "period": "DD",
-                "theme": "dark",
-                "valueAxis": {
-                    "type": "date"
-                },
-                "brightnessStep": 10,
-                "graph": {
-                    "fillAlphas": 1,
-                    "balloonText": "[[open]] - [[value]]"
-                },
-                "rotate": true,
-                "categoryField": "category",
-                "segmentsField": "segmentList",
-                "dataDateFormat": "YYYY-MM-DD",
-                "startDateField": "startDate",
-                "endDateField": "endDate",
-                "chartCursor": {
-                    "valueBalloonsEnabled": false,
-                    "cursorAlpha": 0,
-                    "valueLineBalloonEnabled": true,
-                    "valueLineEnabled": true,
-                    "valueZoomable": true,
-                    "zoomable": false
-                },
-                "valueScrollbar": {
-                    "position": "top",
-                    "autoGridCount": true,
-                    "color": "#000000"
-                },
-            });
+             //These are the properties of the chart, you set what it  will look like here
+             var chartD;
+             var chartVal = Object.create(null);
 
+             var chart = AmCharts.makeChart("chartdiv", {
+                 "type": "gantt",
+                 "period": "DD",
+                 "theme": "dark",
+                 "valueAxis": {
+                     "type": "date"
+                 },
+                 "brightnessStep": 10,
+                 "graph": {
+                     "fillAlphas": 1,
+                     "balloonText": "[[open]] - [[value]]"
+                 },
+                 "rotate": true,
+                 "categoryField": "category",
+                 "segmentsField": "segmentList",
+                 "dataDateFormat": "YYYY-MM-DD",
+                 "startDateField": "startDate",
+                 "endDateField": "endDate",
+                 "chartCursor": {
+                     "valueBalloonsEnabled": false,
+                     "cursorAlpha": 0,
+                     "valueLineBalloonEnabled": true,
+                     "valueLineEnabled": true,
+                     "valueZoomable": true,
+                     "zoomable": false
+                 },
+                 "valueScrollbar": {
+                     "position": "top",
+                     "autoGridCount": true,
+                     "color": "#000000"
+                 },
+             });
 
-            //Event method: click item
-            //Once you click one of the bars in the gantt chart, this method will execute
-            var clickItemEvent = function (event) {
 
-                //Refresh
-                $("#submitEntryEdit").html("");
-                //Hide the input for new tasks
-                $("#submitEntry").hide();
-                //Change the label to edit task
-                $("#labelGantt").text("Edit task");
-                $("#prvBtn").show();
-                $("#addSegment").show();
+             //Event method: click item
+             //Once you click one of the bars in the gantt chart, this method will execute
+             var index = 0;
+             var clickItemEvent = function (event) {
+                 index = 0;
 
+                 //Refresh
+                 $("#submitEntryEdit").html("");
+                 //Hide the input for new tasks
+                 $("#submitEntry").hide();
+                 //Change the label to edit task
+                 $("#labelGantt").text("Edit task");
+                 $("#prvBtn").show();
+                 $("#addSegment").show();
+                 $("#submitGData").hide();
+                 $("#backBtn").show();
 
 
 
-                var index = 0;
-                $.map(event.item.dataContext, function (val, i) {
 
-                    //When the index is referring to the category of the selected value
-                    if (i == "category") {
 
-                        //Place the name of the selected value on the textfield 
-                        $("#category").val(event.item.dataContext.category);
 
+                 $.map(event.item.dataContext, function (val, i) {
 
-                    }
-                    //Else, if the index is referring to the segments of that particular value selected
-                    else {
+                     //When the index is referring to the category of the selected value
+                     if (i == "category") {
 
+                         //Place the name of the selected value on the textfield 
+                         $("#category").val(event.item.dataContext.category);
 
-                        var name = i.indexOf("start") != -1 ? "startDate" : "endDate";
-                        var labelName = i.indexOf("start") != -1 ? "Start date: " : "End date: ";
 
+                     }
+                     //Else, if the index is referring to the segments of that particular value selected
+                     else {
 
 
-                        var divInd = "#" + "div" + index;
+                         var name = i.indexOf("start") != -1 ? "startDate" : "endDate";
+                         var labelName = i.indexOf("start") != -1 ? "Start date: " : "End date: ";
 
 
-                        //Creates a div that will store the start date and end date for a particular Task   
-                        if (i.indexOf("start") != -1) {
 
+                         var divInd = "#" + "div-" + index;
 
-                            //Creates a label and then pushes it  to the div
-                            var div = $("<div></div>");
-                            div.prop("id", "div" + index);
-                            div.appendTo("#submitEntryEdit");
 
-                        }
+                         //Creates a div that will store the start date and end date for a particular Task   
+                         if (i.indexOf("start") != -1) {
 
 
+                             //Creates a label and then pushes it  to the div
+                             var div = $("<div></div>");
+                             div.prop("id", "div-" + index);
+                             div.prop("class", "divinput");
+                             div.appendTo("#submitEntryEdit");
 
+                         }
 
-                        //Creates a label and then pushes it  to the div
-                        var label = $("<label/>");
-                        label.html(labelName);
-                        label.prop("id", name + index);
-                        label.appendTo("#" + "div" + index);
 
 
 
-                        //Creates a textfield then puts it to the div
-                        var newStart = $("<input type='text'/>");
-                        newStart.prop("id", name + '-' + index);
-                        newStart.appendTo("#" + "div" + index);
-                        newStart.val(new Date(val));
+                         //Creates a label and then pushes it  to the div
+                         var label = $("<label/>");
+                         label.html(labelName);
+                         label.prop("id", name + index);
+                         label.appendTo("#" + "div-" + index);
 
 
 
-                        $("<br>").appendTo("#" + "div" + index);
+                         //Creates a textfield then puts it to the div
+                         var newStart = $("<input type='text'/>");
+                         newStart.prop("id", name + '-' + index);
+                         newStart.appendTo("#" + "div-" + index);
+                         newStart.val(formatDate(new Date(val)));
 
 
-                        if (i.indexOf("end") != -1) {
 
-                            //Creates a delete button so you can delete the components
-                            var btnDelete = $("<input type='button' value='Delete'></input>");
-                            btnDelete.prop("id", "delete-" + index);
-                            //Function added to the button
-                            $('#submitEntryEdit').on('click', '#delete-' + index, function () {
-                                var cat = $('#category').val();
-                                var id = getId(this.id);
-                                $.each(chartVal, function (i) {
-                                    if (chartVal[i].category === cat) {
-                                        chartVal[i].segmentList.splice(id, 1);
-                                    }
-                                    if (chartVal[i].segmentList.length == 0) {
-                                        chartVal.splice(i, 1);
-                                    }
-                                });
-                                //Removes the div
-                                console.log(chartVal.length);
-                                $(divInd).remove();
-                                renderChart(chartVal);
+                         $("<br>").appendTo("#" + "div-" + index);
 
 
+                         if (i.indexOf("end") != -1) {
 
-                                //Needs to reload the chartVal, containing the new values
+                             //Creates a delete button so you can delete the components
+                             var btnDelete = $("<input type='button' value='Delete'></input>");
+                             btnDelete.prop("id", "delete-" + index);
 
+                             //Function added to the button
+                             $('#submitEntryEdit').on('click', '#delete-' + index, function () {
+                                 var cat = $('#category').val();
+                                 var id = getId(this.id);
 
-                            });
+                                 $.each(chartVal, function (i) {
+                                     console.log("before delete: " + chartVal[i].segmentList.length);
+                                     if (chartVal[i].category === cat) {
+                                         chartVal[i].segmentList.splice(id, 1);
+                                     }
+                                     if (chartVal[i].segmentList.length == 0) {
+                                         chartVal.splice(i, 1);
+                                     }
+                                     console.log("after delete: " + chartVal[i].segmentList.length);
+                                 });
+                                 //Removes the div
+                                 console.log(chartVal.length);
+                                 $(divInd).remove();
+                                 renderChart(chartVal);
 
-                            btnDelete.appendTo(divInd);
-                            $("<br>").appendTo("#submitEntryEdit");
-                            index++;
 
-                        }
 
+                                 //Needs to reload the chartVal, containing the new values
 
 
+                             });
 
-                    }
+                             btnDelete.appendTo(divInd);
+                             $("<br>").appendTo("#submitEntryEdit");
+                             index++;
 
+                         }
 
 
 
-                });
 
+                     }
 
 
 
-            };
 
-            //Method that will add segments to the category selected
-            var clickAddSegment = function (event) {
+                 });
 
 
 
 
-                //
+             };
 
 
+             //var index = 0;
+             var addSegment = function (event) {
 
 
 
+                 $.map(event.item.dataContext, function (val, i) {
 
-            };
+                     //When the index is referring to the category of the selected value
+                     if (i == "category") {
 
+                         //Place the name of the selected value on the textfield 
+                         $("#category").val(event.item.dataContext.category);
 
 
+                     }
+                     //Else, if the index is referring to the segments of that particular value selected
+                     else {
 
 
+                         var name = i.indexOf("start") != -1 ? "startDate" : "endDate";
+                         var labelName = i.indexOf("start") != -1 ? "Start date: " : "End date: ";
 
 
 
-            //Once you click the edit button
-            var clickEditEvent = function () {
+                         var divInd = "#" + "div-" + index;
 
-                //alert("called");
-                //Gets the category name of the bar selected and puts it on the text field
-                var category = $("#category").val();
 
-                //Loops through the value of the entire chart itself
-                for (var i = 0; i < chartVal.length; i++) {
+                         //Creates a div that will store the start date and end date for a particular Task   
+                         if (i.indexOf("start") != -1) {
 
-                    //If one of category values of the entire chart is equal to the selected one
-                    if (category == chartVal[i].category) {
 
-                        //Loop through the segments of that particular category
-                        for (var x = 0; x < chartVal[i].segmentList.length; x++) {
+                             //Creates a div and then pushes it  to the div
+                             var div = $("<div></div>");
+                             div.prop("id", "div-" + index);
+                             div.prop("class", "divinput");
+                             div.appendTo("#submitEntryEdit");
 
-                            //Place the values on the textfields on the html
-                            chartVal[i].segmentList[x].startDate = $("#startDate" + x).val();
-                            chartVal[i].segmentList[x].endDate = $("#endDate" + x).val();
+                         }
 
 
 
-                        }
 
+                         //Creates a label and then pushes it  to the div
+                         var label = $("<label/>");
+                         label.html(labelName);
+                         label.prop("id", name + index);
+                         label.appendTo("#" + "div-" + index);
 
-                    }
 
 
+                         //Creates a textfield then puts it to the div
+                         var newStart = $("<input type='text'/>");
+                         newStart.prop("id", name + index);
+                         newStart.appendTo("#" + "div-" + index);
+                         newStart.val(new Date(val));
 
 
-                }
 
+                         $("<br>").appendTo("#" + "div-" + index);
 
 
-            }
+                         if (i.indexOf("end") != -1) {
 
+                             //Creates a delete button so you can delete the components
+                             var btnDelete = $("<input type='button' value='Delete'></input>");
+                             btnDelete.prop("id", "delete-" + index);
 
+                             //Function added to the button
+                             $('#submitEntryEdit').on('click', '#delete-' + index, function () {
+                                 var cat = $('#category').val();
+                                 var id = getId(this.id);
 
-            $("#prvBtn").click(function (event) {
+                                 $.each(chartVal, function (i) {
+                                     console.log("before delete: " + chartVal[i].segmentList.length);
+                                     if (chartVal[i].category === cat) {
+                                         chartVal[i].segmentList.splice(id, 1);
 
 
-                clickEditEvent();
+                                     }
+                                     if (chartVal[i].segmentList.length == 0) {
+                                         chartVal.splice(i, 1);
+                                     }
 
-                alert(JSON.stringify(chartVal));
-                //Draws the chart
-                renderChart(chartVal);
+                                     console.log("after delete: " + chartVal[i].segmentList.length);
+                                     //renderChart(chartVal);
+                                 });
+                                 //Removes the div
+                                 //console.log(chartVal.length);
+                                 //$("#submitEntryEdit").html("");
+                                 $(divInd).remove();
+                                 renderChart(chartVal);
 
 
-            });
 
+                                 //Needs to reload the chartVal, containing the new values
 
 
+                             });
 
-            //This will draw the chart
-            var renderChart = function (data) {
+                             btnDelete.appendTo(divInd);
+                             $("<br>").appendTo("#submitEntryEdit");
+                             index++;
 
-                //Sets the data source    
-                chart.dataProvider = data;
+                         }
 
-                //This method should be called after data in your data provider changed or a new array was set to dataProvider. 
-                chart.validateData();
 
-                //Adds event listener to the object.
-                chart.addListener("clickGraphItem", clickItemEvent);
 
 
-            }
+                     }
 
 
-            $.ajax({
-                type: 'post',
-                url: 'getGanttData',
-                dataType: 'json',
-                data: {},
-                cache: false,
-                success: function (data) {
-                    chartVal = data;
-                    console.log(JSON.stringify(data));
 
 
+                 });
 
 
-                    renderChart(data);
-                }
-            });
 
 
-            //Function called when the submit button is selected
-            //Gets the value input from the text fields, and then adds it to the current chart graph drawn, and it re-draws the chart
-            //This only works when you're adding a new entry, for now
-            //Should support edits
-            var submitClick = function () {
+             };
 
-                //Gets the input here and stores it on the variable
-                var category = $("#category").val();
-                var startDate = $("#startD").val();
-                var endDate = $("#endD").val();
 
+             //Method for the add date
+             //var index2 = 0;
+             var addSegment = function () {
 
+                 //Creates a div
+                 var divInd2 = "#" + "div-" + index;
 
-                //Loops through the value of the entire chart itself
-                for (var i = 0; i < chartVal.length; i++) {
+                 //Creates a div and then pushes it  to the div
+                 var div2 = $("<div></div>");
+                 div2.prop("id", "div-" + index);
+                 div2.prop("class", "divinput");
+                 div2.appendTo("#submitEntryEdit");
 
-                    //If the task you typed is already exists
-                    if (category == chartVal[i].category) {
+                 //Creates a label and then pushes it  to the div
+                 var label2 = $("<label/>");
+                 label2.text("Start date: ")
+                 label2.prop("id", "label" + index);
+                 label2.appendTo("#" + "div-" + index);
 
-                        alert("Task already exists!");
-                        return;
 
-                    }
 
+                 //Creates a textfield then puts it to the div
+                 var newStart2 = $("<input type='text'/>");
+                 newStart2.prop("id", "startDate-" + index);
+                 newStart2.appendTo("#" + "div-" + index);
+                 //newStart2.val(new Date(val));
+                 $("<br>").appendTo("#" + "div-" + index);
 
+                 var label3 = $("<label/>");
+                 label3.text("End date: ")
+                 label3.prop("id", "label" + index);
+                 label3.appendTo("#" + "div-" + index);
 
+                 var newEnd2 = $("<input type='text'/>");
+                 newEnd2.prop("id", "endDate-" + index);
+                 newEnd2.appendTo("#" + "div-" + index);
 
-                }
+                 $("<br>").appendTo("#" + "div-" + index);
 
+                 //Creates a delete button so you can delete the components
+                 var btnDelete2 = $("<input type='button' value='Delete'></input>");
+                 btnDelete2.prop("id", "delete-" + index);
 
+                 //Function added to the button
+                 $('#submitEntryEdit').on('click', '#delete-' + index, function () {
 
-                //Creates a format for the values to be put in the graph
-                var ganttData = {category: category, segmentList: [{startDate: startDate, endDate: endDate}]}
+                     var cat = $('#category').val();
+                     var id = getId(this.id);
 
-                //Place it on the chart
-                chartVal.push(ganttData);
-                //alert(JSON.stringify(chartVal));
-                //Draws the chart
-                renderChart(chartVal);
-            };
+                     $.each(chartVal, function (i) {
+                         //console.log("before delete: " + chartVal[i].segmentList.length);
+                         if (chartVal[i].category === cat) {
+                             chartVal[i].segmentList.splice(id, 1);
+                         }
+                         if (chartVal[i].segmentList.length == 0) {
+                             chartVal.splice(i, 1);
+                         }
+                         //console.log("after delete: " + chartVal[i].segmentList.length);
+                     });
+                     //Removes the div
+                     console.log(chartVal.length);
+                     $(divInd2).remove();
+                     renderChart(chartVal);
 
-            $("#submitGData").click(submitClick);
-            $("#addSegment").click(clickAddSegment);
 
-            function getId(str) {
-                var spl = str.split("-");
-                return spl[1];
-            }
+                 });
+
+                 btnDelete2.appendTo(divInd2);
+                 $("<br>").appendTo("#submitEntryEdit");
+
+
+
+             };
+             //Clicks the add date button
+
+             $("#addSegment").click(function (event) {
+
+
+
+                 addSegment();
+                 index++;
+
+             });
+
+
+             var back = function () {
+
+
+                 //Refresh
+                 $("#submitEntryEdit").html("");
+                 //Hide the input for new tasks
+                 $("#submitEntry").show();
+                 //Change the label to edit task
+                 $("#labelGantt").text("Add task");
+                 $("#prvBtn").hide();
+                 $("#addSegment").hide();
+                 $("#backBtn").hide();
+                 $("#submitGData").show();
+
+
+             };
+
+             $("#backBtn").click(function (event) {
+
+
+                 back();
+                 renderChart(chartVal);
+
+
+             });
+
+
+
+             //Once you click the edit button
+             var clickEditEvent = function () {
+
+                 //alert("called");
+                 //Gets the category name of the bar selected and puts it on the text field
+                 var category = $("#category").val();
+
+                 //Loops through the value of the entire chart itself
+                 for (var i = 0; i < chartVal.length; i++) {
+
+                     //If one of category values of the entire chart is equal to the selected one
+                     if (category == chartVal[i].category) {
+
+                         //Loop through the segments of that particular category
+                         for (var x = 0; x < chartVal[i].segmentList.length; x++) {
+
+                             //Place the values on the textfields on the html
+                             chartVal[i].segmentList[x].startDate = $("#startDate" + x).val();
+                             chartVal[i].segmentList[x].endDate = $("#endDate" + x).val();
+
+
+
+                         }
+
+
+                     }
+
+
+
+
+                 }
+
+
+
+             };
+
+
+             var submitEdited = function () {
+
+                 var segmentList2 = [];
+                 var category = $("#category").val();
+                 var editlist = document.getElementById("submitEntryEdit");
+                 var editDivList = editlist.getElementsByClassName("divinput");
+                 //alert(editDivList[1].id);
+                 //segmentList2 = Object.create(null);
+
+                 //var segmentList2 =  [{startDate: startDate, endDate: endDate}]
+
+                 var e;
+                 for (var i = 0; i < editDivList.length; i++) {
+                     e = editDivList[i];
+
+                     var str2 = e.id;
+                     var spl2 = str2.split("-");
+                     var num = spl2[1];
+
+                     var start = formatDate($("#startDate-" + num).val());
+                     var end = formatDate($("#endDate-" + num).val());
+
+
+                     if (end >= '2016-01-01') {
+
+                         alert("Cannot exceed from target date of completion!");
+                         return;
+
+
+                     }
+                     else {
+
+                         //alert(formatDate(start));
+
+                         var segmentInput = {startDate: start, endDate: end};
+                         segmentList2.push(segmentInput);
+                         //console.log(segmentInput);
+
+                         //alert("Before :" + JSON.stringify(chartVal));
+                         //alert("Entering this value: " + JSON.stringify(segmentInput));
+
+
+
+
+                     }
+
+
+                 }
+
+
+
+
+                 for (var x = 0; x < chartVal.length; x++) {
+
+                     //If one of category values of the entire chart is equal to the selected one
+                     if (category == chartVal[x].category) {
+
+
+                         chartVal[x].segmentList = segmentList2;
+
+
+                         /*
+                          if(jQuery.inArray(segmentInput,chartVal[x].segmentList) == -1){
+                          chartVal[x].segmentList.push(segmentInput);
+                          }
+                          
+                          if(chartVal[x].segmentList.contains(segmentInput)== false){
+                          
+                          
+                          chartVal[x].segmentList.push(segmentInput);
+                          
+                          
+                          }
+                          */
+                         /*
+                          //Loop through the segments of that particular category
+                          for (var y = 0; y < chartVal[x].segmentList.length; y++) {
+                          
+                          //var imp = {startDate: formatDate(chartVal[x].segmentList[y].startDate), endDate: formatDate(chartVal[x].segmentList[y].endDate)};
+                          // alert(JSON.stringify(segmentInput));
+                          //alert("comparing it to: " + JSON.stringify(chartVal[x].segmentList[y]));
+                          
+                          if (formatDate(chartVal[x].segmentList[y].startDate).toString() == start.toString() || formatDate(chartVal[x].segmentList[y].endDate).toString() == end.toString()) {
+                          
+                          
+                          chartVal[x].segmentList[y] = segmentInput;
+                          
+                          
+                          }
+                          else{
+                          
+                          chartVal[x].segmentList.push(segmentInput);
+                          
+                          
+                          }
+                          
+                          
+                          
+                          
+                          }
+                          */
+
+
+
+                     }
+
+
+
+
+                 }
+
+
+
+
+
+
+                 console.log("Here: " + JSON.stringify(chartVal));
+                 renderChart(chartVal);
+             };
+
+
+
+             $("#prvBtn").click(function (event) {
+
+
+                 submitEdited();
+
+
+             });
+
+
+
+             //This will draw the chart
+             var renderChart = function (data) {
+
+                 //Sets the data source    
+                 chart.dataProvider = data;
+
+                 //This method should be called after data in your data provider changed or a new array was set to dataProvider. 
+                 chart.validateData();
+
+                 //Adds event listener to the object.
+                 chart.addListener("clickGraphItem", clickItemEvent);
+
+
+             }
+
+
+             $.ajax({
+                 type: 'post',
+                 url: 'getGanttData',
+                 dataType: 'json',
+                 cache: false,
+                 success: function (data) {
+                     chartVal = data;
+                     console.log(JSON.stringify(data));
+
+
+
+
+                     renderChart(data);
+                 }
+             });
+
+
+             //Function called when the submit button is selected
+             //Gets the value input from the text fields, and then adds it to the current chart graph drawn, and it re-draws the chart
+             //This only works when you're adding a new entry, for now
+             //Should support edits
+             var submitClick = function () {
+
+                 //Gets the input here and stores it on the variable
+                 var category = $("#category").val();
+                 var startDate = $("#startD").val();
+                 var endDate = $("#endD").val();
+
+
+
+                 //Loops through the value of the entire chart itself
+                 for (var i = 0; i < chartVal.length; i++) {
+
+                     //If the task you typed is already exists
+                     if (category == chartVal[i].category) {
+
+                         alert("Task already exists!");
+                         return;
+
+                     }
+
+                     //If the task you typed is already exists
+                     if (endDate >= '2016-01-01') {
+
+                         alert("Cannot exceed from target date of completion!");
+                         return;
+
+                     }
+
+
+
+
+                 }
+
+                 //Creates a format for the values to be put in the graph
+                 var ganttData = {category: category, segmentList: [{startDate: startDate, endDate: endDate}]};
+
+                 //Place it on the chart
+                 chartVal.push(ganttData);
+                 //alert(JSON.stringify(chartVal));
+                 //Draws the chart
+                 renderChart(chartVal);
+             };
+
+             $("#submitGData").click(submitClick);
+             //$("#addSegment").click(clickAddSegment);
+
+             function formatDate(date) {
+                 var d = new Date(date),
+                         month = '' + (d.getMonth() + 1),
+                         day = '' + d.getDate(),
+                         year = d.getFullYear();
+
+                 if (month.length < 2)
+                     month = '0' + month;
+                 if (day.length < 2)
+                     day = '0' + day;
+
+                 return [year, month, day].join('-');
+             }
+
+             function getId(str) {
+                 var spl = str.split("-");
+                 return spl[1];
+             }
+             ;
+
+             function getUpdatedChartVal() {
+                 return chartVal;
+             }
+             ;
+
         </script>    
 
 

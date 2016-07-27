@@ -156,42 +156,43 @@ public class Citizen_AddInfo extends HttpServlet {
                         String filename = files.get(x);
                         String[] parts = filename.split(Pattern.quote("."));
                         String extension = parts[1];
-                        //Videos
-                        if (extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("avi") || extension.equalsIgnoreCase("3gp") || extension.equalsIgnoreCase("flv") || extension.equalsIgnoreCase("wmv") || extension.equalsIgnoreCase("mkv")) {
-                            Files f = new Files();
-                            f.setFileName(files.get(x));
-                            f.setType("Video");
-                            f.setTestimonial(t);
-                            f.setStatus("Pending");
-                            f.setDescription(videoD);
-                            f.setUploader(c.getUser().getUsername());
-                            f.setTestimonial(t);
-                            citizenDAO.uploadFiles(f, c.getUser().getUsername());
+                        if (!filename.isEmpty()) {
+                            //Videos
+                            if (extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("avi") || extension.equalsIgnoreCase("3gp") || extension.equalsIgnoreCase("flv") || extension.equalsIgnoreCase("wmv") || extension.equalsIgnoreCase("mkv")) {
+                                Files f = new Files();
+                                f.setFileName(files.get(x));
+                                f.setType("Video");
+                                f.setTestimonial(t);
+                                f.setStatus("Pending");
+                                f.setDescription(videoD);
+                                f.setUploader(c.getUser().getUsername());
+                                f.setTestimonial(t);
+                                citizenDAO.uploadFiles(f, c.getUser().getUsername());
 
-                        } //Images
-                        else if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("bmp")) {
-                            Files f = new Files();
-                            f.setFileName(files.get(x));
-                            f.setType("Image");
-                            f.setTestimonial(t);
-                            f.setStatus("Pending");
-                            f.setDescription(imageD);
-                            f.setUploader(c.getUser().getUsername());
-                            f.setTestimonial(t);
-                            citizenDAO.uploadFiles(f, c.getUser().getUsername());
-                        } //Documents 
-                        else if (extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("docx") || extension.equalsIgnoreCase("doc") || extension.equalsIgnoreCase("pptx") || extension.equalsIgnoreCase("txt") || extension.equalsIgnoreCase("xlsx")) {
-                            Files f = new Files();
-                            f.setFileName(files.get(x));
-                            f.setType("Document");
-                            f.setTestimonial(t);
-                            f.setStatus("Pending");
-                            f.setDescription(documentD);
-                            f.setUploader(c.getUser().getUsername());
-                            f.setTestimonial(t);
-                            citizenDAO.uploadFiles(f, c.getUser().getUsername());
+                            } //Images
+                            else if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("bmp")) {
+                                Files f = new Files();
+                                f.setFileName(files.get(x));
+                                f.setType("Image");
+                                f.setTestimonial(t);
+                                f.setStatus("Pending");
+                                f.setDescription(imageD);
+                                f.setUploader(c.getUser().getUsername());
+                                f.setTestimonial(t);
+                                citizenDAO.uploadFiles(f, c.getUser().getUsername());
+                            } //Documents 
+                            else if (extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("docx") || extension.equalsIgnoreCase("doc") || extension.equalsIgnoreCase("pptx") || extension.equalsIgnoreCase("txt") || extension.equalsIgnoreCase("xlsx")) {
+                                Files f = new Files();
+                                f.setFileName(files.get(x));
+                                f.setType("Document");
+                                f.setTestimonial(t);
+                                f.setStatus("Pending");
+                                f.setDescription(documentD);
+                                f.setUploader(c.getUser().getUsername());
+                                f.setTestimonial(t);
+                                citizenDAO.uploadFiles(f, c.getUser().getUsername());
+                            }
                         }
-
                     }
 
                 } catch (FileUploadException e) {

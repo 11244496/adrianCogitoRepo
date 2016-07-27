@@ -484,6 +484,7 @@
                 }
 
                 function geocodeLatLng(geocoder, map, infowindow, latLng, coor) {
+                    console.log(coor);
                     var latlng = latLng;
                     geocoder.geocode({'location': latlng}, function (results, status) {
                         if (status === google.maps.GeocoderStatus.OK) {
@@ -497,7 +498,7 @@
                                         '</div>' +
                                         '<h1 id="firstHeading" class="firstHeading"><a href="Citizen_OpenTestimonial?idd=' + coor.testimonial.id + '">' + coor.testimonial.title + '</a></h1>' +
                                         '<div id="bodyContent">' +
-                                        '<br><div>Date Uploaded: ' + coor.testimonial.dateuploaded + '</div>' +
+                                        '<br><div>Date Uploaded: ' + coor.testimonial.dateUploaded + '</div>' +
                                         '<br><div>Location: ' + results[0].formatted_address + '</div>' +
                                         '<br><div>Category: ' + coor.testimonial.category + '</div>' +
                                         '<br><div>Message: ' + coor.testimonial.message + ' </div>' +

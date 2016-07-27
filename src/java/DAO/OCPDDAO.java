@@ -290,10 +290,13 @@ public class OCPDDAO {
             //Set Components of each Pworks
             for (PWorks pworks : projectPWorks) {
                 ArrayList<Component> componentList = new ArrayList<Component>();
-                String query = ("select * from components join unit on Unit_ID = unit.id where Project_has_PWorks_Pworks_ID = ? and Project_has_PWorks_Project_ID = ?");
+                String query = ("select * from components \n"
+                        + "join unit on unit_id = unit.id \n"
+                        + "join project_has_works on project_has_works.id = project_has_pworks_id\n"
+                        + "where project_id = ? and pworks_id = ?");
                 PreparedStatement statement = connection.prepareStatement(query);
-                statement.setInt(1, pworks.getId());
-                statement.setString(2, project.getId());
+                statement.setString(1, project.getId());
+                statement.setInt(2, pworks.getId());
                 result = statement.executeQuery();
                 while (result.next()) {
                     Component component = new Component();
@@ -803,7 +806,7 @@ public class OCPDDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String getID = "select sum(components.quantity*components.unitprice) as cost from components join project_has_works on project_has_works.PWorks_ID = components.Project_has_PWorks_Pworks_ID and project_has_works.Project_ID = components.Project_has_PWorks_Project_ID where components.Project_has_PWorks_Project_ID = ?";
+            String getID = "select sum(components.quantity*components.unitprice) as cost from components join project_has_works on project_has_works.id = project_has_pworks_id  where project_id = ?";
             statement = connection.prepareStatement(getID);
             statement.setString(1, p.getId());
             result = statement.executeQuery();

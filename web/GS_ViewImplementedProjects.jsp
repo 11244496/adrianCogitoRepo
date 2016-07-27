@@ -282,8 +282,11 @@
                                                                     <%out.print(description);%>
                                                                 </td>
                                                                
-                                                                <td class="p-name">   
-                                                                    <a class="btn btn-success btn-sm" href="GS_ProjectTimeline.jsp">Gantt Chart</a>
+                                                                <td>
+                                                                <form action="GS_ViewProjectTimeline">
+                                                                    <input type="hidden" name="projectId1" value="<%=id%>">
+                                                                    <button type="submit" class="btn btn-success" style="width: 90%" value="View progress repors">Gantt Chart</button>
+                                                                </form>
                                                                 </td>
                                                                 <td>
                                                                 <form action="GS_ViewInspectionList">
@@ -292,7 +295,7 @@
                                                                 </form>
                                                                 </td>
                                                                 <td>
-                                                                <form action="">
+                                                                <form action="GS_ViewProgressReports">
                                                                     <input type="hidden" name="projectId1" value="<%=id%>">
                                                                     <button type="submit" class="btn btn-success" style="width: 90%" value="View progress repors">Progress Reports</button>
                                                                 </form>

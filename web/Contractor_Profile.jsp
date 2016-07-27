@@ -257,8 +257,8 @@
                                                     </td>
 
                                                     <td>
-                                                        <form action="">
-                                                            <input type="hidden" name="projectID2" value="">
+                                                        <form action="Contractor_ViewProject">
+                                                            <input type="hidden" name="projectID" value="<%=pList.get(x).getId()%>">
 
                                                             <button type="submit" class="btn btn-success" value="View proposal details">Project details</button>
 

@@ -6,6 +6,7 @@
 package Servlet;
 
 import DAO.GSDAO;
+import Entity.Inspection_Report;
 import Entity.Project_has_Pwork;
 import Entity.Report_File;
 import com.google.gson.Gson;
@@ -48,7 +49,8 @@ public class GS_OpenInspectionReport extends HttpServlet {
                 String date = request.getParameter("date");
                 
                 
-                ArrayList<Project_has_Pwork> proj_pwork = gsDAO.getProject_has_PworkInfo(projid, date);
+                //ArrayList<Project_has_Pwork> proj_pwork = gsDAO.getProject_has_PworkInfo(projid, date);
+                ArrayList<Inspection_Report> inspectionReport = gsDAO.getInspectionPerDate(projid, date);
             
                 
                 

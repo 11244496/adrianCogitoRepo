@@ -1,3 +1,4 @@
+<%@page import="Entity.Inspection_Report"%>
 <%@page import="Entity.Project_has_Pwork"%>
 <%@page import="Entity.Task"%>
 <%@page import="Entity.Project"%>
@@ -214,7 +215,7 @@
             <%
             
             Project project = (Project) request.getAttribute("project");    
-            ArrayList<Project_has_Pwork> proj_pwork = (ArrayList<Project_has_Pwork>) request.getAttribute("proj_pwork");
+            ArrayList<Inspection_Report> listDate = (ArrayList<Inspection_Report>) request.getAttribute("listDate");
             
             %>
             
@@ -226,9 +227,9 @@
                        <b> Project: </b> <%=project.getName()%> <br><br>
                         <b>Description: </b> <%=project.getDescription()%> 
                         
-                        <a style="float: right;" class="btn btn-info" data-toggle="modal" href='javascript:getWorkItems("<%=project.getId()%>")'>
-                                  Submit inspection
-                       </a> 
+                        <button class="btn btn-info" type="button" style="float: right;" onClick="javascript:getWorkItems('<%=project.getId()%>')">Submit Inspection</button>    
+                        
+                       
                       
                        <br>
                        <br>
@@ -252,9 +253,9 @@
                                         
                                          <%
                                         
-                                        for(int x = 0; x < proj_pwork.size();x++){
+                                        for(int x = 0; x < listDate.size();x++){
                                         
-                                        String date = proj_pwork.get(x).getInspection().getDateUploaded();
+                                        String date = listDate.get(x).getDateUploaded();
                                         String idd = project.getId();
                                         %>
                                         <tr>
@@ -303,35 +304,59 @@
                             </div>
                         </div>
 
-                         <div class="modal fade " id="inspectionInput" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                  <div class="modal-dialog">
-                                      <div class="modal-content">
-                                          <div class="modal-header">
-                                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                              <h4 class="modal-title">New Inspection</h4>
-                                          </div>
-                                          <div id="tableT" class="modal-body">
-
-                                              
-
-                                          </div>
-                                          <div class="modal-footer">
-                                              <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-                                              <button class="btn btn-success" type="button">Save changes</button>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
+                         
                         
-                        <br>
-                        <br>
-                        </div>
+                        
 
 
                   
-                    </div>
+                  
                 </section>
             </section>
+                                    
+                                        
+                      <div class="modal fade" id="inspectionreport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+
+                        <form action="GS_SubmitInspectionEntry">
+                            
+                            
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                
+                                <h5>New Inspection</h5>
+                            </div>
+                            <div class="modal-body">
+                              
+                                
+                                <div id="itemField">
+                                    
+                                       
+                                    
+                                </div>    
+                                   
+                                
+                                    
+                            </div>
+                            <div class="modal-footer">
+                                
+                                <input type="hidden" id="listSize" name="listSize" value="">
+                                <input type="hidden" id="projectID" name="projectID" value="<%=project.getId()%>">
+                                
+
+                                <button class="btn btn-success" type="submit">Submit</button>
+                                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>                  
+                                        
+                                        
+                                        
         </section>
             
             
@@ -400,11 +425,11 @@
                           tr.appendTo("#tbody");
                           
                           var td = $("<td/>");
-                          td.text(file[i].pwork.name);
+                          td.text(file[i].task.name);
                           td.appendTo("#tr"+i);
                           
                           var td2 = $("<td/>");
-                          td2.text(file[i].inspection.Remark);
+                          td2.text(file[i].Remark);
                           td2.appendTo("#tr"+i);
                           
                           
@@ -424,7 +449,7 @@
                           
                           
                           var label2 = $("<label/>");
-                          label2.text(file[0].inspection.DateUploaded);
+                          label2.text(file[0].DateUploaded);
                           label2.prop("id", "label2");
                           label2.appendTo("#fileFeed");
 //                        $.each(file, function (i) {
@@ -450,6 +475,8 @@
         
         <script>
             function getWorkItems(projid) {
+                var proj = projid;
+                console.log("value: " - proj);
                 
                 $.ajax({
                     type: 'POST',
@@ -459,54 +486,81 @@
                    data: {projid: projid},
                     success: function (file) {
                         
-                        //$("#fileFeed").empty();
+                        $("#itemField").empty();
+                        var itemNames = [];
                           
-                         var table = $("<table/>");
-                          table.prop("id", "table-x");
-                          table.prop("class", "table table-bordered table-striped table-condensed");
-                          table.appendTo("#tableT");  
-                          
-                          var thead = $("<thead/>");
-                          thead.prop("id", "thead-x");
-                          thead.appendTo("#table-x");
-                          
-                          var th = $("<th/>");
-                          th.text("Work Items")
-                          th.appendTo("#thead-x");
-                          
-                          var th2 = $("<th/>");
-                          th2.text("Remarks")
-                          th2.appendTo("#thead-x");
-                          
-                           var tbody = $("<tbody/>");
-                          tbody.prop("id", "tbody-x");
-                          tbody.appendTo("#table-x");
+                         
                           
                         $.each( file, function( i, l ){
                             
-                            
-                          
-                          var tr = $("<tr/>");
-                          tr.prop("id", "tr"+i);
-                          tr.appendTo("#tbody-x");
-                          
-                          var td = $("<td/>");
-                          td.text(file[i].pwork.name);
-                          td.appendTo("#tr-x"+i);
-                          
-                          var td2 = $("<td/>");
-                          td2.appendTo("#tr-x"+i);
-                          
-                          
-                          
-                          
-                          
+                        var item = file[i].task.name; 
+                        var start = file[i].startdate;
+                        var end = file[i].enddate;
+                        //$('#testValue').text("Sample: " + file[0].pwork.name); 
+                        
+                        var checkinput = $("<input type='checkbox'/>");
+                        checkinput.prop("id", "checkboxinput");
+                        checkinput.prop("name", "checkboxinput");
+                        checkinput.val(file[i].task.id);
+                        checkinput.appendTo("#" + "itemField");
+                        
+                        var label = $("<label/>");
+                        label.html(item);
+                        label.prop("id", "label-" + i);
+                        label.appendTo("#" + "itemField");
+                        
+                        
+                        
+                        var label1 = $("<label/>");
+                        label1.text("Start date: " + start);
+                        label1.prop("id", "label1-" + i);
+                        label1.prop("style", "margin-left: 10%");
+                        label1.appendTo("#" + "itemField");
+                        
+                        
+                        var label2 = $("<label/>");
+                        label2.text("End date: " + end);
+                        label2.prop("id", "label2-" + i);
+                        label2.prop("style", "margin-left: 10%");
+                        label2.appendTo("#" + "itemField");
+        
+                        /*
+                        var input = $("<input type='text'/>");
+                        input.prop("id", "input-" + i);
+                        input.prop("name", "input-" + i);
+                        input.prop("style", "margin-left:5em");
+                        
+                        input.appendTo("#" + "itemField");
+                        
+                      
+                        
+                        itemNames.push(item);
+                        
+                        $("#workItemNames").val(itemNames);
+
+                          */
+                         
+                        itemNames.push(file[i].task.id);
+                        $("<br>").appendTo("#" + "itemField");
+                        
+                
+                        var input = $("<textarea required rows='5'/>");
+                        input.prop("id", "input-" + i);
+                        input.prop("name", "input-" + i);
+                        input.prop("style", "width: 98%");
+                        
+                        input.appendTo("#" + "itemField");
+                        
                         });
 
-
-                         $("<br>").appendTo("#tableT");
+                        $("<br>").appendTo("#" + "itemField");
+                        
+                        $("#listSize").val(itemNames);
                           
-                        $('#inspectionInput').show();
+                        $('#inspectionreport').modal();
+                        
+                        
+                        
 
                     }
                 });

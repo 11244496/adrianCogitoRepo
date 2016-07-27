@@ -15,6 +15,8 @@ import Entity.Feedback;
 import Entity.InvitationToBid;
 import Entity.Progress_Report;
 import Entity.Project;
+import Entity.Timeline_Update;
+import Entity.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -617,29 +619,6 @@ public class ContractorDAO {
         return f;
     }
     
-    public void uploadProgressReport(Progress_Report progressreport) {
-        try {
-            myFactory = ConnectionFactory.getInstance();
-            connection = myFactory.getConnection();
-            String query = "INSERT INTO progress_report (`Message`, `FileName`, `FolderName`, `DateUploaded`, `Project_ID`, `Contractor_ID`) VALUES (?, ?, ?, now(), ?, ?);";
-            statement = connection.prepareStatement(query);
-            statement.setString(1, progressreport.getMessage());
-            statement.setString(2, progressreport.getFileName());
-            statement.setString(3, progressreport.getFolderName());
-            statement.setString(4, progressreport.getProject().getId());
-            statement.setInt(5, progressreport.getContractor_user().getID());
-            
-            
-            statement.executeUpdate();
-            statement.close();
-
-            connection.close();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
     
     public ArrayList<Progress_Report> getProgress_ReportList(Project project, Contractor_User conuser) {
 
@@ -671,5 +650,196 @@ public class ContractorDAO {
 
         return progress_reports;
     }
+
+
+       public Progress_Report getProgressReportFile(int id) {
+
+        Progress_Report progress_Report = null;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from progress_report where ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                progress_Report = new Progress_Report(result.getInt("ID"), result.getString("Message"), result.getString("FileName"), result.getString("FolderName"), result.getString("DateUploaded"), null, null);
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return progress_Report;
+    }
+
+       public void uploadProgressReport(Progress_Report progressreport) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "INSERT INTO progress_report (`Message`, `FileName`, `FolderName`, `DateUploaded`, `Project_ID`, `Contractor_ID`) VALUES (?, ?, ?, now(), ?, ?);";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, progressreport.getMessage());
+            statement.setString(2, progressreport.getFileName());
+            statement.setString(3, progressreport.getFolderName());
+            statement.setString(4, progressreport.getProject().getId());
+            statement.setInt(5, progressreport.getContractor_user().getID());
+            
+            
+            statement.executeUpdate();
+            statement.close();
+
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+       
+       
+   public Project getProjectInfo(String id) {
+
+        Project project = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from project where ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                project = new Project();
+                project.setId(result.getString("ID"));
+                project.setName(result.getString("Name"));
+                project.setDescription(result.getString("Description"));
+                project.setCategory(result.getString("Category"));
+                project.setStatus(result.getString("Status"));
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return project;
+    }
+   
+    public User getUser(Contractor_User cuser) {
+        User u = null;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from users where users.ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, cuser.getUser().getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                u = new User(result.getInt("users.id"), result.getString("username"), result.getString("password"), result.getString("type"));
+
+            }
+
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ActivityDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return u;
+    }
+   
+    public void submitTimelineUpdate(Timeline_Update timelineupdate) {
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "INSERT INTO timeline_update (Message, Project_ID, Users_ID) VALUES (?,?,?);";
+
+            statement = connection.prepareStatement(query);
+
+            statement.setString(1, timelineupdate.getMessage());
+            statement.setString(2, timelineupdate.getProject().getId());
+            statement.setInt(3, timelineupdate.getUser().getId());
+
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+       public ArrayList<Timeline_Update> getTimeline_UpdateList(Project project) {
+
+        ArrayList<Timeline_Update> timeline_updates = new ArrayList<Timeline_Update>();
+        Timeline_Update update;
+        User user;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from timeline_update JOIN users on users.ID = Users_ID where Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, project.getId());
+            
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                user = new User(result.getInt("Users.ID"), result.getString("Username"));
+                update = new Timeline_Update(result.getInt("timeline_update.ID"), result.getString("Message"), project, user);
+                timeline_updates.add(update);
+                
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return timeline_updates;
+    }
+       
+       
+       
+       
+       public Timeline_Update getTimelineMessage(int id) {
+
+        Timeline_Update tupdate = null;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from timeline_update where ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                    tupdate = new Timeline_Update(id, result.getString("Message"), null, null);
+               
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    return tupdate;
+       }
 
 }

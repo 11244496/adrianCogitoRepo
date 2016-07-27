@@ -55,6 +55,13 @@
         <script src ='calendar/jquery.min.js'></script>
         <script src ='calendar/fullcalendar.js'></script>
         <script src ='calendar/scheduler.js'></script>
+
+        <script src="amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="amcharts/serial.js" type="text/javascript"></script>
+        <script src="amcharts/themes/dark.js"></script>
+        <script src="amcharts/gantt.js" type="text/javascript"></script>
+
+
         <script>var worksList = <%=request.getAttribute("works")%>;
             var unitList = <%=request.getAttribute("unitGson")%>;
         </script>
@@ -370,7 +377,7 @@
                                                 </table>
                                             </div>
 
-                                            <div class="adv-table" id="selectedprojectTable">
+                                                    <div class="adv-table" id="selectedprojectTable" style="display: none">
                                                 <table  class="display table table-bordered table-striped" id="dynamic-table">
                                                     <thead>
                                                         <tr>
@@ -383,7 +390,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody id="selectedprojectlistTable">
-                                                        
+
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -496,7 +503,9 @@
                                                     <br>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <div id="ganttDiv"></div>
+                                                    <div class="panel-body">
+                                                        <div id="chartdiv" style="width: 100%; height: 400px;"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </fieldset>
@@ -652,10 +661,5 @@
         <script src="js/GS_CreateProposal.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"
         async defer></script> 
-        <script src="amcharts/amcharts.js" type="text/javascript"></script>
-        <script src="amcharts/serial.js" type="text/javascript"></script>
-        <script src="amcharts/themes/dark.js"></script>
-        <script src="amcharts/gantt.js" type="text/javascript"></script>
-
     </body>
 </html>

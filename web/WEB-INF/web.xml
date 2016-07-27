@@ -380,6 +380,54 @@
         <servlet-name>AJAX_UpdateMeeting</servlet-name>
         <servlet-class>Servlet.AjaxServlet.AJAX_UpdateMeeting</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Citizen_ProjectsImplemented</servlet-name>
+        <servlet-class>Servlet.Citizen_ProjectsImplemented</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Citizen_ViewProjectDetails</servlet-name>
+        <servlet-class>Servlet.Citizen_ViewProjectDetails</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_GetProgressReport</servlet-name>
+        <servlet-class>Servlet.Contractor_GetProgressReport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_OpenMessage</servlet-name>
+        <servlet-class>Servlet.Contractor_OpenMessage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_RequestForChange</servlet-name>
+        <servlet-class>Servlet.Contractor_RequestForChange</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_ViewProjectTimeline</servlet-name>
+        <servlet-class>Servlet.Contractor_ViewProjectTimeline</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_GenerateAccomplishmentReport</servlet-name>
+        <servlet-class>Servlet.GS_GenerateAccomplishmentReport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_GetWorkItems</servlet-name>
+        <servlet-class>Servlet.GS_GetWorkItems</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_SubmitInspectionEntry</servlet-name>
+        <servlet-class>Servlet.GS_SubmitInspectionEntry</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_TimelineUpdate</servlet-name>
+        <servlet-class>Servlet.GS_TimelineUpdate</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_ViewProgressReports</servlet-name>
+        <servlet-class>Servlet.GS_ViewProgressReports</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_ViewProjectTimeline</servlet-name>
+        <servlet-class>Servlet.GS_ViewProjectTimeline</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -759,6 +807,54 @@
     <servlet-mapping>
         <servlet-name>AJAX_UpdateMeeting</servlet-name>
         <url-pattern>/AJAX_UpdateMeeting</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_ProjectsImplemented</servlet-name>
+        <url-pattern>/Citizen_ProjectsImplemented</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_ViewProjectDetails</servlet-name>
+        <url-pattern>/Citizen_ViewProjectDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_GetProgressReport</servlet-name>
+        <url-pattern>/Contractor_GetProgressReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_OpenMessage</servlet-name>
+        <url-pattern>/Contractor_OpenMessage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_RequestForChange</servlet-name>
+        <url-pattern>/Contractor_RequestForChange</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_ViewProjectTimeline</servlet-name>
+        <url-pattern>/Contractor_ViewProjectTimeline</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_GenerateAccomplishmentReport</servlet-name>
+        <url-pattern>/GS_GenerateAccomplishmentReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_GetWorkItems</servlet-name>
+        <url-pattern>/GS_GetWorkItems</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_SubmitInspectionEntry</servlet-name>
+        <url-pattern>/GS_SubmitInspectionEntry</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_TimelineUpdate</servlet-name>
+        <url-pattern>/GS_TimelineUpdate</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_ViewProgressReports</servlet-name>
+        <url-pattern>/GS_ViewProgressReports</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_ViewProjectTimeline</servlet-name>
+        <url-pattern>/GS_ViewProjectTimeline</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

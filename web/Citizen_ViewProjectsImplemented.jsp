@@ -280,7 +280,7 @@
                                                                 <th style="width: 10%; text-align: center">Date Submitted</th>
                                                                 <th style="width: 15%; text-align: center">Status</th>
                                                                 <th style="width: 10%; text-align: center"></th>
-
+                                                                <th style="width: 10%; text-align: center"></th>
                                                             </tr>
                                                         </thead>
 

@@ -47,7 +47,7 @@ public class Contractor_Profile extends HttpServlet {
             ContractorDAO contDAO = new ContractorDAO();
             //Gets the contractor
             //Contractor_User contractor_user = (Contractor_User) session.getAttribute("user");
-           ArrayList<Project> pList = contDAO.getProjectHistoryList("Implementation");
+           ArrayList<Project> pList = contDAO.getProjectHistoryList("Finished");
             
             
             request.setAttribute("pList", pList);

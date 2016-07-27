@@ -121,6 +121,13 @@
                             <span>Profile</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="Contractor_ViewProjectList">
+                            <i class="fa fa-dashboard"></i>
+                            <span>View All Projects</span>
+                        </a>
+                    </li>
+                    
                     <li class="sub-menu">
                         <a href="javascript:;" >
                             <i class="fa fa-tasks"></i>
@@ -275,15 +282,15 @@
                                                                 </form>
                                                             </td>
                                                             <td>
-                                                                <form action="Contractor_ViewProjectCalendar">
-                                                                    <input type="hidden" name="projectID2" value="<%=projects.get(a).getId()%>">
-                                                                    <button type="submit" class="btn btn-success" style="width: 90%" value="View proposal details">Project calendar</button>
+                                                                <form action="Contractor_ViewProjectTimeline">
+                                                                    <input type="hidden" name="projectID3" value="<%=projects.get(a).getId()%>">
+                                                                    <button type="submit" class="btn btn-success" style="width: 90%" value="View proposal details">Gantt Chart</button>
                                                                 </form>
                                                             </td>
                                                             <td>
-                                                                <form action="Contractor_ViewTasks">
-                                                                    <input type="hidden" name="projectID2" value="<%=projects.get(a).getId()%>">
-                                                                    <button type="submit" class="btn btn-success" style="width: 90%" value="View proposal details">View Task</button>
+                                                                <form action="Contractor_ProgressReportPage">
+                                                                    <input type="hidden" name="projectID4" value="<%=projects.get(a).getId()%>">
+                                                                    <button type="submit" class="btn btn-success" style="width: 90%" value="View progress report">Progress Report</button>
                                                                 </form>
                                                             </td>
                                                         </tr>

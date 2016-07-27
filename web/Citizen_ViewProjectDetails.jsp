@@ -8,8 +8,6 @@
 <%@page import="Entity.Feedback"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="Entity.Files"%>
-<%@page import="Entity.Schedule"%>
-<%@page import="Entity.Material"%>
 <%@page import="Entity.Project"%>
 <%@page import="Entity.Reply"%>
 <%@page import="java.util.ArrayList"%>
@@ -19,8 +17,6 @@
 <%Citizen c = (Citizen) session.getAttribute("user");%>
 <%Project p = (Project) session.getAttribute("project");%>
 <%Feedback feedback = (Feedback) session.getAttribute("feedback");%>
-<%ArrayList<Material> materials = p.getMaterials();%>
-<%ArrayList<Schedule> schedule = p.getSchedule();%>
 <%ArrayList<Files> files = p.getFiles();%>
 <%ArrayList<Testimonial> tList = (ArrayList<Testimonial>) session.getAttribute("testimonials");%>
 
@@ -205,7 +201,7 @@
 
                                                 <div>
                                                     <p><span class="bold">Category </span>:</p>
-                                                    <p><%=p.getType()%>&nbsp;-&nbsp;<%=p.getCategory().getSubCategory()%></p>
+                                                    <p><%=p.getCategory()%></p>
                                                 </div><br>
                                                 <div>
                                                     <p><span class="bold">Date Submitted</span> :</p>

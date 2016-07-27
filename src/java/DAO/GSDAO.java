@@ -19,6 +19,7 @@ import Entity.Location;
 import Entity.PComments;
 import Entity.PWorks;
 import Entity.PlanningDocument;
+import Entity.Progress_Report;
 import Entity.Project;
 import Entity.Project_Inspection;
 import Entity.Project_has_Pwork;
@@ -30,6 +31,7 @@ import Entity.TComments;
 import Entity.TLocation;
 import Entity.Task;
 import Entity.Testimonial;
+import Entity.Timeline_Update;
 import Entity.Unit;
 import Entity.User;
 import java.sql.Connection;
@@ -594,18 +596,35 @@ public class GSDAO {
         }
     }
 
-    public void insertComponents(Component c, PWorks pw, Project p) {
+    public int getPHPWID(){
+            int x = 0;
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "insert into components (name, unitprice, quantity, unit_id, Project_has_PWorks_Project_ID, Project_has_PWorks_PWorks_ID) values (?,?,?,?,?,?)";
+            String query = "select max(id) i from project_has_works";
+            statement = connection.prepareStatement(query);
+            result = statement.executeQuery();
+            while (result.next()) {
+                x = result.getInt("i");
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting id phpworks", ex);
+        }
+        return x;
+    }
+
+    public void insertComponents(Component c, int id, Project p) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into components (name, unitprice, quantity, unit_id, project_has_pworks_id) values (?,?,?,?,?)";
             statement = connection.prepareStatement(query);
             statement.setString(1, c.getName());
             statement.setFloat(2, c.getUnitPrice());
             statement.setInt(3, c.getQuantity());
             statement.setInt(4, c.getUnit().getId());
-            statement.setString(5, p.getId());
-            statement.setInt(6, pw.getId());
+            statement.setInt(5, id);
             statement.executeUpdate();
             statement.close();
         } catch (SQLException ex) {
@@ -1062,81 +1081,6 @@ public class GSDAO {
         return a;
     }
 
-    //New method for the list of citizen reports
-    public ArrayList<Citizen_Report> getCitizenReports(String projectId) {
-        ArrayList<Citizen_Report> cRepList = new ArrayList<>();
-        Citizen_Report citreport = null;
-        Citizen citizen = null;
-        Project project = null;
-        try {
-            myFactory = ConnectionFactory.getInstance();
-            connection = myFactory.getConnection();
-            String query = "select * from citizen_report join citizen on citizen_ID = citizen.id join address on address_id =  address.ID join barangay on barangay_ID = barangay.ID  where citizen_report.Project_ID = ?";
-            statement = connection.prepareStatement(query);
-            statement.setString(1, projectId);
-            result = statement.executeQuery();
-            while (result.next()) {
-                citizen = new Citizen();
-                citizen.setId(result.getInt("Citizen_ID"));
-                citizen.setFirstName(result.getString("FirstName"));
-                citizen.setMiddleName(result.getString("MiddleName"));
-                citizen.setLastName(result.getString("LastName"));
-
-                project = new Project();
-                project.setId(result.getString("Project_ID"));
-
-                citreport = new Citizen_Report(result.getInt("ID"), result.getString("Message"), result.getString("FolderName"), result.getString("Date_Uploaded"), citizen, project);
-                cRepList.add(citreport);
-            }
-            connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return cRepList;
-    }
-
-    //New method for opening the details regarding a specific citizen report
-    public ArrayList<Report_File> getCitizen_ReportFiles(int id) {
-
-        ArrayList<Report_File> reportList = new ArrayList<Report_File>();
-        Report_File report;
-
-        Citizen_Report creport;
-        Project project;
-
-        try {
-            myFactory = ConnectionFactory.getInstance();
-            connection = myFactory.getConnection();
-            String query = "select * from citizen_report join report_file on report_file.Citizen_ReportID = citizen_report.ID where citizen_ReportID = ?";
-            statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-
-            result = statement.executeQuery();
-
-            while (result.next()) {
-
-                creport = new Citizen_Report();
-                creport.setId(result.getInt("Citizen_ReportID"));
-                creport.setMessage(result.getString("Message"));
-                creport.setDate(result.getString("citizen_report.Date_Uploaded"));
-                creport.setFoldername(result.getString("FolderName"));
-
-                project = new Project();
-                project.setId(result.getString("Project_ID"));
-
-                report = new Report_File(result.getInt("report_file.ID"), result.getString("FileName"), result.getString("report_file.Date_Uploaded"), result.getString("Type"), result.getString("Uploader"), result.getString("Description"), creport, project);
-
-                reportList.add(report);
-            }
-            connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return reportList;
-    }
-
     public ArrayList<Project> getImplementedProjects() {
         ArrayList<Project> plist = new ArrayList<Project>();
         try {
@@ -1196,6 +1140,27 @@ public class GSDAO {
         }
         return plist;
     }
+    
+    public boolean isEditable(Project p) {
+        boolean isEditable = false;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select max(startdate), status from schedule join task on task_id = task.id where project_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                if (result.getString("status").equalsIgnoreCase("Done")) {
+                    isEditable = true;
+                }
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting latest meeting", ex);
+        }
+        return isEditable;
+    }
 
     public ArrayList<Project_Inspection> getInspection(Project p) {
         ArrayList<Project_Inspection> projectinspection = new ArrayList<Project_Inspection>();
@@ -1203,7 +1168,7 @@ public class GSDAO {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
 
-            String getID = "SELECT * FROM project_inspection join task on Task_ID = task.id join schedule on Schedule_ID = schedule.id where schedule.Project_ID = ?;";
+            String getID = "SELECT * FROM project_inspection join task on Task_ID = task.id join schedule on Schedule_ID = schedule.id where task.Project_ID = ?;";
             statement = connection.prepareStatement(getID);
             statement.setString(1, p.getId());
             result = statement.executeQuery();
@@ -1240,24 +1205,71 @@ public class GSDAO {
         return projectinspection;
     }
 
-    public ArrayList<Project_has_Pwork> getProject_has_PworkInfo(String id, String date) {
+ 
+        public ArrayList<Project_has_Pwork> getProject_has_PworkList(Project project) {
+
+        ArrayList<Project_has_Pwork> reportList = new ArrayList<Project_has_Pwork>();
+        Project_has_Pwork proj_pwork;
+        PWorks pwork;
+        Inspection_Report inspection;
+        
+        
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select DISTINCT DateUploaded from project_has_works \n" +
+"join pworks on PWorks_ID = pworks.id\n" +
+"join inspection_report on proj_pworks_id = project_has_works.id where Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, project.getId());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                
+                pwork = new PWorks();
+                //pwork.setId(result.getInt("PWork_ID"));
+                //proj_pwork = new Project_has_Pwork(result.getInt("project_has_pworks.ID"), project, pwork, result.getString("Remark"), result.getString("Date_Inspected"));
+                proj_pwork = new Project_has_Pwork();
+                inspection = new Inspection_Report();
+                inspection.setDateUploaded(result.getString("DateUploaded"));
+                proj_pwork.setInspection(inspection);
+                proj_pwork.setPwork(pwork);
+                proj_pwork.setProject(project);
+                reportList.add(proj_pwork);
+                
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return reportList;
+    }
+
+
+
+
+
+       public ArrayList<Project_has_Pwork> getProject_has_PworkInfo(String id, String date) {
 
         ArrayList<Project_has_Pwork> reportList = new ArrayList<Project_has_Pwork>();
         Project_has_Pwork proj_pwork;
         PWorks pwork;
         Inspection_Report inspection;
         Project p;
-
+        
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "select * from project_has_works \n"
-                    + "join pworks on Pwork_ID = pworks.id\n"
-                    + "join inspection_report on proj_pworks_id = project_has_works.id\n"
-                    + "where project_has_works.Project_ID = ? AND DateUploaded = ?";
+            String query = "select * from project_has_works \n" +
+"join pworks on Pworks_ID = pworks.id\n" +
+"join inspection_report on proj_pworks_id = project_has_works.id\n" +
+"where project_has_works.Project_ID = ? AND DateUploaded = ?";
             statement = connection.prepareStatement(query);
             statement.setString(1, id);
             statement.setString(2, date);
+            
 
             result = statement.executeQuery();
 
@@ -1267,13 +1279,340 @@ public class GSDAO {
                 pwork.setName(result.getString("pworks.Name"));
                 p = new Project();
                 p.setId(id);
-
+                
                 inspection = new Inspection_Report(result.getInt("inspection_report.ID"), result.getString("Remark"), result.getString("DateUploaded"));
-
+                
+                
                 proj_pwork = new Project_has_Pwork(result.getInt("project_has_works.ID"), p, pwork);
                 proj_pwork.setInspection(inspection);
                 reportList.add(proj_pwork);
+                
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
+        return reportList;
+    }
+
+
+          public ArrayList<Project_has_Pwork> getWorkItems(String id) {
+
+        ArrayList<Project_has_Pwork> reportList = new ArrayList<Project_has_Pwork>();
+        Project_has_Pwork proj_pwork;
+        PWorks pwork;
+        
+        
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "SELECT DISTINCT Name FROM project_has_works JOIN pworks on pworks.ID = project_has_works.Pworks_ID \n" +
+"where Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, id);
+            
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                pwork = new PWorks();
+                pwork.setName(result.getString("Name"));
+                
+                proj_pwork = new Project_has_Pwork(0, null, pwork);
+                reportList.add(proj_pwork);
+                
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return reportList;
+    }
+
+        public int getWorkItemId(String name) {
+        int id = 0;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String getID = "select ID from pworks where Name = ?";
+            statement = connection.prepareStatement(getID);
+            statement.setString(1,name);
+            result = statement.executeQuery();
+            while (result.next()) {
+                id = result.getInt("ID");
+            }
+
+            statement.close();
+            connection.close();
+            return id;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+    }
+
+
+        public Project_has_Pwork getProject_has_pWork(String projID, int itemId) {
+       
+        Project_has_Pwork projectpwork = null;    
+        Project project;
+        PWorks pwork;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from project_has_works where Project_ID = ? AND PWorks_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, projID);
+            statement.setInt(2, itemId);
+            
+            result = statement.executeQuery();
+            while (result.next()) {
+                project = new Project();
+                project.setId(result.getString("Project_ID"));
+                pwork = new PWorks();
+                pwork.setId(result.getInt("Pworks_ID"));
+                
+                projectpwork = new Project_has_Pwork(result.getInt("ID"),project, pwork);
+                
+            }
+            statement.close();
+            connection.close();
+            return projectpwork;
+        } catch (SQLException ex) {
+            Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return projectpwork;
+    }
+
+
+        public void addEngInspection(String remark, int id) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "INSERT INTO inspection_report (Remark, DateUploaded, proj_pworks_id) VALUES (?, now(), ?);";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, remark);
+            statement.setInt(2, id);
+            
+            
+            
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+        public ArrayList<Progress_Report> getProgress_ReportList(Project project) {
+
+        ArrayList<Progress_Report> progress_reports = new ArrayList<Progress_Report>();
+        Progress_Report progress_report;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "SELECT * FROM progress_report where Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, project.getId());
+            
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                progress_report = new Progress_Report(result.getInt("ID"), result.getString("Message"),result.getString("FileName"), result.getString("FolderName"), result.getString("DateUploaded"), project, null);
+                progress_reports.add(progress_report);
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return progress_reports;
+    }
+
+        public ArrayList<Citizen_Report> getCitizenReports(String projectId) {
+        ArrayList<Citizen_Report> cRepList = new ArrayList<>();
+        Citizen_Report citreport = null;
+        Citizen citizen = null;
+        Project project = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from citizen_report join citizen on citizen_ID = citizen.id join address on address_id =  address.ID join barangay on barangay_ID = barangay.ID  where citizen_report.Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, projectId);
+            result = statement.executeQuery();
+            while (result.next()) {
+                citizen = new Citizen();
+                citizen.setId(result.getInt("Citizen_ID"));
+                citizen.setFirstName(result.getString("FirstName"));
+                citizen.setMiddleName(result.getString("MiddleName"));
+                citizen.setLastName(result.getString("LastName"));
+
+                project = new Project();
+                project.setId(result.getString("Project_ID"));
+                
+                citreport = new Citizen_Report(result.getInt("ID"), result.getString("Message"), result.getString("FolderName"), result.getString("Date_Uploaded"), citizen, project);
+                cRepList.add(citreport);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return cRepList;
+    }
+      public ArrayList<Report_File> getCitizen_ReportFiles(int id) {
+
+        ArrayList<Report_File> reportList = new ArrayList<Report_File>();
+        Report_File report;
+        
+        Citizen_Report creport;
+        Project project;
+        
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from citizen_report join report_file on report_file.Citizen_Report_ID = citizen_report.ID where citizen_Report_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                
+                creport = new Citizen_Report();
+                creport.setId(result.getInt("Citizen_Report_ID"));
+                creport.setMessage(result.getString("Message"));
+                creport.setDate(result.getString("citizen_report.Date_Uploaded"));
+                creport.setFoldername(result.getString("FolderName"));
+                
+                project = new Project();
+                project.setId(result.getString("Project_ID"));
+                
+                report = new Report_File(result.getInt("report_file.ID"), result.getString("FileName"), result.getString("report_file.Date_Uploaded"), result.getString("Type"), result.getString("Uploader"), result.getString("Description"), creport, project);
+                
+                
+                reportList.add(report);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return reportList;
+    }
+      
+      
+    public Project getProjectInfo(String id) {
+
+        Project project = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from project where ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, id);
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+
+                project = new Project();
+                project.setId(result.getString("ID"));
+                project.setName(result.getString("Name"));
+                project.setDescription(result.getString("Description"));
+                project.setCategory(result.getString("Category"));
+                project.setStatus(result.getString("Status"));
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return project;
+    }
+    
+    
+    
+    
+        public ArrayList<Inspection_Report> getInspectionDate(Project project) {
+       
+        ArrayList<Inspection_Report> list = new ArrayList<Inspection_Report>();
+        Inspection_Report inspectionDate = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select DISTINCT DateUploaded from task join schedule on task.ID = Task_ID\n" +
+"join inspection_report on inspection_report.Task_ID = task.ID\n" +
+"where Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, project.getId());
+            
+            result = statement.executeQuery();
+            while (result.next()) {
+                
+                
+                inspectionDate = new Inspection_Report();
+                inspectionDate.setDateUploaded(result.getString("DateUploaded"));
+                list.add(inspectionDate);
+                
+            }
+            statement.close();
+            connection.close();
+            return list;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    
+    public ArrayList<Schedule> getTaskSchedule(String id) {
+
+        ArrayList<Schedule> reportList = new ArrayList<Schedule>();
+        Schedule schedule;
+        Task task;
+        
+        
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select task.ID,Name, min(StartDate) as StartDate,max(EndDate) as EndDate from task join schedule on schedule.Task_ID = task.ID\n" +
+"where schedule.Status = 'Pending' AND task.Project_ID = ? group by Name";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, id);
+            
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                
+                schedule = new Schedule();
+                task = new Task();
+                
+                task.setId(result.getInt("ID"));
+                task.setName(result.getString("Name"));
+                
+                
+                schedule.setStartdate(result.getString("StartDate"));                
+                schedule.setEnddate(result.getString("EndDate"));
+                schedule.setTask(task);
+                
+                reportList.add(schedule);
+
+                
+                
             }
             connection.close();
         } catch (SQLException ex) {
@@ -1283,25 +1622,234 @@ public class GSDAO {
         return reportList;
     }
     
-    public boolean isEditable(Project p) {
-        boolean isEditable = false;
+    
+    
+    public void addInspection_Report(String remark, int taskid) {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "select max(startdate), status from schedule join task on task_id = task.id where project_id = ?";
+            String query = "INSERT INTO inspection_report (Remark, DateUploaded, Task_ID) VALUES (?, now(), ?);";
             statement = connection.prepareStatement(query);
-            statement.setString(1, p.getId());
+            statement.setString(1, remark);
+            statement.setInt(2, taskid);
+            
+            
+            
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    
+            public ArrayList<Inspection_Report> getInspectionPerDate(String projectid, String date) {
+       
+        ArrayList<Inspection_Report> list = new ArrayList<Inspection_Report>();
+        Inspection_Report inspection = null;
+        Task task;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select Name, Remark,DateUploaded from inspection_report join task on Task_ID = task.id where task.Project_ID = ? AND DateUploaded = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, projectid);
+            statement.setString(2, date);
+            
             result = statement.executeQuery();
             while (result.next()) {
-                if (result.getString("status").equalsIgnoreCase("Done")) {
-                    isEditable = true;
-                }
+                
+                task = new Task();
+                task.setName(result.getString("Name"));
+                inspection = new Inspection_Report();
+                inspection.setRemark(result.getString("Remark"));
+                inspection.setDateUploaded(result.getString("DateUploaded"));
+                inspection.setTask(task);
+                
+                list.add(inspection);
+                
+                
+                
+            }
+            statement.close();
+            connection.close();
+            return list;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    
+        public void finishTask(int id) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "UPDATE schedule SET Status = 'Finished', ActualEndDate = now() WHERE Task_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            
+            
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+        
+        
+    public void finishProjects() {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "UPDATE project SET Status = 'Finished' WHERE ID not in (Select Project_ID from task join schedule on task.id = schedule.Task_ID where schedule.Status = 'Pending')";
+            statement = connection.prepareStatement(query);
+            
+            
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    
+    
+            public ArrayList<Timeline_Update> getTimeline_UpdateList(Project project) {
+
+        ArrayList<Timeline_Update> timeline_updates = new ArrayList<Timeline_Update>();
+        Timeline_Update update;
+        User user;
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from timeline_update JOIN users on users.ID = Users_ID\n" +
+"where Project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, project.getId());
+            
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                user = new User(result.getInt("Users.ID"), result.getString("Username"));
+                update = new Timeline_Update(result.getInt("timeline_update.ID"), result.getString("Message"), project, user);
+                timeline_updates.add(update);
+                
             }
             connection.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting latest meeting", ex);
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return isEditable;
+
+        return timeline_updates;
+    }    
+            
+            
+            
+        public User getUser(Employee emp) {
+        User u = null;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from users where users.ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, emp.getUser().getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                u = new User(result.getInt("users.id"), result.getString("username"), result.getString("password"), result.getString("type"));
+
+            }
+
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ActivityDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return u;
+    }
+        
+        
+        
+        public void submitTimelineUpdate(Timeline_Update timelineupdate) {
+
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "INSERT INTO timeline_update (Message, Project_ID, Users_ID) VALUES (?,?,?);";
+
+            statement = connection.prepareStatement(query);
+
+            statement.setString(1, timelineupdate.getMessage());
+            statement.setString(2, timelineupdate.getProject().getId());
+            statement.setInt(3, timelineupdate.getUser().getId());
+
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }    
+        
+        
+        
+        
+    public ArrayList<Schedule> getCompletedTaskReport(String id) {
+
+        ArrayList<Schedule> reportList = new ArrayList<Schedule>();
+        Schedule schedule;
+        Task task;
+        
+        
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select task.Name, Description, min(StartDate), max(EndDate), ActualEndDate from task join schedule on task.ID = schedule.Task_ID where Project_ID = ?\n" +
+"group by Name";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, id);
+            
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                
+                schedule = new Schedule();
+                task = new Task();
+                
+                task.setName(result.getString("Name"));
+                task.setDescription(result.getString("Description"));
+                
+                schedule.setStartdate(result.getString("min(StartDate)"));                
+                schedule.setEnddate(result.getString("max(EndDate)"));
+                schedule.setActualenddate(result.getString("ActualEndDate"));
+                schedule.setTask(task);
+                
+                reportList.add(schedule);
+
+                
+                
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return reportList;
     }
 
 }

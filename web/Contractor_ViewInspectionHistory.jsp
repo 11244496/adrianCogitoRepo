@@ -188,11 +188,17 @@
                             </a>
                         </li>
                         <li>
-                            <a href="Contractor_Profile">
-                                <i class="fa fa-dashboard"></i>
-                                <span>Profile</span>
-                            </a>
-                        </li>
+                        <a href="Contractor_Profile">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Contractor_ViewProjectList">
+                            <i class="fa fa-dashboard"></i>
+                            <span>View All Projects</span>
+                        </a>
+                    </li>
                         <li class="sub-menu">
                             <a href="javascript:;" >
                                 <i class="fa fa-tasks"></i>

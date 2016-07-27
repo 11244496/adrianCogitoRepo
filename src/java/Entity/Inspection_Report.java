@@ -15,6 +15,7 @@ public class Inspection_Report {
     private int ID;
     private String Remark;
     private String DateUploaded;
+    private Task task;
 
     public Inspection_Report(int ID, String Remark, String DateUploaded) {
         this.ID = ID;
@@ -49,11 +50,14 @@ public class Inspection_Report {
     public void setDateUploaded(String DateUploaded) {
         this.DateUploaded = DateUploaded;
     }
-    
-    
-    
-    
-    
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
     
     
     

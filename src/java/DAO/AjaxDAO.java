@@ -73,7 +73,7 @@ public class AjaxDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "SELECT * FROM testimonial join TLocation on testimonial.ID = tlocation.Testimonial_ID where Title like \"%" + searchQuery + "%\" or Category like \"%" + searchQuery + "%\" or Message like \"%" + searchQuery + "%\";";
+            String query = "SELECT * FROM testimonial join TLocation on testimonial.ID = tlocation.Testimonial_ID join Citizen on Citizen_ID = citizen.id where Title like \"%" + searchQuery + "%\" or Category like \"%" + searchQuery + "%\" or Message like \"%" + searchQuery + "%\";";
             statement = connection.prepareStatement(query);
             result = statement.executeQuery();
             while (result.next()) {
@@ -90,6 +90,9 @@ public class AjaxDAO {
                 testi.setFolderName(result.getString("foldername"));
                 Citizen c = new Citizen();
                 c.setId(result.getInt("Citizen_ID"));
+                c.setFirstName(result.getString("citizen.FirstName"));
+                c.setMiddleName(result.getString("citizen.MiddleName"));
+                c.setLastName(result.getString("citizen.LastName"));
                 testi.setCitizen(c);
                 testi.setStatus(result.getString("Status"));
                 loc.setTestimonial(testi);

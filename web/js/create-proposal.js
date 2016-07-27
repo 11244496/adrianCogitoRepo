@@ -74,11 +74,14 @@ $('.viewbutton').click(function () {
 
     $('#viewdetails').modal();
 });
+
+//Select Main Testimonial and Referenced Projects
 var mainTestimonial = [];
-var referencedTestimonial = [];
 var detachedMainRow;
 var tablerow;
 var Testimonialmarkers = [];
+var referencedProjects = [];
+
 //Select Testimonial from Testimonial List as Main Testimonial and append labels.
 $('.selectmainbtn').click(function () {
     detachedMainRow = $(this).closest('tr').detach();
@@ -128,32 +131,35 @@ $('.deselectmainbtn').click(function () {
     initMap();
 });
 //Transfer from Testi List to Referenced Table List via detach
-$(document).on('click', '.selectreferencebtn', function () {
+$(document).on('click', '.selectprojectbtn', function () {
 
-    $("#ReferenceTestimonialList").show();
-    var Rtestimonial = {id: $(this).val()};
-    referencedTestimonial.push(Rtestimonial);
+    $("#selectedprojectTable").show();
+    var PID = {id: $(this).val()};
+    referencedProjects.push(PID);
     var Rt = $(this).closest('tr').detach();
-    $("#RTestimonialTableBody").append(Rt);
-    $(this).removeClass('btn btn-warning btn-sm selectreferencebtn').addClass('btn btn-danger btn-sm unselectreferencebtn');
+    $("#selectedprojectlistTable").append(Rt);
+    $(this).removeClass('btn btn-success btn-sm selectprojectbtn').addClass('btn btn-danger btn-sm unselectprojectbtn');
     $(this).text("Remove");
+    
+    
 });
 //Transfer from Referenced Table back to Testi list
-$(document).on('click', '.unselectreferencebtn', function () {
-    for (var x = 0; x < referencedTestimonial.length; x++) {
-        if (referencedTestimonial[x].id == $(this).val()) {
-            referencedTestimonial.splice(x, 1);
+$(document).on('click', '.unselectprojectbtn', function () {
+    for (var x = 0; x < referencedProjects.length; x++) {
+        if (referencedProjects[x].id == $(this).val()) {
+            referencedProjects.splice(x, 1);
         }
     }
 
-    if (referencedTestimonial.length == 0) {
-        $("#ReferenceTestimonialList").hide();
+    if (referencedProjects.length == 0) {
+        $("#selectedprojectTable").hide();
     }
 
     var detached = $(this).closest('tr').detach();
-    $("#TestimonialTableBody").append(detached);
-    $(this).removeClass('btn btn-danger btn-sm unselectreferencebtn').addClass('btn btn-warning btn-sm selectreferencebtn');
-    $(this).text("Use as reference");
+    $("#projectlistTable").append(detached);
+    $(this).removeClass('btn btn-danger btn-sm unselectprojectbtn').addClass('btn btn-success btn-sm selectprojectbtn');
+    $(this).text("Select Project");
+    
 });
 $.fn.searchableTable = function () {
     return this.each(function () {
@@ -379,19 +385,19 @@ function addComponentsRow(btn) {
     var row = $('<tr></tr>');
     var x = 1;
     var componenttd = $('<td></td>');
-    var component = $('<input type="text" name="component" class="form-control component"> ');
+    var component = $('<input type="text" name="component" class="form-control" id="component"> ');
     componenttd.append(component);
     var quantitytd = $('<td></td>');
-    var quantity = $('<input type="text" name="quantity" class="form-control quantity"> ');
+    var quantity = $('<input type="text" name="quantity" class="form-control" id="quantity"> ');
     quantitytd.append(quantity);
     var unittd = $('<td></td>');
-    var select = $('<select type="text" name="unit" class="form-control unit" ></select>');
+    var select = $('<select type="text" name="unit" class="form-control" id="unit" ></select>');
     for (var i = 0; i < unitList.length; i++) {
         $(select).append($("<option></option>").val(unitList[i].unit).html(unitList[i].unit));
     }
     $(unittd).append(select);
     var unitCosttd = $('<td></td>');
-    var unitCost = $('<input type="text" name="unitCost" class="form-control unitCost">');
+    var unitCost = $('<input type="text" name="unitCost" class="form-control" id="unitCost">');
     unitCosttd.append(unitCost);
     var amounttd = $('<td></td>');
     var amount = $('<input readonly type="text" name="amount" class="form-control amount" style="background: white">');
@@ -438,27 +444,26 @@ var n, q, u, c;
 function insertWorks() {
 
     for (var x = 1; x < powNumber; x++) {
-        pw = $('#worksButton-' + 1).text();
-        console.log(pw);
+        pw = $('#worksButton-' + x).text();
         $('#comp-' + x + ' tbody tr').each(function (row, tr) {
 
-            n = $(tr).find(' .component').val();
-            q = $(tr).find('.quantity').val();
-            u = $(tr).find('.unit').val();
-            c = $(tr).find('.unitCost').val();
+            n = $(tr).find('#component').val();
+            q = $(tr).find('#quantity').val();
+            u = $(tr).find('#unit').val();
+            c = $(tr).find('#unitCost').val();
             comps = {cname: n, qty: q, unit: u, cost: c};
             compList.push(comps);
         });
         pworks = {name: pw, component: compList};
         works.push(pworks);
+        compList = [];
     }
 
 //    JSON.stringify(works);
     $('#pworks').val(JSON.stringify(works));
-    console.log(JSON.stringify(works));
 
     $('#schedule').val(JSON.stringify(finalTasks));
-    console.log(JSON.stringify(finalTasks));
+//    console.log(JSON.stringify(finalTasks));
 
 }
 
@@ -490,7 +495,7 @@ $(document).ready(function () {
 });
 function setTasksTable() {
 
-    var schedDetails = [];
+
     var taskDet;
     $('#taskTable tbody > tr').remove();
     for (var x = 0; x < taskName.length; x++) {
@@ -506,6 +511,7 @@ function setTasksTable() {
             tr.append(buttontd);
 //            tr.append(deltd);
             $('#taskTable tbody').append(tr);
+            var schedDetails = [];
             taskDet = {name: task, details: schedDetails};
             finalTasks.push(taskDet);
         }
@@ -528,16 +534,18 @@ function addScheduleToArray() {
     var end = $('#endDate').val();
     var det = {start: start, end: end};
 
-    for (var x = 0; x<finalTasks.length; x++){
-        if (finalTasks[x].name === name){
+    for (var x = 0; x < finalTasks.length; x++) {
+        if (finalTasks[x].name === name) {
             finalTasks[x].details.push(det);
+            break;
         }
     }
-    
+
     $('#startDate').val("");
     $('#endDate').val("");
-    finalizeTasks();
-    console.log(finalTasks[0].details.length);
+    
+    renderChart(JSON.stringify(finalTasks));
+    
 }
 
 function finalizeTasks() {
@@ -578,3 +586,135 @@ function deleteForSchedule(btn) {
     }
     console.log(taskName);
 }
+
+//FOR THE GANTT CHARTS
+var chartD;
+var chartVal = Object.create(null);
+var chart = AmCharts.makeChart("chartdiv", {
+    "type": "gantt",
+    "period": "DD",
+    "theme": "dark",
+    "valueAxis": {
+        "type": "date"
+    },
+    "brightnessStep": 10,
+    "graph": {
+        "fillAlphas": 1,
+        "balloonText": "[[open]] - [[value]]"
+    },
+    "rotate": true,
+    "categoryField": "name",
+    "segmentsField": "details",
+    "dataDateFormat": "YYYY-MM-DD",
+    "startDateField": "start",
+    "endDateField": "end",
+    "chartCursor": {
+        "valueBalloonsEnabled": false,
+        "cursorAlpha": 0,
+        "valueLineBalloonEnabled": true,
+        "valueLineEnabled": true,
+        "valueZoomable": true,
+        "zoomable": false
+    },
+    "valueScrollbar": {
+        "position": "top",
+        "autoGridCount": true,
+        "color": "#000000"
+    },
+});
+
+
+//Event method: click item
+//Once you click one of the bars in the gantt chart, this method will execute
+var index = 0;
+
+//var index = 0;
+var addSegment = function (event) {
+    $.map(event.item.dataContext, function (val, i) {
+
+        //When the index is referring to the category of the selected value
+        if (i == "name") {
+
+            //Place the name of the selected value on the textfield 
+            $("#category").val(event.item.dataContext.category);
+
+
+        }
+        //Else, if the index is referring to the segments of that particular value selected
+        else {
+
+
+            var name = i.indexOf("start") != -1 ? "start" : "end";
+            var labelName = i.indexOf("start") != -1 ? "Start date: " : "End date: ";
+            var divInd = "#" + "div-" + index;
+
+            //Creates a div that will store the start date and end date for a particular Task   
+            if (i.indexOf("start") != -1) {
+                //Creates a div and then pushes it  to the div
+                var div = $("<div></div>");
+                div.prop("id", "div-" + index);
+                div.prop("class", "divinput");
+                div.appendTo("#submitEntryEdit");
+            }
+
+            //Creates a label and then pushes it  to the div
+            var label = $("<label/>");
+            label.html(labelName);
+            label.prop("id", name + index);
+            label.appendTo("#" + "div-" + index);
+            //Creates a label then puts it to the div
+            var newStart = $("<input type='text'/>");
+            newStart.prop("id", name + index);
+            newStart.appendTo("#" + "div-" + index);
+            newStart.val(new Date(val));
+            $("<br>").appendTo("#" + "div-" + index);
+
+
+            if (i.indexOf("end") != -1) {
+                index++;
+
+            }
+        }
+    });
+
+};
+
+//This will draw the chart
+var renderChart = function (data) {
+
+    //Sets the data source    
+    chart.dataProvider = data;
+
+    //This method should be called after data in your data provider changed or a new array was set to dataProvider. 
+    chart.validateData();
+
+    //Adds event listener to the object.
+    chart.addListener("clickGraphItem", clickItemEvent);
+
+
+}
+
+function formatDate(date) {
+    var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+function getId(str) {
+    var spl = str.split("-");
+    return spl[1];
+}
+;
+
+function getUpdatedChartVal() {
+    return chartVal;
+}
+;

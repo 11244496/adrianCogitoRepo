@@ -63,7 +63,7 @@ public class CityAdminDAO {
             connection = myFactory.getConnection();
             String testimonialquery = "select * from testimonial \n"
                     + "join citizen on citizen_id = citizen.ID\n"
-                    + "join users on users_id = users.id where status = ?";
+                    + "join users on users_id = users.id where status = ? order by dateuploaded ASC";
 
             statement = connection.prepareStatement(testimonialquery);
             statement.setString(1, "Pending");

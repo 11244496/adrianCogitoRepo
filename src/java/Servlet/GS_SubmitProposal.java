@@ -88,7 +88,6 @@ public class GS_SubmitProposal extends HttpServlet {
                         }
                     }
                     c.setUnitPrice(Float.parseFloat(co.getString("cost")));
-                    System.out.println(c.getName());
                     componentFromJSP.add(c);
                 }
                 pw.setComponents(componentFromJSP);
@@ -96,7 +95,6 @@ public class GS_SubmitProposal extends HttpServlet {
             }
 
             boolean existsInDB;
-
             ArrayList<PWorks> existingPWorks = gs.getExistingPWorks();
             for (PWorks pow : pWorksFromJSP) {
                 existsInDB = false;
@@ -109,16 +107,18 @@ public class GS_SubmitProposal extends HttpServlet {
                     gs.insertNewPWorks(pw);
                 }
             }
-            for (PWorks pw2 : pWorksFromJSP) {
+            for (int x = 0; x<pWorksFromJSP.size(); x++){
+                PWorks pw2 = pWorksFromJSP.get(x);
                 componentFromJSP = pw2.getComponents();
                 pw2 = gs.getPWork(pw2);
-                gs.insertWorksPerProject(pw2, p);
                 pw2.setComponents(componentFromJSP);
-                for (Component com : pw2.getComponents()) {
-                    gs.insertComponents(com, pw2, p);
+                gs.insertWorksPerProject(pw2, p);
+                
+                for (int y = 0; y < pw2.getComponents().size(); y++){
+                    gs.insertComponents(pw2.getComponents().get(y), gs.getPHPWID(), p);
                 }
             }
-
+            
             setSchedule(request, p);
             
             ServletContext context = getServletContext();
@@ -136,10 +136,15 @@ public class GS_SubmitProposal extends HttpServlet {
         p.setName(request.getParameter("projectname"));
         p.setDescription(request.getParameter("projectdescription"));
         p.setStatus("Pending");
-        p.setCategory(request.getParameter("maincategory"));
+        p.setCategory(request.getParameter("category"));
         p.setEmployee(e);
         Testimonial t = new Testimonial();
+        
+        if(request.getParameter("maintestimonial").equalsIgnoreCase("") || request.getParameter("maintestimonial") == null){
+        t.setId(0);
+        }else{
         t.setId(Integer.parseInt(request.getParameter("maintestimonial")));
+        }
         p.setMainTestimonial(t);
 
         String[] loc = request.getParameter("hiddenlocation").split(",");
@@ -199,11 +204,12 @@ public class GS_SubmitProposal extends HttpServlet {
             tList.add(t);
         }
         
+        
         for (Task task : tList){
-            gs.insertTask(t, p);
+            gs.insertTask(task, p);
             task.setId(gs.getTaskID());
-            for (Schedule sched : t.getSchedules()){
-                gs.insertSchedule(t, s);
+            for (Schedule sched : task.getSchedules()){
+                gs.insertSchedule(task, sched);
             }
         }
     }
