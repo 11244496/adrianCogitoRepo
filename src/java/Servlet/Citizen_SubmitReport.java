@@ -169,7 +169,7 @@ public class Citizen_SubmitReport extends HttpServlet {
                         //Upload testimonial
                         //citizenDAO.uploadTestimonial(t);
                         
-                        Citizen_Report report = new Citizen_Report(0, message, "chrome-extension://dekmoccdlaelhdkmeooopbljiifmohmf/"+projectName + " - " + user.getFirstName() + user.getLastName() + "'s report" ,null, user, proj);
+                        Citizen_Report report = new Citizen_Report(0, message, "chrome-extension://nioaipehgdakmfdbddhcckfihdjfjmoj/"+projectName + " - " + user.getFirstName() + user.getLastName() + "'s report" ,null, user, proj);
                         
                         citizenDAO.uploadCitizenReport(report);
                         int id = citizenDAO.getRecentPostid(user, message);

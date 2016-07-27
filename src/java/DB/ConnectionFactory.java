@@ -9,8 +9,8 @@ import java.sql.Connection;
 public abstract class ConnectionFactory {
     
     private String driverName="com.mysql.jdbc.Driver";
-    private String url = "jdbc:mysql://localhost/cogito";//localhost:3306
-    private String username = "cogito";
+    private String url = "jdbc:mysql://localhost/cogitov5";//localhost:3306
+    private String username = "root";
     private String password = "";
     
     public static ConnectionFactory getInstance(){

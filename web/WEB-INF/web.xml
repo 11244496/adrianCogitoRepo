@@ -448,6 +448,26 @@
         <servlet-name>Contractor_ViewSubmittedScheduleWorks</servlet-name>
         <servlet-class>Servlet.Contractor_ViewSubmittedScheduleWorks</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GS_GoToEdit</servlet-name>
+        <servlet-class>Servlet.GS_GoToEdit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GS_SubmitEdit</servlet-name>
+        <servlet-class>Servlet.GS_SubmitEdit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_GS_GenerateTemplate</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_GS_GenerateTemplate</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_ProjectSchedule</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_ProjectSchedule</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AJAX_ProjectWorks</servlet-name>
+        <servlet-class>Servlet.AjaxServlet.AJAX_ProjectWorks</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -895,6 +915,26 @@
     <servlet-mapping>
         <servlet-name>Contractor_ViewSubmittedScheduleWorks</servlet-name>
         <url-pattern>/Contractor_ViewSubmittedScheduleWorks</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_GoToEdit</servlet-name>
+        <url-pattern>/GS_GoToEdit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GS_SubmitEdit</servlet-name>
+        <url-pattern>/GS_SubmitEdit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_GS_GenerateTemplate</servlet-name>
+        <url-pattern>/AJAX_GS_GenerateTemplate</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_ProjectSchedule</servlet-name>
+        <url-pattern>/AJAX_ProjectSchedule</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AJAX_ProjectWorks</servlet-name>
+        <url-pattern>/AJAX_ProjectWorks</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

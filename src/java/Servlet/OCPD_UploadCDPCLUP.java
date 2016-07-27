@@ -91,7 +91,7 @@ public class OCPD_UploadCDPCLUP extends HttpServlet {
                             String root = getServletContext().getRealPath("/");
 
                             //path where the file will be stored
-                            File path = new File("C\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\CogitoFirst\\Upload" + "/Engineering Department" + "/planningdocuments_TEMP");
+                            File path = new File("C:\\Users\\Krist\\Desktop\\Thesis 4\\FinalCogitoRepository\\Upload" + "/Engineering Department" + "/planningdocuments_TEMP");
                             if (!path.exists()) {
                                 boolean status = path.mkdirs();
                             }
@@ -105,7 +105,7 @@ public class OCPD_UploadCDPCLUP extends HttpServlet {
                     //
                     PlanningDocument d = new PlanningDocument();
                     d.setName(fileName);
-                    d.setUrl("chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/Engineering Department/planningdocuments_TEMP/" + fileName);
+                    d.setUrl("chrome-extension://nioaipehgdakmfdbddhcckfihdjfjmoj/Engineering Department/planningdocuments_TEMP/" + fileName);
                     d.setType(type);
                     d.setEmployee(e);
                     ocpdDAO.uploadDocument(d);

@@ -8,13 +8,17 @@ package DAO;
 import DB.ConnectionFactory;
 import Entity.Agenda;
 import Entity.Citizen;
+import Entity.Component;
 import Entity.Contractor;
 import Entity.Files;
 import Entity.Location;
+import Entity.PWorks;
 import Entity.Project;
 import Entity.Schedule;
 import Entity.TLocation;
+import Entity.Task;
 import Entity.Testimonial;
+import Entity.Unit;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -275,6 +279,170 @@ public class AjaxDAO {
         } catch (SQLException ex) {
             Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in updating meeting schedule", ex);
         }
+    }
+    
+    public ArrayList<PWorks> getPworks(String id) {
+        ArrayList<PWorks> pList = new ArrayList<>();
+        PWorks p = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from project_has_works join pworks on pworks_id = pworks.id where project_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                p = new PWorks();
+                p.setId(result.getInt("pworks.ID"));
+                p.setName(result.getString("Name"));
+                pList.add(p);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting agenda", ex);
+        }
+        return pList;
+    }
+
+    public ArrayList<Component> getComponent(int pid, String projId) {
+        ArrayList<Component> cList = new ArrayList<>();
+        Component c = null;
+        Unit u = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from components join unit on unit_id = unit.id join Project_has_works on project_has_works.id = project_has_pworks_id\n"
+                    + "where project_id = ? and pworks_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, projId);
+            statement.setInt(2, pid);
+            result = statement.executeQuery();
+            while (result.next()) {
+                c = new Component();
+                c.setId(result.getInt("components.id"));
+                c.setName(result.getString("components.name"));
+                c.setUnitPrice(result.getFloat("unitprice"));
+                c.setQuantity(result.getInt("quantity"));
+                u = new Unit();
+                u.setId(result.getInt("unit.id"));
+                u.setUnit(result.getString("unit"));
+                c.setUnit(u);
+                cList.add(c);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting components", ex);
+        }
+        return cList;
+    }
+
+    public ArrayList<Task> getTask(String id) {
+        ArrayList<Task> tList = new ArrayList<>();
+        Task t = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from task where project_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, id);
+            result = statement.executeQuery();
+            while (result.next() && !result.getString("Name").equalsIgnoreCase("Meeting with OCPD")) {
+                t = new Task();
+                t.setId(result.getInt("ID"));
+                t.setName(result.getString("Name"));
+                tList.add(t);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting agenda", ex);
+        }
+        return tList;
+    }
+
+    public ArrayList<Schedule> getSchedule(int id) {
+        ArrayList<Schedule> sList = new ArrayList<>();
+        Schedule s = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from schedule where task_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                s = new Schedule();
+                s.setId(result.getInt("ID"));
+                s.setStartdate(result.getString("Startdate"));
+                s.setEnddate(result.getString("Enddate"));
+                sList.add(s);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting agenda", ex);
+        }
+        return sList;
+    }
+
+    public ArrayList<PWorks> powTemplate(String[] ids) {
+        ArrayList<PWorks> pList = new ArrayList<>();
+        PWorks p = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select pworks.id, pworks.name from project_has_works join pworks on pworks.id = PWorks_ID where project_id=? ";
+            for (int x = 1; x < ids.length; x++) {
+                query += "or project_id = ? ";
+            }
+            query += " group by name";
+            statement = connection.prepareStatement(query);
+            for (int x = 0; x < ids.length; x++) {
+                statement.setString(x + 1, ids[x]);
+            }
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                p = new PWorks();
+                p.setId(result.getInt("pworks.id"));
+                p.setName(result.getString("pworks.name"));
+                pList.add(p);
+            }
+
+            for (PWorks pw : pList) {
+                pw.setComponents(getComponentsForTemplate(ids, pw.getName()));
+            }
+
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in getting works for template", ex);
+        }
+        return pList;
+    }
+
+    public ArrayList<Component> getComponentsForTemplate(String[] id, String work) throws SQLException {
+        ArrayList<Component> cList = new ArrayList<>();
+        Component c = new Component();
+        String query = "select * from components \n"
+                + "join project_has_works on project_has_pworks_id = project_has_works.id\n"
+                + "join pworks on pworks.id = pworks_id\n"
+                + "where pworks.name=? and (project_id = ? ";
+
+        for (int x = 1; x < id.length; x++) {
+            query += "or project_id = ?";
+        }
+        query += ") group by components.name";
+        statement = connection.prepareStatement(query);
+        statement.setString(1, work);
+        for (int x = 0; x < id.length; x++) {
+            statement.setString(x + 2, id[x]);
+        }
+        result = statement.executeQuery();
+        while (result.next()) {
+            c = new Component();
+            c.setId(result.getInt("components.id"));
+            c.setName(result.getString("components.name"));
+            cList.add(c);
+        }
+        return cList;
     }
 
 }

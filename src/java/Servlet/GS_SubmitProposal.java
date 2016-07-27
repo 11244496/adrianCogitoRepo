@@ -101,11 +101,13 @@ public class GS_SubmitProposal extends HttpServlet {
                 for (PWorks pow2 : existingPWorks) {
                     if (pow.getName().equalsIgnoreCase(pow2.getName())) {
                         existsInDB = true;
+                        break;
                     }
                 }
                 if (!existsInDB) {
                     gs.insertNewPWorks(pw);
                 }
+                existingPWorks = gs.getExistingPWorks();
             }
             for (int x = 0; x<pWorksFromJSP.size(); x++){
                 PWorks pw2 = pWorksFromJSP.get(x);

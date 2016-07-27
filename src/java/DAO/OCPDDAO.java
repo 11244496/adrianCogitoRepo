@@ -157,6 +157,29 @@ public class OCPDDAO {
         }
         return p;
     }
+    
+    public Testimonial getMainTestimonial(String id){
+            Testimonial t = new Testimonial();
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String detailsQuery = ("select * from testimonial join project on testimonial.id = testimonial_id where project.id = ?");
+            statement = connection.prepareStatement(detailsQuery);
+            statement.setString(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                t.setId(result.getInt("ID"));
+                t.setTitle(result.getString("title"));
+                t.setDateUploaded(result.getString("dateuploaded"));
+                t.setMessage(result.getString("message"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return t;
+    }
 
     public Project getAllProjectDetails(String id) {
         Project project = new Project();

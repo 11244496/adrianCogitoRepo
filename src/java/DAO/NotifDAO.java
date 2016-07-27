@@ -53,7 +53,7 @@ public class NotifDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "select * from notification;";
+            String query = "select * from notification";
             statement = connection.prepareStatement(query);
             result = statement.executeQuery();
 

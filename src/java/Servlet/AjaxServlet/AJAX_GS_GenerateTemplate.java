@@ -3,33 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Servlet;
+package Servlet.AjaxServlet;
 
-import DAO.ActivityDAO;
-import DAO.CitizenDAO;
-import DAO.GSDAO;
-import DAO.OCPDDAO;
-import Entity.Activity;
-import Entity.Employee;
-import Entity.Project;
-import Entity.Testimonial;
+import DAO.AjaxDAO;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import json.JSONArray;
+import json.JSONObject;
 
 /**
  *
- * @author AdrianKyle
+ * @author RoAnn
  */
-public class GS_CreateProposal extends HttpServlet {
+public class AJAX_GS_GenerateTemplate extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,44 +35,28 @@ public class GS_CreateProposal extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        HttpSession session = request.getSession();
-        try {
-            GSDAO gs = new GSDAO();
-            CitizenDAO c = new CitizenDAO();
-            OCPDDAO oc = new OCPDDAO();
-            ActivityDAO actdao = new ActivityDAO();
-            Employee emp = (Employee) session.getAttribute("user");
-            //Get All Testimonials
-            ArrayList<Testimonial> allTestimonials = gs.getAllTestimonials();
-            for (int x = 0; x < allTestimonials.size(); x++) {
-                allTestimonials.get(x).setFiles(c.getFilesWithStatus(allTestimonials.get(x).getId(), allTestimonials.get(x), "Approved"));
-                allTestimonials.get(x).setMainproject(gs.getMainProjectOnTestimonial(allTestimonials.get(x).getId()));
+        try (PrintWriter out = response.getWriter()) {
+            AjaxDAO ad = new AjaxDAO();
+            ArrayList<String> projIds = new ArrayList<>();
+            JSONArray ids = new JSONArray(request.getParameter("projids"));
+            for (Object obj : ids) {
+                JSONObject pidJson = new JSONObject(obj.toString());
+                String tID = pidJson.getString("id");
+                projIds.add(tID);
             }
-
-            ArrayList<Project> allProject = new ArrayList<Project>();
-            ArrayList<String> allProjectID = oc.getAllFinishedProjectIDs();
-
-            for (String id : allProjectID) {
-                allProject.add(oc.getBasicProjectDetails(id));
+            
+            String[] idList = new String[projIds.size()];
+            int x = 0;
+            for (String i : projIds){
+                idList[x] = i;
+                x++;
             }
+                        
+            String json = new Gson().toJson(ad.powTemplate(idList));
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(json);
 
-            //Request set attributes testimonials
-            request.setAttribute("allTestimonials", allTestimonials);
-            request.setAttribute("worksList", gs.getWorks());
-            request.setAttribute("works", new Gson().toJson(gs.getWorks()));
-            request.setAttribute("unitGson", new Gson().toJson(gs.getAllUnits()));
-            request.setAttribute("allProject", allProject);
-            request.setAttribute("finishedP", gs.getFinishedProjects());
-
-            actdao.addActivity(new Activity(0, "created a proposal", null, emp.getUser()));
-            ServletContext context = getServletContext();
-
-            RequestDispatcher dispatch = context.getRequestDispatcher("/GS_CreateProposal.jsp");
-            dispatch.forward(request, response);
-
-        } finally {
-            out.close();
         }
     }
 

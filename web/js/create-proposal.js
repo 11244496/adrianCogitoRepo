@@ -328,6 +328,7 @@ function powTableFc(button, sel, num, work) {
             $(work).keypress(function (e) {
                 var key = e.which;
                 if (key === 13) {
+                    $('#componentsDiv-' + num).remove();
                     $(work).hide();
                     $(sel).hide();
                     $(button).text($(work).val());
@@ -343,6 +344,7 @@ function powTableFc(button, sel, num, work) {
         }
         else {
             $(sel).hide();
+            $('#componentsDiv-' + num).remove();
             $(button).text($(sel).val());
             $(button).val($(sel).val());
             $(button).show();
@@ -489,6 +491,7 @@ $(document).ready(function () {
             else {
                 taskName.push($(this).text());
             }
+            isExisting = false;
         });
         setTasksTable();
     });
@@ -584,6 +587,191 @@ function deleteForSchedule(btn) {
         }
     }
     console.log(taskName);
+}
+
+//GENERATE TEMPLATE
+var projectRef = [];
+$('.selectprojectbtn').click(function () {
+    var detachedMainRow = $(this).closest('tr').detach();
+    var proj = {id: $(this).val()};
+    projectRef.push(proj);
+    $(this).hide();
+    $('#selProjRef').append(detachedMainRow);
+    $(this).closest('td').find('.deselectprojectbtn').show();
+    genTemp();
+
+});
+
+$('.deselectprojectbtn').click(function () {
+    var detachedMainRow = $(this).closest('tr').detach();
+    var proj = {id: $(this).val()};
+    removeProject(proj);
+    $(this).hide();
+    $('#unselProjRef').append(detachedMainRow);
+    $(this).closest('td').find('.selectprojectbtn').show();
+
+});
+
+function removeProject(id) {
+    for (var x = 0; x < projectRef.length; x++) {
+        if (projectRef[x] === id) {
+            projectRef[x].splice(x, 1);
+            break;
+        }
+    }
+}
+
+function genTemp() {
+
+    $.ajax({
+        type: 'post',
+        url: 'AJAX_GS_GenerateTemplate',
+        dataType: 'json',
+        data: {projids: JSON.stringify(projectRef)},
+        cache: false,
+        success: function (data) {
+            $(data).each(function (i) {
+                insertRowWorks(data[i].name);
+                createTble(data[i].name, i + 1);
+
+                $(data[i].components).each(function () {
+                    compTemp(this, i + 1);
+                });
+
+
+            });
+            $('#compMain div').hide();
+            $('#componentsDiv-1').show();
+
+        }
+    });
+}
+
+
+function insertRowWorks(work) {
+    //debugger;
+
+    var table = $('#powTable tbody');
+    var tr = $('<tr></tr>');
+    var td = $('<td></td>');
+    var sel = $('<select id="worksOk-' + powNumber + '" class="worksSelect form-control" name="works"> </select>');
+    var button = $('<button id="worksButton-' + powNumber + '" class="form-control finalWorks" name="works" type="button">' + work + '</button>');
+    var newWork = $('<input id="newWork-' + powNumber + '" class="form-control" type="text">');
+    var td2 = $('<td></td>');
+    var delBtn = document.createElement('button');
+    delBtn.setAttribute("id", "worksDel-" + powNumber);
+    delBtn.setAttribute("class", "btn btn-danger btn-sm");
+    delBtn.innerHTML = "-";
+    delBtn.addEventListener("click", function () {
+        var row = delBtn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        $('#componentsDiv-' + (getIdNum(delBtn.id))).remove();
+    });
+    var option = document.createElement("option");
+    option.setAttribute('hidden', true);
+    option.text = 'Select Works';
+    sel.append(option);
+    for (var i = 0; i < worksList.length; i++) {
+        option = document.createElement("option");
+        option.setAttribute("value", worksList[i].name);
+        option.text = worksList[i].name;
+        sel.append(option);
+    }
+
+    option = document.createElement("option");
+    option.setAttribute("value", "new");
+    option.text = "New...";
+    sel.append(option);
+    powTemp(button, sel, powNumber, newWork);
+
+    td.append(sel, button, newWork);
+    td2.append(delBtn);
+    tr.append(td, td2);
+    table.append(tr);
+    powNumber++;
+}
+
+function powTemp(button, sel, num, work) {
+    $(sel).hide();
+    $(work).hide();
+    $(sel).change(function () {
+        if ($(sel).val() === "new") {
+            $(work).show();
+            $(work).keypress(function (e) {
+                var key = e.which;
+                if (key === 13) {
+                    $('#componentsDiv-' + num).remove();
+                    $(work).hide();
+                    $(sel).hide();
+                    $(button).text($(work).val());
+                    $(button).show();
+                    $('#compMain div').each(function () {
+                        $(this).hide();
+                    });
+                    $(button).val($(work).val());
+                    createTble(button.innerHTML, num);
+                    $('#worksDel-' + num).val($(sel).val());
+                }
+            });
+        }
+        else {
+            $(sel).hide();
+            $('#componentsDiv-' + num).remove();
+            $(button).text($(sel).val());
+            $(button).val($(sel).val());
+            $(button).show();
+            $('#compMain div').each(function () {
+                $(this).hide();
+            });
+            createTble(button.innerHTML, num);
+            $('#worksDel-' + num).val($(sel).val());
+        }
+    });
+    $(button).dblclick(function () {
+        $(button).hide();
+        $(sel).show();
+    });
+    $(button).click(function () {
+        $('#compMain div').each(function () {
+            if (this.id === "componentsDiv-" + num) {
+                $('#componentsDiv-' + num).show();
+            }
+            else {
+                $(this).hide();
+            }
+        });
+    });
+}
+
+function compTemp(comp, id) {
+    var tableId = "comp-" + id;
+    var row = $('<tr></tr>');
+    var componenttd = $('<td></td>');
+    var component = $('<input type="text" name="component" class="form-control" id="component"> ');
+    $(component).val(comp.name);
+    componenttd.append(component);
+    var quantitytd = $('<td></td>');
+    var quantity = $('<input type="text" name="quantity" class="form-control" id="quantity"> ');
+    quantitytd.append(quantity);
+    var unittd = $('<td></td>');
+    var select = $('<select type="text" name="unit" class="form-control" id="unit" ></select>');
+    for (var i = 0; i < unitList.length; i++) {
+        $(select).append($("<option></option>").val(unitList[i].unit).html(unitList[i].unit));
+    }
+    $(unittd).append(select);
+    var unitCosttd = $('<td></td>');
+    var unitCost = $('<input type="text" name="unitCost" class="form-control" id="unitCost">');
+    unitCosttd.append(unitCost);
+    var amounttd = $('<td></td>');
+    var amount = $('<input readonly type="text" name="amount" class="form-control amount" style="background: white">');
+    amounttd.append(amount);
+    $(row).append(componenttd);
+    $(row).append(quantitytd);
+    $(row).append(unittd);
+    $(row).append(unitCosttd);
+    $(row).append(amounttd);
+    onchanges(quantity, unitCost, amount, id);
+    $("#" + tableId).append(row);
 }
 
 //FOR THE GANTT CHARTS

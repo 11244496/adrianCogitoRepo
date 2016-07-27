@@ -3,33 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Servlet;
+package Servlet.AjaxServlet;
 
-import DAO.ActivityDAO;
-import DAO.CitizenDAO;
-import DAO.GSDAO;
-import DAO.OCPDDAO;
-import Entity.Activity;
-import Entity.Employee;
-import Entity.Project;
-import Entity.Testimonial;
+import DAO.AjaxDAO;
+import Entity.PWorks;
+import Entity.Schedule;
+import Entity.Task;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author AdrianKyle
+ * @author RoAnn
  */
-public class GS_CreateProposal extends HttpServlet {
+public class AJAX_ProjectSchedule extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,44 +36,18 @@ public class GS_CreateProposal extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        HttpSession session = request.getSession();
-        try {
-            GSDAO gs = new GSDAO();
-            CitizenDAO c = new CitizenDAO();
-            OCPDDAO oc = new OCPDDAO();
-            ActivityDAO actdao = new ActivityDAO();
-            Employee emp = (Employee) session.getAttribute("user");
-            //Get All Testimonials
-            ArrayList<Testimonial> allTestimonials = gs.getAllTestimonials();
-            for (int x = 0; x < allTestimonials.size(); x++) {
-                allTestimonials.get(x).setFiles(c.getFilesWithStatus(allTestimonials.get(x).getId(), allTestimonials.get(x), "Approved"));
-                allTestimonials.get(x).setMainproject(gs.getMainProjectOnTestimonial(allTestimonials.get(x).getId()));
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            AjaxDAO ad = new AjaxDAO();
+            String proj = request.getParameter("projId");
+            ArrayList<Task> tList = ad.getTask(proj);
+            for (Task t : tList){
+                t.setSchedules(ad.getSchedule(t.getId()));
             }
-
-            ArrayList<Project> allProject = new ArrayList<Project>();
-            ArrayList<String> allProjectID = oc.getAllFinishedProjectIDs();
-
-            for (String id : allProjectID) {
-                allProject.add(oc.getBasicProjectDetails(id));
-            }
-
-            //Request set attributes testimonials
-            request.setAttribute("allTestimonials", allTestimonials);
-            request.setAttribute("worksList", gs.getWorks());
-            request.setAttribute("works", new Gson().toJson(gs.getWorks()));
-            request.setAttribute("unitGson", new Gson().toJson(gs.getAllUnits()));
-            request.setAttribute("allProject", allProject);
-            request.setAttribute("finishedP", gs.getFinishedProjects());
-
-            actdao.addActivity(new Activity(0, "created a proposal", null, emp.getUser()));
-            ServletContext context = getServletContext();
-
-            RequestDispatcher dispatch = context.getRequestDispatcher("/GS_CreateProposal.jsp");
-            dispatch.forward(request, response);
-
-        } finally {
-            out.close();
+            String json = new Gson().toJson(tList);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(json);
         }
     }
 

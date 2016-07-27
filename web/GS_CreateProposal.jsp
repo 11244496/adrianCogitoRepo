@@ -4,6 +4,7 @@
     Author     : User
 --%>
 
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="Entity.Project"%>
 <%@page import="Entity.PWorks"%>
 <%@page import="Entity.Testimonial"%>
@@ -12,10 +13,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-    <% //Employee e = (Employee) session.getAttribute("user");
+    <%
+        Employee e = (Employee) session.getAttribute("user");
         ArrayList<Testimonial> allTestimonials = (ArrayList<Testimonial>) request.getAttribute("allTestimonials");
         ArrayList<PWorks> wList = (ArrayList<PWorks>) request.getAttribute("worksList");
         ArrayList<Project> allProject = (ArrayList<Project>) request.getAttribute("allProject");
+        ArrayList<Project> finishedP = (ArrayList<Project>) request.getAttribute("finishedP");
+        DecimalFormat f = new DecimalFormat("#,###.00");
+
 
     %>
 
@@ -55,13 +60,6 @@
         <script src ='calendar/jquery.min.js'></script>
         <script src ='calendar/fullcalendar.js'></script>
         <script src ='calendar/scheduler.js'></script>
-
-        <script src="amcharts/amcharts.js" type="text/javascript"></script>
-        <script src="amcharts/serial.js" type="text/javascript"></script>
-        <script src="amcharts/themes/dark.js"></script>
-        <script src="amcharts/gantt.js" type="text/javascript"></script>
-
-
         <script>var worksList = <%=request.getAttribute("works")%>;
             var unitList = <%=request.getAttribute("unitGson")%>;
         </script>
@@ -122,7 +120,7 @@
                         <li class="dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <img alt="" src="img/avatar1_small.jpg">
-                                <span class="username">Hello <b><u></u></b>!</span>
+                                <span class="username">Hello <b><u><%=e.getFirstName()%></u></b>!</span>
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu extended logout">
@@ -291,6 +289,7 @@
                                                     </div>
                                                 </section>
                                                 <input type="hidden" name="maintestimonial" id="maintestimonial">
+                                                <input type="hidden" name="refproj" id="refproj">
 
                                                 <div class="modal fade" id="viewdetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-lg">
@@ -347,12 +346,14 @@
                                             <legend> </legend>
 
                                             <div class="adv-table" id="projectTable">
-                                                <table  class="display table table-bordered table-striped" id="dynamic-table">
+                                                <table  class="display table table-bordered table-striped" id="unselProjRef">
                                                     <thead>
                                                         <tr>
                                                             <th>Title</th>
                                                             <th>Description</th>
                                                             <th>Budget</th>
+                                                            <th>Date Finished</th>
+                                                            <th>Rating</th>
                                                             <th></th>
                                                         </tr>
                                                     </thead>
@@ -362,19 +363,23 @@
                                                         <tr>
                                                             <td><%=allProject.get(x).getName()%></td>
                                                             <td><%=allProject.get(x).getDescription()%></td>
-                                                            <td><%=allProject.get(x).getBudget()%></td>
+                                                            <td>PHP <%=f.format(allProject.get(x).getBudget())%></td>
+                                                            <td>2015-06-15</td>
+                                                            <td>4/5</td>
                                                             <td>
                                                                 <a class="btn btn-info btn-sm" target="_blank" href="GS_ViewProjectDetails?projid=<%=allProject.get(x).getId()%>">View Details</a>
                                                                 <p> <button type="button"  class="btn btn-success btn-sm selectprojectbtn" value="<%=allProject.get(x).getId()%>">Select Project</button> </p>
+                                                                <p> <button type="button"  class="btn btn-danger btn-sm deselectprojectbtn" style="display: none;" value="<%=allProject.get(x).getId()%>">Remove Project</button> </p>
                                                             </td>
                                                         </tr>
                                                         <%}%>
                                                     </tbody>
-                                                </table>
+                                                </table><br><br>
                                             </div>
 
-                                                    <div class="adv-table" id="selectedprojectTable" style="display: none">
-                                                <table  class="display table table-bordered table-striped" id="dynamic-table">
+                                            <h4>Selected Projects</h4>
+                                            <div class="adv-table" id="selectedprojectTable">
+                                                <table  class="display table table-bordered table-striped" id="selProjRef">
                                                     <thead>
                                                         <tr>
                                                             <th>Title</th>
@@ -386,7 +391,6 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody id="selectedprojectlistTable">
-
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -499,9 +503,7 @@
                                                     <br>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <div class="panel-body">
-                                                        <div id="chartdiv" style="width: 100%; height: 400px;"></div>
-                                                    </div>
+                                                    <div id="ganttDiv"></div>
                                                 </div>
                                             </div>
                                         </fieldset>
@@ -639,6 +641,8 @@
 
         <!--Form Validation-->
         <script src="js/bootstrap-validator.min.js" type="text/javascript"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"
+        async defer></script> 
 
         <!--Form Wizard-->
         <script src="js/jquery.steps.min.js" type="text/javascript"></script>
@@ -655,7 +659,10 @@
         <!--script for this page only-->
         <script src="js/dynamic_table_init.js"></script>
         <script src="js/GS_CreateProposal.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"
-        async defer></script> 
+        <script src="amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="amcharts/serial.js" type="text/javascript"></script>
+        <script src="amcharts/themes/dark.js"></script>
+        <script src="amcharts/gantt.js" type="text/javascript"></script>
+
     </body>
 </html>

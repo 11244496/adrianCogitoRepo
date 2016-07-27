@@ -132,7 +132,7 @@ public class BAC_UploadNotices extends HttpServlet {
                             fileType.add(documentType);
 
                             //path where the file will be stored
-                            path = new File("C:\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\CogitoFirst\\Upload" + "/Bids and Awards Department" + "/Bid Notices/" + title + "/" + contractorName);
+                            path = new File("C:\\Users\\Krist\\Desktop\\Thesis 4\\FinalCogitoRepository\\Upload" + "/Bids and Awards Department" + "/Bid Notices/" + title + "/" + contractorName);
                             if (!path.exists()) {
                                 boolean status = path.mkdirs();
                             }
@@ -163,7 +163,7 @@ public class BAC_UploadNotices extends HttpServlet {
                     }
                     //CHANGE
                     for (int x = 0; x < files.size(); x++) {
-                        Bid_Notices bidnotice = new Bid_Notices(0, files.get(x), null, project, contractor, "chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/" + "Bids and Awards Department" + "/Bid Notices/" + title + "/" + contractorName, fileType.get(x));
+                        Bid_Notices bidnotice = new Bid_Notices(0, files.get(x), null, project, contractor, "chrome-extension://nioaipehgdakmfdbddhcckfihdjfjmoj/" + "Bids and Awards Department" + "/Bid Notices/" + title + "/" + contractorName, fileType.get(x));
                         bacdao.uploadBidNotices(bidnotice);
                     }
 
