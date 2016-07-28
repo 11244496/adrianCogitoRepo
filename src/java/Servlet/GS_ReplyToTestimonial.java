@@ -5,10 +5,12 @@
  */
 package Servlet;
 
+import DAO.ActivityDAO;
 import DAO.CitizenDAO;
 import DAO.GSDAO;
 import DAO.LoginDAO;
 import DAO.NotifDAO;
+import Entity.Activity;
 import Entity.Citizen;
 import Entity.Employee;
 import Entity.Files;
@@ -50,7 +52,7 @@ public class GS_ReplyToTestimonial extends HttpServlet {
 
             int id = Integer.parseInt(request.getParameter("testIdR"));
             Employee e = (Employee) session.getAttribute("user");
-
+            ActivityDAO actdao = new ActivityDAO();
             GSDAO gs = new GSDAO();
             Reply r = new Reply();
             r.setMessage(request.getParameter("messageR"));
@@ -78,6 +80,7 @@ public class GS_ReplyToTestimonial extends HttpServlet {
             request.setAttribute("supporters", Integer.toString(supporter));
             t.setStatus("Read");
             gs.changeTestiStatus(t);
+            actdao.addActivity(new Activity(0, "Replied to " + t.getTitle(), null, e.getUser()));
 
             ServletContext context = getServletContext();
             RequestDispatcher dispatch;
@@ -88,7 +91,6 @@ public class GS_ReplyToTestimonial extends HttpServlet {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-
     /**
      * Handles the HTTP <code>GET</code> method.
      *

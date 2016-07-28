@@ -5,7 +5,10 @@
  */
 package Servlet;
 
+import DAO.ActivityDAO;
 import DAO.GSDAO;
+import Entity.Activity;
+import Entity.Employee;
 import Entity.Project_has_Pwork;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,60 +44,50 @@ public class GS_SubmitInspectionEntry extends HttpServlet {
         HttpSession session = request.getSession();
 
         try (PrintWriter out = response.getWriter()) {
-            
+
             GSDAO gsDAO = new GSDAO();
+            ActivityDAO actdao = new ActivityDAO();
             String projectId = request.getParameter("projectID");
-            
-            String list= request.getParameter("listSize");
+            Employee e = (Employee) session.getAttribute("user");
+            String list = request.getParameter("listSize");
             String[] listSize = list.split(",");
-            
-            for(int x = 0; x < listSize.length; x++){
-            
-            int taskID = Integer.parseInt(listSize[x]);
-            String remark = request.getParameter("input-"+x);
-            
-            
-            
-            //insert method
-            gsDAO.addInspection_Report(remark, taskID);
-            
+
+            for (int x = 0; x < listSize.length; x++) {
+
+                int taskID = Integer.parseInt(listSize[x]);
+                String remark = request.getParameter("input-" + x);
+
+                //insert method
+                gsDAO.addInspection_Report(remark, taskID);
+
             }
-            
-            
-            
+
             String[] taskIds = request.getParameterValues("checkboxinput");
-            
-            if(taskIds != null){
-            for(int i = 0; i < taskIds.length; i++){
-            
-            int idd = Integer.parseInt(taskIds[i]);
-            
-            //Set the schedule table
-            gsDAO.finishTask(idd);
-            
-            
-            
+
+            if (taskIds != null) {
+                for (int i = 0; i < taskIds.length; i++) {
+
+                    int idd = Integer.parseInt(taskIds[i]);
+
+                    //Set the schedule table
+                    gsDAO.finishTask(idd);
+
+                }
+
             }
-            
-            }
-            
-            
-            
-            
+
             //Refresh the projects
             gsDAO.finishProjects();
-            
-            
+            actdao.addActivity(new Activity(0, "Submitted inspection", null, e.getUser()));
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/GS_Home");
             dispatch.forward(request, response);
-            
-            
-        }finally{
-        
-        out.close();
+
+        } finally {
+
+            out.close();
         }
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

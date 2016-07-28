@@ -5,8 +5,10 @@
  */
 package Servlet;
 
+import DAO.ActivityDAO;
 import DAO.ContractorDAO;
 import DAO.OCPDDAO;
+import Entity.Activity;
 import Entity.Contractor_User;
 import Entity.Project;
 import Entity.Timeline_Update;
@@ -45,7 +47,7 @@ public class Contractor_RequestForChange extends HttpServlet {
         HttpSession session = request.getSession();
 
         try (PrintWriter out = response.getWriter()) {
-            
+            ActivityDAO actdao = new ActivityDAO();
             ContractorDAO contDAO = new ContractorDAO();
             OCPDDAO oc = new OCPDDAO();
             String projectID = request.getParameter("projectID");
@@ -54,22 +56,20 @@ public class Contractor_RequestForChange extends HttpServlet {
             //Contractor_User conuser = (Contractor_User) session.getAttribute("user");
             Contractor_User conuser = (Contractor_User) session.getAttribute("user");
             User user = contDAO.getUser(conuser);
-            
-            
-            
+
             Timeline_Update tUpdate = new Timeline_Update(0, message, project, user);
-            
+
             //Add the entry
             contDAO.submitTimelineUpdate(tUpdate);
-            
+            actdao.addActivity(new Activity(0, "you re-uploaded for project " + project.getName(), null, conuser.getUser()));
+
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/Contractor_Home");
             dispatch.forward(request, response);
-            
-            
-        }finally{
-        
-        out.close();
+
+        } finally {
+
+            out.close();
         }
     }
 

@@ -5,7 +5,9 @@
  */
 package Servlet;
 
+import DAO.ActivityDAO;
 import DAO.CitizenDAO;
+import Entity.Activity;
 import Entity.Citizen;
 import Entity.Reply;
 import Entity.Testimonial;
@@ -40,7 +42,8 @@ public class Citizen_SendComment extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             HttpSession session = request.getSession();
             /* TODO output your page here. You may use following sample code. */
-            Citizen c = (Citizen)session.getAttribute("user");
+            ActivityDAO actdao = new ActivityDAO();
+            Citizen c = (Citizen) session.getAttribute("user");
             Reply r = new Reply();
             String message = request.getParameter("comment");
             Testimonial t = new Testimonial();
@@ -50,6 +53,8 @@ public class Citizen_SendComment extends HttpServlet {
             r.setSender(c.getUser());
             CitizenDAO cd = new CitizenDAO();
             cd.sendComment(r);
+            actdao.addActivity(new Activity(0, "you commented on " + t.getTitle(), null, c.getUser()));
+            
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/Citizen_OpenTestimonial?idd=1");
             dispatch.forward(request, response);

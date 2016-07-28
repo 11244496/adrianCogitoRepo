@@ -5,8 +5,13 @@
  */
 package Servlet;
 
+import DAO.ActivityDAO;
 import DAO.BACDAO;
+import DAO.ContractorDAO;
+import DAO.NotifDAO;
+import Entity.Activity;
 import Entity.Contractor_Has_Project;
+import Entity.Employee;
 import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.System.out;
@@ -18,6 +23,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -37,13 +43,23 @@ public class BAC_ConfirmContractor extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        HttpSession session = request.getSession();
         try {
-
+            ActivityDAO actdao = new ActivityDAO();
+            NotifDAO ntDAO = new NotifDAO();
+            ContractorDAO contDAO = new ContractorDAO();
             BACDAO bacdao = new BACDAO();
             int contID = Integer.parseInt(request.getParameter("contractor_has_projectID"));
             String id = request.getParameter("projID");
             bacdao.changeBACStatus2(contID);
+
+            //Contractor_User conuser = contDAO.getContractorUser(contID);
+            Employee emp = (Employee) session.getAttribute("user");
+
+//           request.setParameter("projectID", id);
+            actdao.addActivity(new Activity(0, "you confirmed contractor", null, emp.getUser()));
+
+            //ntDAO.addNotification(new Notification(0, emp.getFirstName() + " " + emp.getLastName() + " confirmed you as contractor ", null, conuser.getUser()));
 //           request.setParameter("projectID", id);
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/BAC_Home");

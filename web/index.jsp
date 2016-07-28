@@ -175,7 +175,7 @@
 
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label class="control-label pull-left regFieldTitle">Email Address: <i class="formAsterisk">*</i></label>
+                                        <label class="control-label pull-left regFieldTitle">Username: <i class="formAsterisk">*</i></label>
                                         <input type="text" class="form-control regField" name="username">
                                     </div>
 

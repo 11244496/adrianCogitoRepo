@@ -956,5 +956,41 @@ public class BACDAO {
         }
 
     }
+    
+    public ArrayList<Contractor_User> getAllContractors(int id) {
+
+        ArrayList<Contractor_User> contractors = new ArrayList<Contractor_User>();
+        Contractor cont;
+        Contractor_User cu = null;
+        try {
+
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+
+            String query = "select * from contractorusers join contractor on company_id = contractor.id where company_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                cu = new Contractor_User();
+                cu.setID(result.getInt("contractorusers.id"));
+                cu.setName(result.getString("contractorusers.name"));
+                cu.setTelephone(result.getString("telephone"));
+                cu.setAddress(result.getString("Address"));
+                cu.setEmail(result.getString("Email"));
+                cont = new Contractor(result.getInt("ID"), result.getString("Name"));
+                cu.setContractor(cont);
+                contractors.add(cu);
+
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return contractors;
+    }
 
 }

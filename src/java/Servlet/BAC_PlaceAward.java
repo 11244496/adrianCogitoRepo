@@ -5,10 +5,16 @@
  */
 package Servlet;
 
+import DAO.ActivityDAO;
 import DAO.BACDAO;
+import DAO.NotifDAO;
 import DAO.OCPDDAO;
+import Entity.Activity;
 import Entity.Contractor;
 import Entity.Contractor_Has_Project;
+import Entity.Contractor_User;
+import Entity.Employee;
+import Entity.Notification;
 import Entity.Project;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,6 +27,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -41,13 +48,15 @@ public class BAC_PlaceAward extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        HttpSession session = request.getSession();
         try {
 
 //           <input type="hidden" name="contractor_has_projectID" value="<%=idd%>">
 //           <input type="hidden" name="projID" value="<%=projID%>">
             BACDAO bacdao = new BACDAO();
             OCPDDAO oc = new OCPDDAO();
+            ActivityDAO actdao = new ActivityDAO();
+            NotifDAO ntDAO = new NotifDAO();
             int id = Integer.parseInt(request.getParameter("contractor_has_projectID"));
             String id2 = request.getParameter("projID");
 
@@ -58,6 +67,14 @@ public class BAC_PlaceAward extends HttpServlet {
             request.setAttribute("projectDetails", projectDetails);
             request.setAttribute("cont_has_proj_id", id);
             request.setAttribute("contractorID", contractor);
+            Employee employee = (Employee) session.getAttribute("user");
+
+            actdao.addActivity(new Activity(0, "you confirmed " + contractor.getName() + " as the winning bidder", null, employee.getUser()));
+            ArrayList<Contractor_User> conuser = bacdao.getAllContractors(id);
+
+            for (int x = 0; x < conuser.size(); x++) {
+                ntDAO.addNotification(new Notification(0, employee.getFirstName() + " " + employee.getLastName() + " confirmed " + contractor.getName() + " contractor ", null, conuser.get(x).getUser()));
+            }
 
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/BAC_PlaceAward.jsp");

@@ -8,12 +8,16 @@ package Servlet;
 import DAO.ActivityDAO;
 import DAO.BACDAO;
 import DAO.CitizenDAO;
+import DAO.NotifDAO;
 import DAO.OCPDDAO;
 import DAO.ScheduleDAO;
 import Entity.Activity;
 import Entity.Citizen;
+import Entity.Contractor_User;
+import Entity.Employee;
 import Entity.Files;
 import Entity.InvitationToBid;
+import Entity.Notification;
 import Entity.Project;
 import Entity.Schedule;
 import Entity.ScheduleCalendar;
@@ -37,6 +41,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
@@ -62,15 +67,19 @@ public class BAC_UploadInvitationToBid extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
         response.setContentType("text/html;charset=UTF-8");
-
+        HttpSession session = request.getSession();
         try {
-
+            Employee employee = (Employee) session.getAttribute("user");
             InputStream inputStream = null;
-
+            Project project = null;
             String category = null;
 
             ArrayList<String> files = new ArrayList<String>();
             String id2 = "";
+
+            ActivityDAO actdao = new ActivityDAO();
+            NotifDAO ntDAO = new NotifDAO();
+            BACDAO bacdao = new BACDAO();
 
             boolean isMultipart = ServletFileUpload.isMultipartContent(request);
             if (isMultipart) {
@@ -127,9 +136,8 @@ public class BAC_UploadInvitationToBid extends HttpServlet {
                         }
                     }
 
-                    BACDAO bacdao = new BACDAO();
                     OCPDDAO oc = new OCPDDAO();
-                    Project project = oc.getAllProjectDetails(id);
+                    project = oc.getAllProjectDetails(id);
 
                     bacdao.changeBACStatus1(id);
 
@@ -148,6 +156,13 @@ public class BAC_UploadInvitationToBid extends HttpServlet {
                     Logger.getLogger(BAC_UploadInvitationToBid.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
+            }
+            
+            actdao.addActivity(new Activity(0, "you uploaded invitation to bid", null, employee.getUser()));
+            ArrayList<Contractor_User> conuser = bacdao.getAllContractors();
+            
+            for(int x = 0; x < conuser.size();x++){
+            ntDAO.addNotification(new Notification(0, "Uploaded invitation to bid for project " + project.getName(), null, conuser.get(x).getUser()));
             }
 
             request.setAttribute("success", "Success");

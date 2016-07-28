@@ -5,21 +5,20 @@
  */
 package Servlet;
 
-import DAO.ActivityDAO;
-import DAO.CitizenDAO;
-import DAO.GSDAO;
+import DAO.ContractorDAO;
 import DAO.OCPDDAO;
-import Entity.Activity;
-import Entity.Employee;
+import Entity.Contractor;
+import Entity.Contractor_Has_Project;
+import Entity.Contractor_User;
 import Entity.Project;
-import Entity.Testimonial;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import static java.lang.System.out;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,9 +26,10 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author AdrianKyle
+ * @author Krist
  */
-public class GS_CreateProposal extends HttpServlet {
+@WebServlet(name = "Contractor_ViewEligibleProjects", urlPatterns = {"/Contractor_ViewEligibleProjects"})
+public class Contractor_ViewEligibleProjects extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,41 +46,31 @@ public class GS_CreateProposal extends HttpServlet {
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         try {
-            GSDAO gs = new GSDAO();
-            CitizenDAO c = new CitizenDAO();
+
+            ContractorDAO cont = new ContractorDAO();
             OCPDDAO oc = new OCPDDAO();
-            ActivityDAO actdao = new ActivityDAO();
-            Employee emp = (Employee) session.getAttribute("user");
-            //Get All Testimonials
-            ArrayList<Testimonial> allTestimonials = gs.getAllTestimonials();
-            for (int x = 0; x < allTestimonials.size(); x++) {
-                allTestimonials.get(x).setFiles(c.getFilesWithStatus(allTestimonials.get(x).getId(), allTestimonials.get(x), "Approved"));
-                allTestimonials.get(x).setMainproject(gs.getMainProjectOnTestimonial(allTestimonials.get(x).getId()));
+            //Gets the contractor
+            Contractor_User contractor_user = (Contractor_User) session.getAttribute("user");
+            Contractor contractor = contractor_user.getContractor();
+
+            ArrayList<String> EligibleProjects = cont.getEligibleProjects(contractor);
+            ArrayList<Project> projectlist = new ArrayList<Project>();
+            
+            for(String a: EligibleProjects){
+                projectlist.add(oc.getAllProjectDetails(a));
             }
-
-            ArrayList<Project> allProject = new ArrayList<Project>();
-            ArrayList<String> allProjectID = oc.getAllFinishedProjectIDs();
-
-            for (String id : allProjectID) {
-                allProject.add(oc.getBasicProjectDetails(id));
-            }
-
-            //Request set attributes testimonials
-            request.setAttribute("allTestimonials", allTestimonials);
-            request.setAttribute("worksList", gs.getWorks());
-            request.setAttribute("works", new Gson().toJson(gs.getWorks()));
-            request.setAttribute("unitGson", new Gson().toJson(gs.getAllUnits()));
-            request.setAttribute("allProject", allProject);
-
-            actdao.addActivity(new Activity(0, "created a proposal", null, emp.getUser()));
+            
+            
+            request.setAttribute("projectlist", projectlist);
+            
             ServletContext context = getServletContext();
-
-            RequestDispatcher dispatch = context.getRequestDispatcher("/GS_CreateProposal.jsp");
+            RequestDispatcher dispatch = context.getRequestDispatcher("/Contractor_ViewEligibleProjects.jsp");
             dispatch.forward(request, response);
 
         } finally {
             out.close();
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

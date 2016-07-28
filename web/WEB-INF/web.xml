@@ -436,6 +436,18 @@
         <servlet-name>Citizen_SubmitFeedback</servlet-name>
         <servlet-class>Servlet.Citizen_SubmitFeedback</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Contractor_ViewEligibleProjects</servlet-name>
+        <servlet-class>Servlet.Contractor_ViewEligibleProjects</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_CreateGanttWorks</servlet-name>
+        <servlet-class>Servlet.Contractor_CreateGanttWorks</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Contractor_ViewSubmittedScheduleWorks</servlet-name>
+        <servlet-class>Servlet.Contractor_ViewSubmittedScheduleWorks</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -871,6 +883,18 @@
     <servlet-mapping>
         <servlet-name>Citizen_SubmitFeedback</servlet-name>
         <url-pattern>/Citizen_SubmitFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_ViewEligibleProjects</servlet-name>
+        <url-pattern>/Contractor_ViewEligibleProjects</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_CreateGanttWorks</servlet-name>
+        <url-pattern>/Contractor_CreateGanttWorks</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_ViewSubmittedScheduleWorks</servlet-name>
+        <url-pattern>/Contractor_ViewSubmittedScheduleWorks</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -5,6 +5,7 @@
  */
 package Servlet;
 
+import DAO.ActivityDAO;
 import DAO.CitizenDAO;
 import DAO.ContractorDAO;
 import DAO.OCPDDAO;
@@ -60,10 +61,11 @@ public class Contractor_SubmitProgressReport extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-         HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
         try {
             ContractorDAO conDAO = new ContractorDAO();
             OCPDDAO oc = new OCPDDAO();
+            ActivityDAO actdao = new ActivityDAO();
             InputStream inputStream = null;
             Contractor_User c = (Contractor_User) session.getAttribute("user");
 
@@ -82,9 +84,7 @@ public class Contractor_SubmitProgressReport extends HttpServlet {
                     List items = upload.parseRequest(request);
                     Iterator iterator = items.iterator();
 
-                    
                     String message = null;
-                    
 
                     File path = null;
                     File uploadedFiles = null;
@@ -92,9 +92,9 @@ public class Contractor_SubmitProgressReport extends HttpServlet {
                     Contractor_User user = (Contractor_User) session.getAttribute("user");
                     String projectId = null;
                     String projectName = null;
-                    
+
                     Project proj = null;
-                    
+
                     while (iterator.hasNext()) {
                         FileItem item = (FileItem) iterator.next();
 
@@ -105,7 +105,6 @@ public class Contractor_SubmitProgressReport extends HttpServlet {
                             //returns the name of the field
                             String value2 = item.getFieldName();
 
-                           
                             if (value2.equals("reportdescription")) {
                                 message = value;
                             }
@@ -113,20 +112,14 @@ public class Contractor_SubmitProgressReport extends HttpServlet {
                                 projectId = value;
                                 proj = oc.getBasicProjectDetails(projectId);
                             }
-                            
-                            
 
                         }
-                        
-                        
-                        
+
                         if (!item.isFormField()) {
                             fileName = item.getName();
                             if (!fileName.isEmpty()) {
                                 String root = getServletContext().getRealPath("/");
-                                
-                                
-                                
+
                                 //path where the file will be stored
                                 path = new File("C\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\CogitoFirst\\Upload" + "/" + projectName + " - Progress Reports");
                                 if (!path.exists()) {
@@ -136,64 +129,58 @@ public class Contractor_SubmitProgressReport extends HttpServlet {
                                 uploadedFiles = new File(path + "/" + fileName);
                                 item.write(uploadedFiles);
                                 files.add(fileName);
-                            }else{
-                                
+                            } else {
+
                             }
                         }
                     }
 
-                    
                     for (int x = 0; x < files.size(); x++) {
 
                         String filename = files.get(x);
                         if (!filename.isEmpty()) {
                             String[] parts = filename.split(Pattern.quote("."));
                             String extension = parts[1];
-                            
+
                             if (extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("docx") || extension.equalsIgnoreCase("doc") || extension.equalsIgnoreCase("pptx") || extension.equalsIgnoreCase("txt") || extension.equalsIgnoreCase("xlsx")) {
                                 category = "Document";
                             }
-                            
-                            
+
                         }
                     }
-                        
-                        //citizenDAO.uploadReport(r);
-                        //Testimonial t = new Testimonial(0, title, null, description, "chrome-extension://pediieahejagkkidddjjbiaocanpcjik/Citizen/" + title, location, locationdetails, category, null,"Pending", user);
-                        //Testimonial t = new Testimonial(0, title, null, description, "chrome-extension://hjllakiciieioomhnnoiljeofbacabpc/" + title, location, locationdetails, category, null, user);
-                        //Upload testimonial
-                        //citizenDAO.uploadTestimonial(t); 
-                        //pmcnddcphdllbfafphbegnnaifoklamj
-                        
-                        Progress_Report progressreport = new Progress_Report(0, message, fileName, "chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/"+ projectName + " - Progress Reports", null, proj, c);
-                        //Citizen_Report report = new Citizen_Report(0, message, "chrome-extension://pmcnddcphdllbfafphbegnnaifoklamj/"+ projectName + " - Progress Reports" ,null, user, proj);
-                        
-                        conDAO.uploadProgressReport(progressreport);
-                        //int id = citizenDAO.getRecentPostid(user, message);
-                        //report.setId(id);
-                       
 
-                        
-                    }catch (FileUploadException e) {
+                        //citizenDAO.uploadReport(r);
+                    //Testimonial t = new Testimonial(0, title, null, description, "chrome-extension://pediieahejagkkidddjjbiaocanpcjik/Citizen/" + title, location, locationdetails, category, null,"Pending", user);
+                    //Testimonial t = new Testimonial(0, title, null, description, "chrome-extension://hjllakiciieioomhnnoiljeofbacabpc/" + title, location, locationdetails, category, null, user);
+                    //Upload testimonial
+                    //citizenDAO.uploadTestimonial(t); 
+                    //pmcnddcphdllbfafphbegnnaifoklamj
+                    Progress_Report progressreport = new Progress_Report(0, message, fileName, "chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/" + projectName + " - Progress Reports", null, proj, c);
+                        //Citizen_Report report = new Citizen_Report(0, message, "chrome-extension://pmcnddcphdllbfafphbegnnaifoklamj/"+ projectName + " - Progress Reports" ,null, user, proj);
+
+                    conDAO.uploadProgressReport(progressreport);
+                        //int id = citizenDAO.getRecentPostid(user, message);
+                    //report.setId(id);
+                    actdao.addActivity(new Activity(0, "submitted progress report", null, c.getUser()));
+
+                } catch (FileUploadException e) {
                     e.printStackTrace();
-                }catch (Exception ex) {
+                } catch (Exception ex) {
                     Logger.getLogger(Citizen_SubmitReport.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                }
+            }
 
-                request.setAttribute("success", category + "Success");
-                ServletContext context = getServletContext();
-                RequestDispatcher dispatch = context.getRequestDispatcher("/Contractor_Home");
-                dispatch.forward(request, response);
+            request.setAttribute("success", category + "Success");
+            ServletContext context = getServletContext();
+            RequestDispatcher dispatch = context.getRequestDispatcher("/Contractor_Home");
+            dispatch.forward(request, response);
 
-            }finally{
-            
-        
+        } finally {
+
             out.close();
         }
-        
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

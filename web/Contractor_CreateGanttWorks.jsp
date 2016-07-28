@@ -20,7 +20,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%Contractor_User c = (Contractor_User) session.getAttribute("user");%>
 <%
-    ArrayList<InvitationToBid> invitation = (ArrayList<InvitationToBid>) request.getAttribute("invitation");
     Project p = (Project) request.getAttribute("project");
     String projid = p.getId();
     int conid = c.getContractor().getID();
@@ -31,8 +30,6 @@
     String tasksJSON = new Gson().toJson(tasks);%>
 <%ArrayList<Files> files = p.getFiles();%>
 <%DecimalFormat df = new DecimalFormat("#,###.00");%>
-<%ArrayList<Files> pfiles = (ArrayList<Files>) request.getAttribute("pFiles");%>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -49,7 +46,7 @@
         <script src='amcharts/serial.js'></script>
         <script src='amcharts/themes/dark.js'></script>
         <script src='amcharts/gantt.js'></script>
-        
+
         <link href = 'calendar/fullcalendar.css' rel='stylesheet'>
         <link href = 'calendar/scheduler.css' rel='stylesheet'>
         <script src ='calendar/moment.min.js'></script>
@@ -199,69 +196,85 @@
 
                 <section class="panel">
                     <header class="panel-heading">
-                        Invitation to bid
+                        Create Schedule and Program of Works
                     </header>
                     <br>
                     <div class="panel-body">
-
-                        <div class="row">
+                        <form class="form-horizontal" id="proposalForm" method="post" action="Contractor_SubmitGanttSchedule">
                             <div class="col-md-12">
                                 <section class="panel">
 
+                                    <header class="panel-heading">
+                                        Create Program of Works
+                                    </header>
+                                </section>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <header class="panel-heading no-border">
+                                            Works
+                                        </header>
 
-                                    <div class="panel-body bio-graph-info">
-                                        <!--<h1>New Dashboard BS3 </h1>-->
+                                        <table class="table table-bordered table-striped table-condensed" id="powTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Works</th>
+                                                    <th style="width: 20px"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody> 
+                                        </table>
 
-                                        Sample File:
-                                        <%
-
-                                            if (invitation.isEmpty() == false) {
-                                                String d;
-                                                for (int x = 0; x < invitation.size(); x++) {
-                                                    d = invitation.get(x).getFolderName() + "/" + invitation.get(x).getFileName();
-
-
-                                        %>
+                                        <button class="btn btn-success btn-sm pull-right" style="margin-right: 5px" onclick="addRowForWorks()" type="button"><i class="fa fa-plus"></i> Add </button>
 
                                     </div>
-                                    <center>    
-                                        <div>
-                                            <iframe src="<%=d%>" width="1000" height="800"></iframe>
-                                        </div>   
-                                    </center> 
-
-                                    <%
-
-                                            }
-                                        }
-
-                                    %>  
 
 
+                                    <div class="col-md-9" id="compMain">
 
+                                    </div>
 
-
-
-
-
-
-                                </section>
-
-
-
-
-
+                                </div>
 
                             </div>
 
-                        </div>
+                            <div class="col-md-12">
+                                <section class="panel">
+
+                                    <header class="panel-heading">
+                                        Create Schedule
+                                    </header>
+                                </section>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <table class="table table-bordered table-striped table-condensed" id="taskTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Task/s</th>
+                                                    <!--<th></th>-->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                        <input type="hidden" name="pworks" id="pworks">
+                                        <!--<button class="btn btn-success btn-sm pull-right" style="margin-right: 5px" type="button"><i class="fa fa-plus"></i> Add </button>-->
+
+                                        <br>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="panel-body">
+                                            <div id="chartdiv2" style="width: 100%; height: 400px;"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
 
 
+                            </div>
+                        </form>
 
                     </div>
-
-
-
 
                 </section> 
                 <section class="wrapper site-min-height">
@@ -441,132 +454,6 @@
                                     </div>
                                 </section>                                                 
                             </div>            
-
-                            <!------------------------------------------------------Calendar SCHEDULE------------------------------------------>
-
-                            <section class="panel">
-                                <div class="bio-graph-heading project-heading">
-                                    <strong>Schedule</strong>
-                                </div>
-                                <div class="panel-body bio-graph-info">
-                                    <div id='calendar' style="height: 100%; width: 100%"></div>
-                                </div>
-                                <br>
-                            </section>
-
-                            <!-------------------------------------------------MAIN TESTIMONIAL UPLOADS------------------------------------------>
-                            <section class="panel">
-                                <div class="bio-graph-heading project-heading">
-                                    <strong>Project Main Testimonial</strong>
-                                </div>
-                                <div class="panel-body bio-graph-info" style="height: 250px;">
-                                    <div class="DocumentList2">
-                                        <div class="row2">
-                                            <%String url = null;%>
-                                            <%Testimonial t = p.getMainTestimonial();
-                                                for (Files f : t.getFiles()) {
-                                                    url = t.getFolderName() + "/" + t.getTitle() + "/" + f.getFileName();
-                                                    if (f.getType().equalsIgnoreCase("image")) {%>
-
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="<%=url%>" style="width:100%; height:100%">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
-
-                                            <%} else if (f.getType().equalsIgnoreCase("video")) {%>
-
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
-                                                    <source src="<%=url%>" type="video/mp4">
-                                                </video>
-                                                <br/>
-                                                <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getTestimonial(<%=f.getId()%>)">View Details</button>                                        
-                                            </div>
-
-                                            <%} else if (f.getType().equalsIgnoreCase("document")) {%>
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
-
-                                            <%}
-                                                }
-                                            %>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>                        
-
-                            <!------------------------------------------------------GS UPLOADS------------------------------------------>
-                            <section class="panel">
-                                <div class="bio-graph-heading project-heading">
-                                    <strong>Project Files</strong>
-                                </div>
-                                <div class="panel-body bio-graph-info" style="height: 250px;">
-                                    <div class="DocumentList2">
-                                        <div class="row2">
-                                            <%
-                                                for (Files f : pfiles) {
-
-                                                    url = p.getFoldername() + "/" + p.getId() + "/" + f.getFileName();
-                                                    if (f.getType().equalsIgnoreCase("image")) {%>
-
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="<%=url%>" style="width:100%; height:100%">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getProjectFiles(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
-
-                                            <%} else if (f.getType().equalsIgnoreCase("video")) {%>
-
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
-                                                    <source src="<%=url%>" type="video/mp4">
-                                                </video>
-                                                <br/>
-                                                <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getProjectFiles(<%=f.getId()%>)">View Details</button>                                        
-                                            </div>
-
-                                            <%} else if (f.getType().equalsIgnoreCase("document")) {%>
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getProjectFiles(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
-
-                                            <%}
-
-                                                }
-                                            %>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <form action="Contractor_UploadDocPage" class="form-horizontal tasi-form" method="POST">  
-                                    <input type="hidden" name="projectID" value="<%=p.getId()%>">
-
-
-                                    <hr>
-
-                                    <center>
-                                        <div>
-                                            <br>    
-                                            <br>
-
-
-                                            <button id="respondToInvite" class="btn btn-success" type="submit" disabled>Respond to invitation</button>  
-
-
-                                            <button class="btn btn-default" type="button" onclick="history.go(-1)">Back</button>  
-                                        </div>
-                                    </center>   
-                                    <br>   
-                                </form>         
-                            </section>
-
-
                         </div>
 
                     </div>
@@ -574,50 +461,6 @@
                     <!-- page end-->
                 </section>
             </section>
-
-            <div id="testModal" class="modal fade " data-keyboard="false" data-backdrop="static">
-                <div class="modal-dialog">
-
-                    <div class="modal-content" style="">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span> <span class="sr-only">close</span></button>
-                            <h4 id="" class="modal-title">Testimonial Details</h4>
-                        </div>
-                        <div id="modalBody" class="modal-body" style="overflow-y: auto;">
-                            <div id="fDisplay"></div>
-                            <fieldset title="Description" id="abcd" class="step" id="default-step-0">
-                                <header id="testTitle" class="panel-heading"></header>
-                                <header id="testDate" class="panel-heading"></header>
-                                <header id="testLoc" class="panel-heading"></header>
-                                <header id="testDesc" class="panel-heading"></header>
-                            </fieldset>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" id="closeModalB" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="projectFiles" class="modal fade " data-keyboard="false" data-backdrop="static">
-                <div class="modal-dialog">
-
-                    <div class="modal-content" style="">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span> <span class="sr-only">close</span></button>
-                            <h4 id="" class="modal-title">Project File</h4>
-                        </div>
-                        <div id="modalBody" class="modal-body" style="overflow-y: auto;">
-                            <div id="pfDisplay"></div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" id="closeModalB" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
 
         </section>
         <!--main content end-->
@@ -632,129 +475,6 @@
             </div>
         </footer>
         <!--<script src="js/jquery.js"></script>-->
-        <script>
-                                                var proj = "<%=projid%>";
-                                                var cont = "<%=conid%>";
-
-                                                $(document).ready(function () {
-                                                    $.ajax({
-                                                        type: 'POST',
-                                                        url: 'AJAX_Contractor_CheckPage',
-                                                        dataType: 'json',
-                                                        cache: false,
-                                                        data: {contprojID: cont, projID: proj},
-                                                        success: function (text) {
-
-                                                            if (text === "Y") {
-
-                                                                document.getElementById("respondToInvite").disabled = true;
-
-                                                            }
-                                                            else {
-                                                                document.getElementById("respondToInvite").disabled = false;
-
-                                                            }
-
-
-                                                        }
-                                                    });
-                                                });
-        </script>
-
-        <script>
-            function checkPage(cont, proj) {
-
-                $.ajax({
-                    type: 'POST',
-                    url: 'AJAX_Contractor_CheckPage',
-                    dataType: 'json',
-                    cache: false,
-                    data: {contprojID: cont, projID: proj},
-                    success: function (text) {
-                        console.log(text);
-
-                        if (text === "Y") {
-
-                            document.getElementById("respondToInvite").disabled = true;
-
-                        }
-                        else {
-                            document.getElementById("respondToInvite").disabled = false;
-
-                        }
-
-
-                    }
-                });
-
-            }
-            ;
-
-
-
-        </script>
-        <script>
-            function getTestimonial(id) {
-                $.ajax({
-                    type: 'POST',
-                    url: 'AJAX_BAC_gettestimonial',
-                    dataType: 'json',
-                    data: {testId: id}, cache: false,
-                    success: function (f) {
-                        $('#fDisplay').empty();
-                        var url = f.testimonial.folderName + "/" + f.testimonial.title + "/" + f.fileName;
-                        if (f.type === "Video") {
-                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
-
-                        }
-                        else if (f.type === "Image") {
-                            $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#fDisplay");
-
-                        }
-
-                        else if (f.type === "Document") {
-                            $("#docH").remove();
-                            $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#abcd");
-                        }
-                        $('#testTitle').text("Title: " + f.testimonial.title);
-                        $('#testDate').text("Date Uploaded: " + f.testimonial.dateUploaded);
-                        $('#testLoc').text("Location Details: " + f.testimonial.location + " + " + f.testimonial.locationdetails);
-                        $('#testDesc').text("Description: " + f.testimonial.message);
-                        $('#testModal').modal();
-                    }
-                });
-            }
-            ;
-
-
-            function getProjectFiles(id) {
-                $.ajax({
-                    type: 'POST',
-                    url: 'AJAX_BAC_getProjectFiles',
-                    dataType: 'json',
-                    data: {testId: id}, cache: false,
-                    success: function (f) {
-                        $('#pfDisplay').empty();
-                        var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
-                        if (f.type === "Video") {
-                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
-
-                        }
-                        else if (f.type === "Image") {
-                            $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#pfDisplay");
-
-                        }
-
-                        else if (f.type === "Document") {
-                            $("#docH").remove();
-                            $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#pfDisplay");
-                        }
-                        $('#projectFiles').modal();
-                    }
-                });
-            }
-            ;
-        </script>
         <script>
 
 
@@ -989,42 +709,365 @@
 
         <!--common script for all pages-->
         <script src="js/common-scripts.js"></script>
-        
-        
-        <script>
-            var cal = <%=session.getAttribute("calendar")%>;
-            $('document').ready(function () {
 
-                $('#calendar').fullCalendar({
-                    defaultView: 'month',
-                    schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-                    header: {
-                        left: '',
-                        center: 'title',
-                        right: 'today prev,next'
+        <script>
+            var powNumber = 1;
+            var taskName = [];
+            var taskSchedule = [];
+            var finalTasks = [];
+            var taskDetails;
+            var powNumber = 1;
+            function addRowForWorks() {
+                //debugger;
+
+                var table = document.getElementById("powTable");
+                var row = table.insertRow(-1);
+                var cell2 = row.insertCell(-1);
+                var cell3 = row.insertCell(-1);
+                var sel = document.createElement('select');
+                sel.setAttribute("id", "worksSelect-" + powNumber);
+                sel.setAttribute("class", "worksSelect");
+                sel.setAttribute("class", "form-control");
+                sel.setAttribute("name", "works");
+                var ok = document.createElement('button');
+                sel.setAttribute("id", "worksOk-" + powNumber);
+                var button = document.createElement('button');
+                button.setAttribute("id", "worksButton-" + powNumber);
+                button.setAttribute("class", "form-control finalWorks");
+                button.setAttribute("name", "works");
+                button.setAttribute("type", "button");
+                var newWork = document.createElement('input');
+                newWork.setAttribute("id", "newWork-" + powNumber);
+                newWork.setAttribute("class", "form-control");
+                newWork.setAttribute("type", "text");
+                var delBtn = document.createElement('button');
+                delBtn.setAttribute("id", "worksDel-" + powNumber);
+                delBtn.setAttribute("class", "btn btn-danger btn-sm");
+                delBtn.innerHTML = "-";
+                delBtn.addEventListener("click", function () {
+                    var row = delBtn.parentNode.parentNode;
+                    row.parentNode.removeChild(row);
+                    for (var x = 0; x < taskName.length; x++) {
+                        var task = taskName[x];
+                        if (task === $(this).val()) {
+                            taskName.splice(x, 1);
+                        }
+                    }
+
+                    console.log(taskName);
+                    $('#componentsDiv-' + (getIdNum(delBtn.id))).remove();
+                });
+                var option = document.createElement("option");
+                option.setAttribute('hidden', true);
+                option.text = 'Select Works';
+                sel.appendChild(option);
+                for (var i = 0; i < worksList.length; i++) {
+                    option = document.createElement("option");
+                    option.setAttribute("value", worksList[i].name);
+                    option.text = worksList[i].name;
+                    sel.appendChild(option);
+                }
+
+                option = document.createElement("option");
+                option.setAttribute("value", "new");
+                option.text = "New...";
+                sel.appendChild(option);
+                powTableFc(button, sel, powNumber, newWork);
+                cell2.appendChild(sel);
+                cell2.appendChild(button);
+                cell2.appendChild(newWork);
+                cell3.appendChild(delBtn);
+                powNumber++;
+            }
+
+            function createTble(works, id) {
+                var div = $('<div id="componentsDiv-' + id + '"></div>');
+                var header = $('<header class="panel-heading no-border"> Components - ' + works + '</header>');
+                var table = $('<table class="table table-bordered table-striped table-condensed" id="comp-' + id + '"></table>');
+                var tableHeader = $('<thead><tr><th style="width: 20%">Component</th><th style="width: 10%">Qty/Area</th><th style="width: 12%">Unit</th><th style="width: 20%">Unit Cost</th><th style="width: 20%">Amount</th></tr></thead>');
+                var tableBody = $('<tbody></tbody>');
+                var tableFoot = $('<tfoot><tr id="totalTR"><td colspan="3"></td><td style="font-weight: bold;">Subtotal</td><td style="font-weight: bold; border-bottom: 3px double;"> <input type="text" class="form-control" name="subtotal" id="subtotal-"' + id + ' readonly style="background: transparent"></td></tr></tfoot>');
+                var deleteBtn = $('<button class="btn btn-danger btn-sm pull-right" type="button" onclick="delBtn(this)" id="componentsDelete-' + id + '"><i class="fa fa-times"></i> Delete </button>');
+                var addBtn = $('<button class="btn btn-success btn-sm pull-right" type="button" onclick="addComponentsRow(this)" id="componentsAdd-' + id + '" style="margin-right: 5px"><i class="fa fa-plus"></i> Add </button>');
+                var brk = $('<br><br><br>');
+                $('#compMain').append(div);
+                $(div).append(header);
+                $(div).append(table);
+                $(table).append(tableHeader);
+                $(table).append(tableBody);
+                $(table).append(tableFoot);
+                $(div).append(deleteBtn);
+                $(div).append(addBtn);
+                $(div).append(brk);
+            }
+
+            function powTableFc(button, sel, num, work) {
+                $(button).hide();
+                $(work).hide();
+                $(sel).change(function () {
+                    if ($(sel).val() === "new") {
+                        $(work).show();
+                        $(work).keypress(function (e) {
+                            var key = e.which;
+                            if (key === 13) {
+                                $(work).hide();
+                                $(sel).hide();
+                                $(button).text($(work).val());
+                                $(button).show();
+                                $('#compMain div').each(function () {
+                                    $(this).hide();
+                                });
+                                $(button).val($(work).val());
+                                createTble(button.innerHTML, num);
+                                $('#worksDel-' + num).val($(sel).val());
+                            }
+                        });
+                    }
+                    else {
+                        $(sel).hide();
+                        $(button).text($(sel).val());
+                        $(button).val($(sel).val());
+                        $(button).show();
+                        $('#compMain div').each(function () {
+                            $(this).hide();
+                        });
+                        createTble(button.innerHTML, num);
+                        $('#worksDel-' + num).val($(sel).val());
                     }
                 });
-                inputActivities(cal);
-
-            });
-
-            function inputActivities(sched) {
-                $('#calendar').fullCalendar('removeEvents');
-                $.each(sched, function (i) {
-                    var my_events = {
-                        events: [
-                            {
-                                title: sched[i].event,
-                                start: sched[i].startdate,
-                                end: sched[i].enddate,
-                                status: sched[i].status,
-                            }
-                        ]
-                    };
-
-                    $('#calendar').fullCalendar('addEventSource', my_events);
+                $(button).dblclick(function () {
+                    $(button).hide();
+                    $(sel).show();
+                });
+                $(button).click(function () {
+                    $('#compMain div').each(function () {
+                        if (this.id === "componentsDiv-" + num) {
+                            $('#componentsDiv-' + num).show();
+                        }
+                        else {
+                            $(this).hide();
+                        }
+                    });
                 });
             }
+
+            function getIdNum(string) {
+                var spl = string.split('-', 2);
+                return spl[1];
+            }
+
+            function delBtn(btn) {
+                var row = btn.parentNode.parentNode;
+                row.parentNode.removeChild(row);
+            }
+
+            function addComponentsRow(btn) {
+                var id = getIdNum(btn.id);
+                var tableId = "comp-" + id;
+                var row = $('<tr></tr>');
+                var x = 1;
+                var componenttd = $('<td></td>');
+                var component = $('<input type="text" name="component" class="form-control" id="component"> ');
+                componenttd.append(component);
+                var quantitytd = $('<td></td>');
+                var quantity = $('<input type="text" name="quantity" class="form-control" id="quantity"> ');
+                quantitytd.append(quantity);
+                var unittd = $('<td></td>');
+                var select = $('<select type="text" name="unit" class="form-control" id="unit" ></select>');
+                for (var i = 0; i < unitList.length; i++) {
+                    $(select).append($("<option></option>").val(unitList[i].unit).html(unitList[i].unit));
+                }
+                $(unittd).append(select);
+                var unitCosttd = $('<td></td>');
+                var unitCost = $('<input type="text" name="unitCost" class="form-control" id="unitCost">');
+                unitCosttd.append(unitCost);
+                var amounttd = $('<td></td>');
+                var amount = $('<input readonly type="text" name="amount" class="form-control amount" style="background: white">');
+                amounttd.append(amount);
+                $(row).append(componenttd);
+                $(row).append(quantitytd);
+                $(row).append(unittd);
+                $(row).append(unitCosttd);
+                $(row).append(amounttd);
+                onchanges(quantity, unitCost, amount, id);
+                $("#" + tableId).append(row);
+            }
+
+            function onchanges(quantity, unitcost, amount, id) {
+                var cost;
+                $(quantity).change(function () {
+//if unitcost is not empty set amount
+                    if ($(unitcost).val() !== "") {
+                        cost = parseFloat($(quantity).val() * $(unitcost).val());
+                        $(amount).val(cost.toFixed(2));
+                        var total;
+                        $('#comp-' + id + ' .amount').each(function () {
+                            total += $(this).val();
+                        });
+                        $('#subtotal-' + id).val(total.toFixed(2));
+                    }
+                });
+                $(unitcost).change(function () {
+                    if ($(quantity).val() !== "") {
+                        cost = parseFloat($(quantity).val() * $(unitcost).val());
+                        $(amount).val(cost.toFixed(2));
+                        var total = 0;
+                        $('#comp-' + id + ' .amount').each(function () {
+                            total = total + parseFloat($(this).val());
+                        });
+                        $('#comp-' + id + ' tfoot input').val(total.toFixed(2));
+                    }
+                });
+            }
+
+            var works = [];
+            var pw, comps, compList = [], pworks;
+            var n, q, u, c;
+            function insertWorks() {
+
+                for (var x = 1; x < powNumber; x++) {
+                    pw = $('#worksButton-' + x).text();
+                    $('#comp-' + x + ' tbody tr').each(function (row, tr) {
+
+                        n = $(tr).find('#component').val();
+                        q = $(tr).find('#quantity').val();
+                        u = $(tr).find('#unit').val();
+                        c = $(tr).find('#unitCost').val();
+                        comps = {cname: n, qty: q, unit: u, cost: c};
+                        compList.push(comps);
+                    });
+                    pworks = {name: pw, component: compList};
+                    works.push(pworks);
+                    compList = [];
+                }
+
+//    JSON.stringify(works);
+                $('#pworks').val(JSON.stringify(works));
+
+                $('#schedule').val(JSON.stringify(finalTasks));
+//    console.log(JSON.stringify(finalTasks));
+
+            }
+
+//SCRIPTS FOR SCHEDULE SECTION
+            $(document).ready(function () {
+                var isExisting;
+                $('#proposalForm-title-4 div').click(function () {
+                    $('.finalWorks').each(function () {
+                        if (taskName.length > 0) {
+                            for (var x = 0; x < taskName.length; x++) {
+                                if (taskName[x] !== $(this).text()) {
+                                    isExisting = false;
+                                }
+                                else {
+                                    isExisting = true;
+                                    break;
+                                }
+                            }
+                            if (!isExisting) {
+                                taskName.push($(this).text());
+                            }
+                        }
+                        else {
+                            taskName.push($(this).text());
+                        }
+                    });
+                    setTasksTable();
+                });
+            });
+            function setTasksTable() {
+
+
+                var taskDet;
+                $('#taskTable tbody > tr').remove();
+                for (var x = 0; x < taskName.length; x++) {
+                    if (taskName.length > 0) {
+                        var task = taskName[x];
+                        var tr = $('<tr></tr>');
+                        var buttontd = $('<td></td>');
+                        var button = $('<button type="button" class="btn btn-white form-control" value="' + task + '" data-toggle="modal" onclick="addScheduleModal(this)">' + task + '</button>');
+//            var deltd = $('<td></td>');
+//            var del = $('<button class = "btn btn-danger btn-sm" type="button" value="' + task + '" onclick="deleteForSchedule(this)"> - </button>');
+                        buttontd.append(button);
+//            deltd.append(del);
+                        tr.append(buttontd);
+//            tr.append(deltd);
+                        $('#taskTable tbody').append(tr);
+                        var schedDetails = [];
+                        taskDet = {name: task, details: schedDetails};
+                        finalTasks.push(taskDet);
+                    }
+                }
+            }
+
+
+
+            function addScheduleModal(btn) {
+                $('#schedModal > .modal-header > h4').html($(btn).val());
+                $('#taskNameMod').val($(btn).val());
+                $('#schedModal').modal();
+            }
+
+            var tempTasks = [];
+
+            function addScheduleToArray() {
+                var name = $('#taskNameMod').val();
+                var start = $('#startDate').val();
+                var end = $('#endDate').val();
+                var det = {start: start, end: end};
+
+                for (var x = 0; x < finalTasks.length; x++) {
+                    if (finalTasks[x].name === name) {
+                        finalTasks[x].details.push(det);
+                        break;
+                    }
+                }
+
+                $('#startDate').val("");
+                $('#endDate').val("");
+
+                renderChart(JSON.stringify(finalTasks));
+            }
+
+            function finalizeTasks() {
+                for (var x = 0; x < tempTasks.length; x++) {
+                    var exists = false;
+                    var index;
+                    //insert into array {name, details}
+                    //loop through said array and check names
+                    //if same, push into one details array
+                    //
+                    if (finalTasks.length > 0) {
+                        for (var y = 0; y < finalTasks.length; y++ && !exists) {
+                            if (tempTasks[x].name === finalTasks[y].name) {
+                                exists = true;
+                                index = y;
+                            }
+                        }
+                        if (exists) {
+                            finalTasks[y].details.push(tempTasks[x].details[0]);
+                        } else {
+
+                        }
+
+                    } else {
+                        finalTasks.push(tempTasks[x]);
+                    }
+                }
+            }
+
+            function deleteForSchedule(btn) {
+                var row = btn.parentNode.parentNode;
+                row.parentNode.removeChild(row);
+                for (var x = 0; x < taskName.length; x++) {
+                    var task = taskName[x];
+                    if (task === $(btn).val()) {
+                        taskName.splice(x, 1);
+                    }
+                }
+                console.log(taskName);
+            }
+
 
         </script>
     </body>

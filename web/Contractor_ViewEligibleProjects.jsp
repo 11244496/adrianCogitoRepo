@@ -4,6 +4,7 @@
     Author     : RoAnn
 --%>
 
+<%@page import="DAO.ContractorDAO"%>
 <%@page import="Entity.InvitationToBid"%>
 <%@page import="Entity.Contractor_User"%>
 <%@page import="Entity.Project"%>
@@ -125,8 +126,8 @@
                             <span>Bidding</span>
                         </a>
                         <ul class="sub">
-                            <li><a  href="Contractor_HandleInvitations" class="active">&nbsp; &nbsp; &nbsp; &nbsp;Handle Invitations</a></li>
-                            <li><a  href="Contractor_ViewEligibleProjects">&nbsp; &nbsp; &nbsp; &nbsp;Upload Works and Gantt</a></li>
+                            <li><a  href="Contractor_HandleInvitations">&nbsp; &nbsp; &nbsp; &nbsp;Handle Invitations</a></li>
+                            <li><a  href="Contractor_ViewEligibleProjects" class="active">&nbsp; &nbsp; &nbsp; &nbsp;Upload Works and Gantt</a></li>
                             <li><a  href="Contractor_ViewHistory">&nbsp; &nbsp; &nbsp; &nbsp; View History</a></li>
                         </ul>
                     </li>
@@ -165,9 +166,7 @@
 
         <%
 
-            ArrayList<Project> projects = (ArrayList<Project>) request.getAttribute("projectsWithInvitation");
-            ArrayList<InvitationToBid> nego = (ArrayList<InvitationToBid>) request.getAttribute("nego");
-            ArrayList<Contractor_Has_Project> respondedProjects = (ArrayList<Contractor_Has_Project>) request.getAttribute("respondedProjects");
+            ArrayList<Project> projects = (ArrayList<Project>) request.getAttribute("projectlist");
         %>
         <!--main content start-->
         <section id="main-content">
@@ -183,21 +182,9 @@
                                         <ul class="nav nav-tabs nav-justified ">
                                             <li class="active">
                                                 <a href="#proposals" data-toggle="tab">
-                                                    Released with Invitation
+                                                    Eligible Projects
                                                 </a>
                                             </li>
-                                            <li class="">
-                                                <a href="#negotiation" data-toggle="tab">
-                                                    Invitation for Negotiated Procurement
-                                                </a>
-                                            </li>
-                                            <li class="">
-                                                <a href="#approved" data-toggle="tab">
-                                                    Projects responded to
-                                                </a>
-                                            </li>
-
-
                                         </ul>
                                     </header>
 
@@ -215,10 +202,9 @@
                                                         <tr>
                                                             <th>Name</th>
                                                             <th>Description</th>
-
-
+                                                            <th>Category</th>
+                                                            <th>Budget</th>
                                                             <th></th>
-
                                                         </tr>
                                                     </thead>
 
@@ -229,7 +215,8 @@
 
                                                                 String name = projects.get(x).getName();
                                                                 String description = projects.get(x).getDescription();
-                                                                String status = projects.get(x).getStatus();
+                                                                String category = projects.get(x).getCategory();
+                                                                Float budget = projects.get(x).getBudget();
 
 
                                                         %>
@@ -240,83 +227,32 @@
                                                             <td class="p-name">
                                                                 <%=description%>
                                                             </td>
+                                                            <td class="p-name">
+                                                                <%=category%>
+                                                            </td>
+                                                            <td class="p-name">
+                                                                <%=budget%>
+                                                            </td>
 
-
+                                                            <%ContractorDAO cd = new ContractorDAO();
+                                                                if (cd.ifscheduleExist(c, projects.get(x))) {
+                                                            %>
                                                             <td>
-                                                                <form action="Contractor_ViewProject">
+                                                                <form action="Contractor_ViewSubmittedScheduleWorks">
                                                                     <input type="hidden" name="projectID" value="<%=projects.get(x).getId()%>">
-
-                                                                    <button type="submit" class="btn btn-success btn-xs" value="View proposal details"><i class="fa fa-eye"></i> Open invitation</button>
-
+                                                                    <button type="submit" class="btn btn-success" value="View proposal details">View Submitted Schedule and Works</button>
                                                                 </form>
                                                             </td>
-                                                        </tr>
-
-                                                        <%
-                                                            }
-                                                        %>
-
-                                                    </tbody>
 
 
-
-                                                </table>
-
-
-
-                                            </div>
-
-                                            <div class="tab-pane" id="negotiation">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-
-
-                                                    </div>
-                                                </div>
-                                                <table class="table table-hover p-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Description</th>
-                                                            <th>Purpose of invitation</th>
-
-
-                                                            <th></th>
-
-                                                        </tr>
-                                                    </thead>
-
-
-                                                    <tbody>
-                                                        <%
-                                                            for (int x = 0; x < nego.size(); x++) {
-
-                                                                String name = nego.get(x).getProjectID().getName();
-                                                                String description = nego.get(x).getProjectID().getDescription();
-                                                                String status = nego.get(x).getReason();
-
-
-                                                        %>
-                                                        <tr>
-                                                            <td class="p-name">
-                                                                <%=name%>
-                                                            </td>
-                                                            <td class="p-name">
-                                                                <%=description%>
-                                                            </td>
-                                                            <td class="p-name">
-                                                                <%=status%>
-                                                            </td>
-
-
+                                                            <%} else {%>
                                                             <td>
-                                                                <form action="Contractor_ViewProject">
-                                                                    <input type="hidden" name="projectID" value="<%=nego.get(x).getProjectID().getId()%>">
-
-                                                                    <button type="submit" class="btn btn-success btn-xs" value="View proposal details"><i class="fa fa-eye"></i>Open invitation</button>
-
+                                                                <form action="Contractor_CreateGanttWorks">
+                                                                    <input type="hidden" name="projectID" value="<%=projects.get(x).getId()%>">
+                                                                    <button type="submit" class="btn btn-success" value="View proposal details">Create Schedule and Works</button>
                                                                 </form>
                                                             </td>
+                                                            <%}%>
                                                         </tr>
 
                                                         <%
@@ -332,78 +268,6 @@
 
 
                                             </div>
-
-                                            <!--approved-->
-                                            <div class="tab-pane " id="approved">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-
-
-                                                    </div>
-                                                </div>
-
-                                                <table class="table table-hover p-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Description</th>
-                                                            <th>Status</th>
-
-
-                                                        </tr>
-                                                    </thead>
-
-                                                    <tbody>
-
-                                                        <%
-                                                            for (int y = 0; y < respondedProjects.size(); y++) {
-                                                                String iddd = respondedProjects.get(y).getProject().getId();
-                                                                String name2 = respondedProjects.get(y).getProject().getName();
-                                                                String description = respondedProjects.get(y).getProject().getDescription();
-                                                                String Status = respondedProjects.get(y).getStatus();
-                                                                int contid = respondedProjects.get(y).getID();
-                                                        %>
-
-                                                        <tr>
-                                                            <td class="p-name">
-                                                                <%=name2%>
-                                                            </td>
-                                                            <td class="p-name">
-                                                                <%=description%> 
-                                                            </td>
-                                                            <%
-
-                                                                if (Status.equalsIgnoreCase("For eligibility check - Action needed") || Status.equalsIgnoreCase("For eligibility check")) {
-
-                                                            %>
-                                                            <td class="p-name">
-                                                                <a href="Contractor_ViewEligibilityDocuments?conid=<%=contid%>&projectname=<%=name2%>&iddd=<%=iddd%>"> <%=Status%> </a>
-                                                            </td>
-                                                            <%
-
-                                                            } else {
-                                                            %>
-
-                                                            <td class="p-name">
-                                                                <%=Status%>
-                                                            </td>
-
-                                                            <%
-                                                                }
-
-                                                            %>
-
-
-                                                        </tr>
-                                                    </tbody>
-                                                    <%                                                           }
-                                                    %>
-                                                </table>
-
-
-                                            </div>
-
-
 
                                         </div>
                                     </div>

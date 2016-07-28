@@ -5,10 +5,12 @@
  */
 package Servlet;
 
+import DAO.ActivityDAO;
 import DAO.BACDAO;
 import DAO.CitizenDAO;
 import DAO.ContractorDAO;
 import DAO.OCPDDAO;
+import Entity.Activity;
 import Entity.Contractor;
 import Entity.Contractor_Has_Project;
 import Entity.Contractor_User;
@@ -69,8 +71,8 @@ public class Contractor_ReUpload extends HttpServlet {
             ArrayList<String> fileType = new ArrayList<String>();
             ContractorDAO contDAO = new ContractorDAO();
             OCPDDAO oc = new OCPDDAO();
-            
-            
+            ActivityDAO actdao = new ActivityDAO();
+
             //Gets the contractor
             Contractor_User contractor_user = (Contractor_User) session.getAttribute("user");
             Contractor contractor = contractor_user.getContractor();
@@ -98,8 +100,7 @@ public class Contractor_ReUpload extends HttpServlet {
                     while (iterator.hasNext()) {
                         FileItem item = (FileItem) iterator.next();
                         if (item.isFormField()) {
-                            
-                        
+
                             //Returns the string inside the field
                             String value = item.getString();
                             //returns the name of the field
@@ -120,17 +121,13 @@ public class Contractor_ReUpload extends HttpServlet {
                             if (value2.equals("ProjectName")) {
                                 title = value;
 
-                            }     
-                            
-                            
+                            }
 
                         }
 
                         if (!item.isFormField()) {
                             fileName = item.getName();
-                            
-                            
-                            
+
                             String root = getServletContext().getRealPath("/");
                             //path where the file will be stored
                             path = new File("C\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\CogitoFirst\\Upload" + "/Bids and Awards Department" + "/Eligibility Documents/" + title + "/" + contractor.getName());
@@ -141,10 +138,6 @@ public class Contractor_ReUpload extends HttpServlet {
 
                             uploadedFiles = new File(path + "/" + fileName);
                             item.write(uploadedFiles);
-                           
-
-                            
-                            
 
                         }
 
@@ -153,11 +146,10 @@ public class Contractor_ReUpload extends HttpServlet {
                     Project project = oc.getBasicProjectDetails(id);
                     Contractor_Has_Project contProject = contDAO.getContractorHasProject(project, contractor);
 
-                    
-                        Eligibility_Document document = new Eligibility_Document(0, fileName, "chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/" + "Bids and Awards Department" + "/Eligibility Documents/" + title + "/" + contractor.getName(), null, contProject, documentType, null, "");
-                        contDAO.updateEligibilityDocument(docID, document);
+                    Eligibility_Document document = new Eligibility_Document(0, fileName, "chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/" + "Bids and Awards Department" + "/Eligibility Documents/" + title + "/" + contractor.getName(), null, contProject, documentType, null, "");
+                    contDAO.updateEligibilityDocument(docID, document);
 
-                    
+                    actdao.addActivity(new Activity(0, "you re-uploaded for project " + project.getName(), null, contractor_user.getUser()));
 
                 } catch (FileUploadException e) {
                     e.printStackTrace();

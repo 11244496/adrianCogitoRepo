@@ -34,6 +34,10 @@ public class Project {
     private ArrayList<Feedback> feedback;    
     private ArrayList<Project_Inspection> inspection;
 
+    private ArrayList<contractor_project_pworks> contractorWorks;
+    private ArrayList<contractortask> contractorTasks;
+    
+    
     //BAC PART
     private int responses = 0;
     private int confirmed = 0;
@@ -413,5 +417,22 @@ public class Project {
     public void setMainTestimonial(Testimonial mainTestimonial) {
         this.mainTestimonial = mainTestimonial;
     }
+
+    public ArrayList<contractor_project_pworks> getContractorWorks() {
+        return contractorWorks;
+    }
+
+    public void setContractorWorks(ArrayList<contractor_project_pworks> contractorWorks) {
+        this.contractorWorks = contractorWorks;
+    }
+
+    public ArrayList<contractortask> getContractorTasks() {
+        return contractorTasks;
+    }
+
+    public void setContractorTasks(ArrayList<contractortask> contractorTasks) {
+        this.contractorTasks = contractorTasks;
+    }
+    
     
 }

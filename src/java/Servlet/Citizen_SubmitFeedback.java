@@ -5,7 +5,9 @@
  */
 package Servlet;
 
+import DAO.ActivityDAO;
 import DAO.CitizenDAO;
+import Entity.Activity;
 import Entity.Citizen;
 import Entity.Feedback;
 import Entity.Project;
@@ -55,10 +57,13 @@ public class Citizen_SubmitFeedback extends HttpServlet {
             Citizen c = (Citizen) session.getAttribute("user");
             f = new Feedback(quality, promptness, convenience, safety, details, details2, satisfaction, comment, p, c, null);
             ct.sendFeedback(f);
-            
+
+            ActivityDAO actdao = new ActivityDAO();
+            actdao.addActivity(new Activity(0, "you submitted a feedback form on project: " + p.getName(), null, c.getUser()));
+
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/Citizen_ViewProjectDetails?projid=" + p.getId());
             rd.forward(request, response);
-            
+
         }
     }
 

@@ -64,7 +64,7 @@ public class ContractorDAO {
 
         return contractor;
     }
-    
+
     public Contractor getContractorInfo(int id) {
 
         Contractor cont = null;
@@ -92,7 +92,6 @@ public class ContractorDAO {
 
         return cont;
     }
-
 
     //=======================================ALL PROJECT METHODS=======================================================
     public ArrayList<Project> getImplementedProjects(Contractor_User user) {
@@ -311,6 +310,32 @@ public class ContractorDAO {
         }
     }
 
+    //Get Projects na eligible si contractor
+    public ArrayList<String> getEligibleProjects(Contractor contractor) {
+
+        ArrayList<String> eligibleprojectid = new ArrayList<String>();
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select project_ID from contractor_has_project where Contractor_ID = ? and Status = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, contractor.getID());
+            statement.setString(2, "Eligible");
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                eligibleprojectid.add(result.getString("project_ID"));
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return eligibleprojectid;
+    }
+
     //=============================================ALL INVITATION METHODS================================================
     public ArrayList<InvitationToBid> getNegotiatedITB(Contractor c) {
         ArrayList<InvitationToBid> pList = new ArrayList<>();
@@ -476,7 +501,7 @@ public class ContractorDAO {
             Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     //==========================================ALL BID DOCUMENTS================================================
     public ArrayList<Bid_Notices> getBidNotices(Project p, Contractor c) {
 
@@ -510,7 +535,6 @@ public class ContractorDAO {
 
         return bidnotices;
     }
-
 
     //==========================================UTILITY CODES========================================================
     public String checkPage(int id, String idd) {
@@ -553,12 +577,12 @@ public class ContractorDAO {
 
         return result2;
     }
-    
+
     public ArrayList<Project> getProjectHistoryList(String input) {
 
-        ArrayList<Project> projectlist = new ArrayList<Project>();    
+        ArrayList<Project> projectlist = new ArrayList<Project>();
         Project project = null;
-        
+
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
@@ -577,9 +601,8 @@ public class ContractorDAO {
                 project.setDescription(result.getString("Description"));
                 project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
-                
+
                 projectlist.add(project);
-                
 
             }
             connection.close();
@@ -589,7 +612,7 @@ public class ContractorDAO {
 
         return projectlist;
     }
-    
+
     public Feedback getAverage(Project p) {
         Feedback f = null;
         DecimalFormat df = new DecimalFormat("#,###.00");
@@ -618,8 +641,7 @@ public class ContractorDAO {
         }
         return f;
     }
-    
-    
+
     public ArrayList<Progress_Report> getProgress_ReportList(Project project, Contractor_User conuser) {
 
         ArrayList<Progress_Report> progress_reports = new ArrayList<Progress_Report>();
@@ -634,12 +656,12 @@ public class ContractorDAO {
             statement = connection.prepareStatement(query);
             statement.setString(1, project.getId());
             statement.setInt(2, conuser.getID());
-            
+
             result = statement.executeQuery();
 
             while (result.next()) {
 
-                progress_report = new Progress_Report(result.getInt("ID"), result.getString("Message"),result.getString("FileName"), result.getString("FolderName"), result.getString("DateUploaded"), project, conuser);
+                progress_report = new Progress_Report(result.getInt("ID"), result.getString("Message"), result.getString("FileName"), result.getString("FolderName"), result.getString("DateUploaded"), project, conuser);
                 progress_reports.add(progress_report);
 
             }
@@ -651,8 +673,7 @@ public class ContractorDAO {
         return progress_reports;
     }
 
-
-       public Progress_Report getProgressReportFile(int id) {
+    public Progress_Report getProgressReportFile(int id) {
 
         Progress_Report progress_Report = null;
 
@@ -679,7 +700,7 @@ public class ContractorDAO {
         return progress_Report;
     }
 
-       public void uploadProgressReport(Progress_Report progressreport) {
+    public void uploadProgressReport(Progress_Report progressreport) {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
@@ -690,8 +711,7 @@ public class ContractorDAO {
             statement.setString(3, progressreport.getFolderName());
             statement.setString(4, progressreport.getProject().getId());
             statement.setInt(5, progressreport.getContractor_user().getID());
-            
-            
+
             statement.executeUpdate();
             statement.close();
 
@@ -702,9 +722,8 @@ public class ContractorDAO {
         }
 
     }
-       
-       
-   public Project getProjectInfo(String id) {
+
+    public Project getProjectInfo(String id) {
 
         Project project = null;
         try {
@@ -734,7 +753,7 @@ public class ContractorDAO {
 
         return project;
     }
-   
+
     public User getUser(Contractor_User cuser) {
         User u = null;
 
@@ -757,7 +776,7 @@ public class ContractorDAO {
         }
         return u;
     }
-   
+
     public void submitTimelineUpdate(Timeline_Update timelineupdate) {
 
         try {
@@ -781,9 +800,8 @@ public class ContractorDAO {
             Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-       public ArrayList<Timeline_Update> getTimeline_UpdateList(Project project) {
+
+    public ArrayList<Timeline_Update> getTimeline_UpdateList(Project project) {
 
         ArrayList<Timeline_Update> timeline_updates = new ArrayList<Timeline_Update>();
         Timeline_Update update;
@@ -797,14 +815,14 @@ public class ContractorDAO {
             String query = "select * from timeline_update JOIN users on users.ID = Users_ID where Project_ID = ?";
             statement = connection.prepareStatement(query);
             statement.setString(1, project.getId());
-            
+
             result = statement.executeQuery();
 
             while (result.next()) {
                 user = new User(result.getInt("Users.ID"), result.getString("Username"));
                 update = new Timeline_Update(result.getInt("timeline_update.ID"), result.getString("Message"), project, user);
                 timeline_updates.add(update);
-                
+
             }
             connection.close();
         } catch (SQLException ex) {
@@ -813,11 +831,8 @@ public class ContractorDAO {
 
         return timeline_updates;
     }
-       
-       
-       
-       
-       public Timeline_Update getTimelineMessage(int id) {
+
+    public Timeline_Update getTimelineMessage(int id) {
 
         Timeline_Update tupdate = null;
 
@@ -832,14 +847,38 @@ public class ContractorDAO {
 
             while (result.next()) {
 
-                    tupdate = new Timeline_Update(id, result.getString("Message"), null, null);
-               
+                tupdate = new Timeline_Update(id, result.getString("Message"), null, null);
+
             }
             connection.close();
         } catch (SQLException ex) {
             Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-    return tupdate;
-       }
+        return tupdate;
+    }
 
+    public boolean ifscheduleExist(Contractor_User cu, Project p) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "SELECT count(*) as c from contractor_project_pworks where contractorID = ? and projectID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, cu.getID());
+            statement.setString(2, p.getId());
+            
+            result = statement.executeQuery();
+            while (result.next()) {
+                if(result.getInt("c") == 0){
+                    return false;
+                }else if (result.getInt("c") > 0){
+                    return true;
+                }
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
 }

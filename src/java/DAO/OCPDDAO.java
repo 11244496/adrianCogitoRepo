@@ -10,6 +10,7 @@ import Entity.Agenda;
 import Entity.Annotation;
 import Entity.Citizen;
 import Entity.Component;
+import Entity.Contractor;
 import Entity.Contractor_User;
 import Entity.Employee;
 import Entity.Feedback;
@@ -25,6 +26,9 @@ import Entity.Task;
 import Entity.Testimonial;
 import Entity.Unit;
 import Entity.User;
+import Entity.contractor_project_pworks;
+import Entity.contractorcomponent;
+import Entity.contractortask;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -170,7 +174,10 @@ public class OCPDDAO {
         ArrayList<PWorks> projectPWorks = new ArrayList<PWorks>();
         ArrayList<Project> projectReferencedProject = new ArrayList<Project>();
 
-        PreparedStatement locationS, taskS, filesS, pworksS, referencedtestimonialS, referencedprojectS;
+        //ArrayList<contractortask> contractorTasks = new ArrayList<contractortask>();
+        //ArrayList<contractor_project_pworks> contractorWorks = new ArrayList<contractor_project_pworks>();
+
+        PreparedStatement locationS, taskS, filesS, pworksS, referencedtestimonialS, referencedprojectS, ctask, cworks;
 
         try {
             myFactory = ConnectionFactory.getInstance();
@@ -353,7 +360,7 @@ public class OCPDDAO {
 
                 projectTask.add(t);
             }
-            
+
             for (Task t : projectTask) {
                 ArrayList<Schedule> scheduleList = new ArrayList<Schedule>();
                 String query = ("select * from schedule join task on schedule.Task_ID = task.id where Task_ID = ?");
@@ -378,8 +385,120 @@ public class OCPDDAO {
                 t.setSchedules(scheduleList);
             }
             project.setTask(projectTask);
-            
-            
+
+//            //Contractor Methods
+//            //Pworks
+//            String cPWorks = ("select * from contractor_project_pworks join pworks on pworksID = pworks.ID where projectID = ?");
+//            cworks = connection.prepareStatement(cPWorks);
+//            cworks.setString(1, id);
+//            result = cworks.executeQuery();
+//            while (result.next()) {
+//
+//                contractor_project_pworks cpp = new contractor_project_pworks();
+//                cpp.setId(result.getInt("contractor_project_pworks.id"));
+//                cpp.setStatus(result.getString("contractor_project_pworks.status"));
+//                cpp.setDatesubmitted(result.getString("contractor_project_pworks.datesubmitted"));
+//                PWorks pw = new PWorks();
+//                pw.setId(result.getInt("pworks.ID"));
+//                pw.setName(result.getString("Name"));
+//                Project p = new Project();
+//                p.setId(project.getId());
+//                p.setName(project.getName());
+//                p.setDescription(project.getDescription());
+//                p.setStatus(project.getStatus());
+//                p.setFoldername(project.getFoldername());
+//                p.setDatesubmitted(project.getDatesubmitted());
+//                p.setCategory(project.getCategory());
+//                p.setBudget(project.getBudget());
+//                pw.setProject(p);
+//                Contractor_User c = new Contractor_User();
+//                c.setID(result.getInt("contractorID"));
+//
+//                cpp.setPworks(pw);
+//                cpp.setP(p);
+//                cpp.setContractor(c);
+//
+//                contractorWorks.add(cpp);
+//            }
+//
+//            //Set Components of each Pworks
+//            for (contractor_project_pworks cpp : contractorWorks) {
+//                ArrayList<contractorcomponent> componentList = new ArrayList<contractorcomponent>();
+//                String query = ("SELECT * FROM cogito.contractorcomponents join unit on unit_id = unit.id join contractor_project_pworks on contractor_project_pworks.id = cppid where projectid = ? and cppid = ?;");
+//                PreparedStatement statement = connection.prepareStatement(query);
+//                statement.setString(1, project.getId());
+//                statement.setInt(2, cpp.getId());
+//                result = statement.executeQuery();
+//                while (result.next()) {
+//
+//                    contractorcomponent component = new contractorcomponent();
+//
+//                    component.setId(result.getInt("ID"));
+//                    component.setName(result.getString("Name"));
+//                    component.setUnitPrice(result.getFloat("UnitPrice"));
+//                    component.setQuantity(result.getInt("Quantity"));
+//                    Unit unit = new Unit();
+//                    unit.setId(result.getInt("unit.id"));
+//                    unit.setUnit(result.getString("unit.Unit"));
+//                    component.setUnit(unit);
+//                    component.setCpp(cpp);
+//                    componentList.add(component);
+//                }
+//                cpp.setComponents(componentList);
+//            }
+//
+//            project.setContractorWorks(contractorWorks);
+//
+//            //Tasks
+//            String ctaskQuery = ("SELECT * FROM contractortask where project_id = ?");
+//            ctask = connection.prepareStatement(ctaskQuery);
+//            ctask.setString(1, id);
+//            result = ctask.executeQuery();
+//            while (result.next()) {
+//                contractortask ct = new contractortask();
+//                ct.setId(result.getInt("ID"));
+//                ct.setName(result.getString("Name"));
+//                ct.setDescription(result.getString("Description"));
+//                ct.setStatus(result.getString("Status"));
+//                Project p = new Project();
+//                p.setId(project.getId());
+//                p.setName(project.getName());
+//                p.setDescription(project.getDescription());
+//                p.setStatus(project.getStatus());
+//                p.setFoldername(project.getFoldername());
+//                p.setDatesubmitted(project.getDatesubmitted());
+//                p.setCategory(project.getCategory());
+//                p.setBudget(project.getBudget());
+//                ct.setProject(p);
+//                Contractor_User cu = new Contractor_User();
+//                cu.setID(result.getInt("contractor_id"));
+//                contractorTasks.add(ct);
+//            }
+//
+//            for (contractortask ct : contractorTasks) {
+//                ArrayList<Schedule> scheduleList = new ArrayList<Schedule>();
+//                String query = ("select * from contractorschedule join contractortask on contractorschedule.Task_ID = contractortask.id where Task_ID = ?");
+//                PreparedStatement statement = connection.prepareStatement(query);
+//                statement.setInt(1, ct.getId());
+//                result = statement.executeQuery();
+//                while (result.next()) {
+//                    Schedule s = new Schedule();
+//                    s.setId(result.getInt("id"));
+//                    s.setStartdate(result.getString("StartDate"));
+//                    s.setEnddate(result.getString("EndDate"));
+//                    s.setStatus(result.getString("status"));
+//                    s.setActualenddate(result.getString("ActualEndDate"));
+//                    s.setRemarks(result.getString("Remarks"));
+//                    Task task = new Task();
+//                    task.setId(result.getInt("task.id"));
+//                    task.setName(result.getString("task.name"));
+//                    task.setDescription(result.getString("task.description"));
+//                    s.setTask(task);
+//                    scheduleList.add(s);
+//                }
+//                ct.setSchedules(scheduleList);
+//            }
+//            project.setContractorTasks(contractorTasks);
             //End of Method
         } catch (SQLException ex) {
             Logger.getLogger(GSDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -406,7 +525,7 @@ public class OCPDDAO {
         }
         return AllProjectID;
     }
-    
+
     public ArrayList<String> getAllFinishedProjectIDs() {
         ArrayList<String> AllProjectID = new ArrayList<String>();
 
@@ -482,7 +601,7 @@ public class OCPDDAO {
             Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting meeting", ex);
         }
     }
-    
+
     public void insertAgenda(Agenda a) {
         try {
             myFactory = ConnectionFactory.getInstance();
@@ -498,7 +617,7 @@ public class OCPDDAO {
         }
     }
 
-    public ArrayList<Agenda> getAgenda(int id){
+    public ArrayList<Agenda> getAgenda(int id) {
         ArrayList<Agenda> aList = new ArrayList<>();
         Agenda a = new Agenda();
         try {
@@ -508,7 +627,7 @@ public class OCPDDAO {
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             result = statement.executeQuery();
-            while (result.next()){
+            while (result.next()) {
                 a = new Agenda();
                 a.setAgenda(result.getString("agenda"));
                 aList.add(a);
@@ -519,8 +638,8 @@ public class OCPDDAO {
         }
         return aList;
     }
-    
-    public Task getMeeting(String status, Project p){
+
+    public Task getMeeting(String status, Project p) {
         Task t = null;
         Schedule s = null;
         ArrayList<Schedule> sList = new ArrayList<>();
@@ -532,7 +651,7 @@ public class OCPDDAO {
             statement.setString(1, status);
             statement.setString(2, p.getId());
             result = statement.executeQuery();
-            while(result.next()){
+            while (result.next()) {
                 t = new Task();
                 s = new Schedule();
                 t.setId(result.getInt("ID"));
@@ -551,7 +670,8 @@ public class OCPDDAO {
         }
         return t;
     }
-    public Task getMeeting( Project p){
+
+    public Task getMeeting(Project p) {
         Task t = null;
         Schedule s = null;
         ArrayList<Schedule> sList = new ArrayList<>();
@@ -562,7 +682,7 @@ public class OCPDDAO {
             statement = connection.prepareStatement(query);
             statement.setString(1, p.getId());
             result = statement.executeQuery();
-            while(result.next()){
+            while (result.next()) {
                 t = new Task();
                 s = new Schedule();
                 t.setId(result.getInt("ID"));
@@ -837,7 +957,7 @@ public class OCPDDAO {
             Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting budget", ex);
         }
     }
-    
+
     public Testimonial getTestimonial(int id) {
         Testimonial t = null;
         Citizen c = null;
