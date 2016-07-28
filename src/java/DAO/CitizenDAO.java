@@ -13,7 +13,9 @@ import Entity.Citizen;
 import Entity.Citizen_Report;
 import Entity.Comment;
 import Entity.Contractor;
+import Entity.Contractor_User;
 import Entity.Employee;
+import Entity.Feedback;
 import Entity.Files;
 import Entity.Location;
 import Entity.Notification;
@@ -29,6 +31,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1028,25 +1031,27 @@ public class CitizenDAO {
     public ArrayList<Project> getProjectsForImplementation(String input) {
         ArrayList<Project> projects = new ArrayList<Project>();
         Project project;
-        Contractor contractor;
+        Contractor_User contractor;
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "select * from project JOIN contractor ON project.Contractor_ID = contractor.ID where status = ?";
+            String query = "select * from project JOIN contractorusers ON project.Contractor_ID = contractorusers.ID where project.status = ?";
             statement = connection.prepareStatement(query);
             statement.setString(1, input);
 
             result = statement.executeQuery();
 
             while (result.next()) {
-                contractor = new Contractor(result.getInt("contractor.ID"), result.getString("contractor.Name"));
+                contractor = new Contractor_User();
+                contractor.setID(result.getInt("contractorusers.ID"));
+                contractor.setName(result.getString("contractorusers.Name"));
                 project = new Project();
                 project.setId(result.getString("ID"));
                 project.setName(result.getString("Name"));
                 project.setDescription(result.getString("Description"));
                 project.setCategory(result.getString("Category"));
                 project.setStatus(result.getString("Status"));
-                project.setContractor(contractor);
+                project.setContractorUser(contractor);
 
                 projects.add(project);
 
@@ -1057,6 +1062,84 @@ public class CitizenDAO {
         }
 
         return projects;
+    }
+    
+    public int hasFeedback(Citizen c, Project p) {
+        int count = 0;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select count(*) as c from feedback join citizen on citizen_id = citizen.id where project_id = ? and citizen.id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            statement.setInt(2, c.getId());
+
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                count = result.getInt("c");
+            }
+            connection.close();
+            return count;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
+
+    public void sendFeedback(Feedback f) {
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "insert into feedback (quality, promptness, convenience, safety, details, "
+                    + "details2, satisfaction, comments, project_id, citizen_id, datesubmitted) "
+                    + "values (?,?,?,?,?,?,?,?,?,?,now())";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, f.getQuality());
+            statement.setInt(2, f.getPromptness());
+            statement.setInt(3, f.getConvenience());
+            statement.setInt(4, f.getSafety());
+            statement.setInt(5, f.getDetails());
+            statement.setInt(6, f.getDetails2());
+            statement.setInt(7, f.getSatisfaction());
+            statement.setString(8, f.getComments());
+            statement.setString(9, f.getProject().getId());
+            statement.setInt(10, f.getCitizen().getId());
+
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Feedback getAverage(Project p) {
+        Feedback f = null;
+        DecimalFormat df = new DecimalFormat("#,###.00");
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select project_id, avg(quality) as quality,  avg(promptness) as promptness, avg(convenience) as convenience, avg(safety) as safety,\n"
+                    + "avg(details) as details, avg(details2) as details2, avg(satisfaction) as satisfaction from feedback where project_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            result = statement.executeQuery();
+            while (result.next()) {
+                f = new Feedback();
+                f.setQualityave(result.getDouble("quality"));
+                f.setPromptnessave(result.getDouble("promptness"));
+                f.setConvenienceave(result.getDouble("convenience"));
+                f.setSafetyave(result.getDouble("safety"));
+                f.setDetailsave((result.getDouble("details") + result.getDouble("details2")) / 2);
+                f.setSatisfactionave(result.getDouble("satisfaction"));
+            }
+
+            connection.close();
+            return f;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return f;
     }
 
 }

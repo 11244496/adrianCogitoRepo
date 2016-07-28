@@ -353,8 +353,6 @@
                                                             <th>Title</th>
                                                             <th>Description</th>
                                                             <th>Budget</th>
-                                                            <th>Date Finished</th>
-                                                            <th>Rating</th>
                                                             <th></th>
                                                         </tr>
                                                     </thead>
@@ -365,8 +363,6 @@
                                                             <td><%=allProject.get(x).getName()%></td>
                                                             <td><%=allProject.get(x).getDescription()%></td>
                                                             <td><%=allProject.get(x).getBudget()%></td>
-                                                            <td>Insert Date finished here</td>
-                                                            <td>Insert Rating Here</td>
                                                             <td>
                                                                 <a class="btn btn-info btn-sm" target="_blank" href="GS_ViewProjectDetails?projid=<%=allProject.get(x).getId()%>">View Details</a>
                                                                 <p> <button type="button"  class="btn btn-success btn-sm selectprojectbtn" value="<%=allProject.get(x).getId()%>">Select Project</button> </p>

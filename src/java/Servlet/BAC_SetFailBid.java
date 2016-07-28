@@ -8,10 +8,13 @@ package Servlet;
 import java.io.IOException;
 import DAO.BACDAO;
 import DAO.OCPDDAO;
+import DAO.ScheduleDAO;
+import Entity.BiddingSchedule;
 import Entity.Contractor_Has_Project;
 import Entity.Eligibility_Document;
 import Entity.InvitationToBid;
 import Entity.Project;
+import com.google.gson.Gson;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -54,7 +57,9 @@ public class BAC_SetFailBid extends HttpServlet {
             String reason = request.getParameter("failReason");
             Project p = oc.getBasicProjectDetails(projid);
             oc.changeProjStatus("BAC", p);
-            bac.addReasonFail(reason, itb);
+            
+            ScheduleDAO sd = new ScheduleDAO();
+            sd.removeallBiddingSchedule(projid);
             
             ArrayList<Contractor_Has_Project> contractors = bac.getViewRespondents(projid);
             Contractor_Has_Project chp;

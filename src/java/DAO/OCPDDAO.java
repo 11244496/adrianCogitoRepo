@@ -8,6 +8,7 @@ package DAO;
 import DB.ConnectionFactory;
 import Entity.Agenda;
 import Entity.Annotation;
+import Entity.Citizen;
 import Entity.Component;
 import Entity.Contractor_User;
 import Entity.Employee;
@@ -835,5 +836,31 @@ public class OCPDDAO {
         } catch (SQLException ex) {
             Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, "Error in setting budget", ex);
         }
+    }
+    
+    public Testimonial getTestimonial(int id) {
+        Testimonial t = null;
+        Citizen c = null;
+        User u = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from testimonial join citizen on citizen.id = citizen_id join users on users.id = users_id where testimonial.ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                u = new User(result.getInt("users.id"), result.getString("username"));
+                c = new Citizen(result.getInt("citizen.id"), result.getString("FirstName"), result.getString("middlename"), u);
+                t = new Testimonial(result.getString("testimonial.title"), result.getString("testimonial.dateuploaded"), result.getString("testimonial.message"), result.getString("testimonial.foldername"), result.getString("testimonial.category"), result.getString("testimonial.Status"), c);
+
+            }
+
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.GSDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return t;
     }
 }

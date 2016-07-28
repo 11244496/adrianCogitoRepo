@@ -428,6 +428,14 @@
         <servlet-name>GS_ViewProjectTimeline</servlet-name>
         <servlet-class>Servlet.GS_ViewProjectTimeline</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Citizen_CheckFeedback</servlet-name>
+        <servlet-class>Servlet.Citizen_CheckFeedback</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Citizen_SubmitFeedback</servlet-name>
+        <servlet-class>Servlet.Citizen_SubmitFeedback</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -855,6 +863,14 @@
     <servlet-mapping>
         <servlet-name>GS_ViewProjectTimeline</servlet-name>
         <url-pattern>/GS_ViewProjectTimeline</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_CheckFeedback</servlet-name>
+        <url-pattern>/Citizen_CheckFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_SubmitFeedback</servlet-name>
+        <url-pattern>/Citizen_SubmitFeedback</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

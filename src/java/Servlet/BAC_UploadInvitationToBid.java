@@ -9,12 +9,14 @@ import DAO.ActivityDAO;
 import DAO.BACDAO;
 import DAO.CitizenDAO;
 import DAO.OCPDDAO;
+import DAO.ScheduleDAO;
 import Entity.Activity;
 import Entity.Citizen;
 import Entity.Files;
 import Entity.InvitationToBid;
 import Entity.Project;
 import Entity.Schedule;
+import Entity.ScheduleCalendar;
 import Entity.Testimonial;
 import java.io.File;
 import java.io.IOException;
@@ -133,6 +135,12 @@ public class BAC_UploadInvitationToBid extends HttpServlet {
 
                     InvitationToBid invite = new InvitationToBid(0, fileName, null, project, "chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/" + "Bids and Awards Department" + "/Invitations to bid" + "/" + title + " invitation");
                     bacdao.uploadInvitation(invite);
+
+                    //Set Bidding Schedule
+                    ScheduleCalendar sc = new ScheduleCalendar();
+                    sc.createBiddingSched(oc.getBasicProjectDetails(id));
+                    ScheduleDAO sd = new ScheduleDAO();
+                    sd.insertBiddingSchedule(sc.getBidding());
 
                 } catch (FileUploadException e) {
                     e.printStackTrace();

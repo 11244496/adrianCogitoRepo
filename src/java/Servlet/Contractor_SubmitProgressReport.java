@@ -128,7 +128,7 @@ public class Contractor_SubmitProgressReport extends HttpServlet {
                                 
                                 
                                 //path where the file will be stored
-                                path = new File("C:\\Users\\Krist\\Documents\\NetBeansProjects\\Cogito_V4\\Upload" + "/" + projectName + " - Progress Reports");
+                                path = new File("C\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\CogitoFirst\\Upload" + "/" + projectName + " - Progress Reports");
                                 if (!path.exists()) {
                                     boolean status = path.mkdirs();
                                 }
@@ -165,7 +165,7 @@ public class Contractor_SubmitProgressReport extends HttpServlet {
                         //citizenDAO.uploadTestimonial(t); 
                         //pmcnddcphdllbfafphbegnnaifoklamj
                         
-                        Progress_Report progressreport = new Progress_Report(0, message, fileName, "chrome-extension://pmcnddcphdllbfafphbegnnaifoklamj/"+ projectName + " - Progress Reports", null, proj, c);
+                        Progress_Report progressreport = new Progress_Report(0, message, fileName, "chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/"+ projectName + " - Progress Reports", null, proj, c);
                         //Citizen_Report report = new Citizen_Report(0, message, "chrome-extension://pmcnddcphdllbfafphbegnnaifoklamj/"+ projectName + " - Progress Reports" ,null, user, proj);
                         
                         conDAO.uploadProgressReport(progressreport);

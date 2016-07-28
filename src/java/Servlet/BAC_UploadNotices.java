@@ -7,7 +7,9 @@ package Servlet;
 
 import DAO.BACDAO;
 import DAO.OCPDDAO;
+import DAO.ScheduleDAO;
 import Entity.Bid_Notices;
+import Entity.BiddingSchedule;
 import Entity.Contractor;
 import Entity.Contractor_Has_Project;
 import Entity.InvitationToBid;
@@ -161,8 +163,26 @@ public class BAC_UploadNotices extends HttpServlet {
                     }
                     //CHANGE
                     for (int x = 0; x < files.size(); x++) {
-                        Bid_Notices bidnotice = new Bid_Notices(0, files.get(x), null, project, contractor, "chrome-extension://nhcgkapmceenhknicldaiaplpkpmicmc/" + "Bids and Awards Department" + "/Bid Notices/" + title + "/" + contractorName, fileType.get(x));
+                        Bid_Notices bidnotice = new Bid_Notices(0, files.get(x), null, project, contractor, "chrome-extension://fpbodhcdafcmacmbcmgbdicnhmbmmgof/" + "Bids and Awards Department" + "/Bid Notices/" + title + "/" + contractorName, fileType.get(x));
                         bacdao.uploadBidNotices(bidnotice);
+                    }
+
+                    //Bidding schedule change everything to done
+                    ScheduleDAO sd = new ScheduleDAO();
+                    ArrayList<BiddingSchedule> bidlist = sd.getallSched(id); //Gets the arraylist of schedule
+                    for (BiddingSchedule bs : bidlist) {
+                        if (!bs.getStatus().equalsIgnoreCase("Done")) {
+                            
+                            if(bs.getEvent().equalsIgnoreCase("Issuance of Notice to Proceed")){
+                                sd.updateScheduleStatus(bs, "Done");
+                            }
+                            else if(bs.getEvent().equalsIgnoreCase("Awarding")){
+                                sd.updateScheduleStatus(bs, "Done");
+                            }else{
+                                sd.updateBiddingStatus(bs, "Done");
+                            }
+                            
+                        }
                     }
 
                 } catch (FileUploadException e) {

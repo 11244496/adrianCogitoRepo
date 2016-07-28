@@ -1,36 +1,38 @@
 <%-- 
-    Document   : Contractor_ViewProjectN
-    Created on : 03 27, 16, 8:16:14 PM
+    Document   : Citizen_Home
+    Created on : 02 4, 16, 9:19:29 AM
     Author     : RoAnn
 --%>
 
+<%@page import="Entity.Contractor_User"%>
+<%@page import="com.google.gson.Gson"%>
+<%@page import="Entity.Task"%>
 <%@page import="Entity.PWorks"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="Entity.Testimonial"%>
 <%@page import="Entity.Files"%>
 <%@page import="Entity.Schedule"%>
-<%@page import="Entity.Material"%>
 <%@page import="Entity.InvitationToBid"%>
-<%@page import="Entity.Contractor_User"%>
-<%@page import="Entity.Project"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="Entity.Project"%>
+<%@page import="Entity.Employee"%>
 <%@page import="Entity.Citizen"%>
-<%@page import="Entity.Contractor_Has_Project"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%Contractor_User c = (Contractor_User) session.getAttribute("user");%>
 <%
-
     ArrayList<InvitationToBid> invitation = (ArrayList<InvitationToBid>) request.getAttribute("invitation");
     Project p = (Project) request.getAttribute("project");
-
+    String projid = p.getId();
+    int conid = c.getContractor().getID();
 %>
-
 <%float cost = (Float) request.getAttribute("cost");%>
 <%ArrayList<PWorks> pworks = p.getpWorks();%>
-<%ArrayList<Schedule> schedule = p.getSchedule();%>
+<%ArrayList<Task> tasks = p.getTask();
+    String tasksJSON = new Gson().toJson(tasks);%>
 <%ArrayList<Files> files = p.getFiles();%>
 <%DecimalFormat df = new DecimalFormat("#,###.00");%>
 <%ArrayList<Files> pfiles = (ArrayList<Files>) request.getAttribute("pFiles");%>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -43,6 +45,17 @@
         <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         <link rel="stylesheet" type="text/css" href="assets/gritter/css/jquery.gritter.css" />
 
+        <script src='amcharts/amcharts.js'></script>
+        <script src='amcharts/serial.js'></script>
+        <script src='amcharts/themes/dark.js'></script>
+        <script src='amcharts/gantt.js'></script>
+
+        <link href = 'calendar/fullcalendar.css' rel='stylesheet'>
+        <link href = 'calendar/scheduler.css' rel='stylesheet'>
+        <script src ='calendar/moment.min.js'></script>
+        <script src ='calendar/jquery.min.js'></script>
+        <script src ='calendar/fullcalendar.js'></script>
+        <script src ='calendar/scheduler.js'></script>
     </head>
 
     <body>
@@ -241,7 +254,6 @@
                             </div>
 
                         </div>
-
                         <center>
                             <div>
                                 <br>    
@@ -254,6 +266,7 @@
                                 <button class="btn btn-default" type="button" onclick="history.go(-1)">Back</button>  
                             </div>
                         </center>
+
 
                     </div>
 
@@ -298,7 +311,7 @@
 
                                                     <div>
                                                         <p><span class="bold">Category </span>:</p>
-                                                        <p><%=p.getType()%>&nbsp;-&nbsp;<%=p.getCategory()%></p>
+                                                        <p><%=p.getCategory()%></p>
                                                     </div><br>
                                                     <div>
                                                         <p><span class="bold">Date Submitted</span> :</p>
@@ -311,10 +324,6 @@
                                                         <p>PHP <%=df.format(p.getBudget())%></p>
                                                     </div><br>
                                                     <%}%>
-                                                    <div>
-                                                        <p><span class="bold">Additional Files:</span> :</p>
-                                                        <p>FILE.doc</p>
-                                                    </div>
 
                                                     <br>  
 
@@ -350,7 +359,7 @@
                             </section>
                             <div class="row">
 
-                                <!------------------------------------------------------MATERIALS------------------------------------------>
+                                <!------------------------------------------------------PROGRAM OF WORKS------------------------------------------>
 
                                 <section class="panel">
 
@@ -418,6 +427,42 @@
                                 </section>                                                 
                             </div>
 
+                            <div class="row">
+
+                                <!------------------------------------------------------GANTT CHART------------------------------------------>
+
+                                <section class="panel">
+
+                                    <div class="col-lg-12">
+                                        <div class="bio-graph-heading project-heading">
+                                            <strong>Project Task</strong>
+                                        </div>
+
+                                        <section class="panel">
+                                            <div class="panel-body">
+                                                <div id="chartdiv" style="width: 100%; height: 400px;"></div>
+                                            </div>
+
+                                            <div id="submitEntryEdit">
+
+                                            </div>
+
+                                        </section>
+                                    </div>
+                                </section>                                                 
+                            </div>              
+                            <!------------------------------------------------------Calendar SCHEDULE------------------------------------------>
+
+                            <section class="panel">
+                                <div class="bio-graph-heading project-heading">
+                                    <strong>Schedule</strong>
+                                </div>
+                                <div class="panel-body bio-graph-info">
+                                    <div id='calendar' style="height: 100%; width: 100%"></div>
+                                </div>
+                                <br>
+                            </section>
+
                             <!-------------------------------------------------MAIN TESTIMONIAL UPLOADS------------------------------------------>
                             <section class="panel">
                                 <div class="bio-graph-heading project-heading">
@@ -463,52 +508,6 @@
                                 </div>
                             </section>                        
 
-                            <!---------------------------------------------------REFERENCED TESTIMONIAL UPLOADS------------------------------------------>
-                            <section class="panel">
-                                <div class="bio-graph-heading project-heading">
-                                    <strong>Project Referenced Testimonial Files</strong>
-                                </div>
-                                <div class="panel-body bio-graph-info" style="height: 250px;">
-                                    <div class="DocumentList2">
-                                        <div class="row2">
-                                            <%String url2 = null;%>
-                                            <%for (Testimonial testi : p.getReferredTestimonials()) {
-                                                    for (Files f : testi.getFiles()) {
-                                                        url2 = testi.getFolderName() + "/" + testi.getTitle() + "/" + f.getFileName();
-                                                        if (f.getType().equalsIgnoreCase("image")) {%>
-
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="<%=url2%>" style="width:100%; height:100%">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
-
-                                            <%} else if (f.getType().equalsIgnoreCase("video")) {%>
-
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
-                                                    <source src="<%=url2%>" type="video/mp4">
-                                                </video>
-                                                <br/>
-                                                <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getTestimonial(<%=f.getId()%>)">View Details</button>                                        
-                                            </div>
-
-                                            <%} else if (f.getType().equalsIgnoreCase("document")) {%>
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
-
-                                            <%}
-
-                                                    }
-                                                }%>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-
                             <!------------------------------------------------------GS UPLOADS------------------------------------------>
                             <section class="panel">
                                 <div class="bio-graph-heading project-heading">
@@ -552,10 +551,22 @@
                                             %>
                                         </div>
                                     </div>
-                                </div>      
+                                </div>
+
+                                <form action="Contractor_UploadDocPage" class="form-horizontal tasi-form" method="POST">  
+                                    <input type="hidden" name="projectID" value="<%=p.getId()%>">
+
+
+                                    <hr>
+                                    <br>   
+                                </form>         
                             </section>
+
+
                         </div>
+
                     </div>
+
                     <!-- page end-->
                 </section>
             </section>
@@ -584,6 +595,33 @@
                 </div>
             </div>
 
+            <form action="Contractor_UploadBiddingProposal" method="POST" enctype="multipart/form-data">
+                <div class="modal fade top-modal-without-space" id="bidProp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content-wrap">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h4 class="modal-title">Upload Bidding Proposal</h4>
+                                </div>
+                                <div class="modal-body">
+
+                                    <center>
+                                        <input type="hidden" name="projectId" value="<%=p.getId()%>" >
+                                        <input type="hidden" name="projectName" value="<%=p.getName()%>"> 
+                                        <input name="Documents" type="file" class="default">
+                                    </center>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <input class="btn btn-success" type="submit">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
             <div id="projectFiles" class="modal fade " data-keyboard="false" data-backdrop="static">
                 <div class="modal-dialog">
 
@@ -601,35 +639,11 @@
                     </div>
                 </div>
             </div>
+
+
+
         </section>
-
-        <form action="Contractor_UploadBiddingProposal" method="POST" enctype="multipart/form-data">
-            <div class="modal fade top-modal-without-space" id="bidProp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content-wrap">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                <h4 class="modal-title">Upload Bidding Proposal</h4>
-                            </div>
-                            <div class="modal-body">
-
-                                <center>
-                                    <input type="hidden" name="projectId" value="<%=p.getId()%>" >
-                                    <input type="hidden" name="projectName" value="<%=p.getName()%>"> 
-                                    <input name="Documents" type="file" class="default">
-                                </center>
-
-                            </div>
-                            <div class="modal-footer">
-                                <input class="btn btn-success" type="submit">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-
+        <!--main content end-->
 
         <!--footer start-->
         <footer class="site-footer">
@@ -640,70 +654,130 @@
                 </a>
             </div>
         </footer>
-
-        <script src="js/jquery.js"></script>
+        <!--<script src="js/jquery.js"></script>-->
         <script>
-                                                    function getTestimonial(id) {
-                                                        $.ajax({
-                                                            type: 'POST',
-                                                            url: 'AJAX_BAC_gettestimonial',
-                                                            dataType: 'json',
-                                                            data: {testId: id}, cache: false,
-                                                            success: function (f) {
-                                                                $('#fDisplay').empty();
-                                                                var url = f.testimonial.folderName + "/" + f.testimonial.title + "/" + f.fileName;
-                                                                if (f.type === "Video") {
-                                                                    $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
+            var proj = "<%=projid%>";
+            var cont = "<%=conid%>";
 
-                                                                }
-                                                                else if (f.type === "Image") {
-                                                                    $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#fDisplay");
+            $(document).ready(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX_Contractor_CheckPage',
+                    dataType: 'json',
+                    cache: false,
+                    data: {contprojID: cont, projID: proj},
+                    success: function (text) {
 
-                                                                }
+                        if (text === "Y") {
 
-                                                                else if (f.type === "Document") {
-                                                                    $("#docH").remove();
-                                                                    $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#abcd");
-                                                                }
-                                                                $('#testTitle').text("Title: " + f.testimonial.title);
-                                                                $('#testDate').text("Date Uploaded: " + f.testimonial.dateUploaded);
-                                                                $('#testLoc').text("Location Details: " + f.testimonial.location + " + " + f.testimonial.locationdetails);
-                                                                $('#testDesc').text("Description: " + f.testimonial.message);
-                                                                $('#testModal').modal();
-                                                            }
-                                                        });
-                                                    }
+                            document.getElementById("respondToInvite").disabled = true;
+
+                        }
+                        else {
+                            document.getElementById("respondToInvite").disabled = false;
+
+                        }
 
 
-                                                    function getProjectFiles(id) {
-                                                        $.ajax({
-                                                            type: 'POST',
-                                                            url: 'AJAX_BAC_getProjectFiles',
-                                                            dataType: 'json',
-                                                            data: {testId: id}, cache: false,
-                                                            success: function (f) {
-                                                                $('#pfDisplay').empty();
-                                                                var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
-                                                                if (f.type === "Video") {
-                                                                    $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
-
-                                                                }
-                                                                else if (f.type === "Image") {
-                                                                    $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#pfDisplay");
-
-                                                                }
-
-                                                                else if (f.type === "Document") {
-                                                                    $("#docH").remove();
-                                                                    $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#pfDisplay");
-                                                                }
-                                                                $('#projectFiles').modal();
-                                                            }
-                                                        });
-                                                    }
-
+                    }
+                });
+            });
         </script>
 
+        <script>
+            function checkPage(cont, proj) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX_Contractor_CheckPage',
+                    dataType: 'json',
+                    cache: false,
+                    data: {contprojID: cont, projID: proj},
+                    success: function (text) {
+                        console.log(text);
+
+                        if (text === "Y") {
+
+                            document.getElementById("respondToInvite").disabled = true;
+
+                        }
+                        else {
+                            document.getElementById("respondToInvite").disabled = false;
+
+                        }
+
+
+                    }
+                });
+
+            }
+            ;
+
+
+
+        </script>
+        <script>
+            function getTestimonial(id) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX_BAC_gettestimonial',
+                    dataType: 'json',
+                    data: {testId: id}, cache: false,
+                    success: function (f) {
+                        $('#fDisplay').empty();
+                        var url = f.testimonial.folderName + "/" + f.testimonial.title + "/" + f.fileName;
+                        if (f.type === "Video") {
+                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
+
+                        }
+                        else if (f.type === "Image") {
+                            $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#fDisplay");
+
+                        }
+
+                        else if (f.type === "Document") {
+                            $("#docH").remove();
+                            $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#abcd");
+                        }
+                        $('#testTitle').text("Title: " + f.testimonial.title);
+                        $('#testDate').text("Date Uploaded: " + f.testimonial.dateUploaded);
+                        $('#testLoc').text("Location Details: " + f.testimonial.location + " + " + f.testimonial.locationdetails);
+                        $('#testDesc').text("Description: " + f.testimonial.message);
+                        $('#testModal').modal();
+                    }
+                });
+            }
+            ;
+
+
+            function getProjectFiles(id) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX_BAC_getProjectFiles',
+                    dataType: 'json',
+                    data: {testId: id}, cache: false,
+                    success: function (f) {
+                        $('#pfDisplay').empty();
+                        var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
+                        if (f.type === "Video") {
+                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
+
+                        }
+                        else if (f.type === "Image") {
+                            $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#pfDisplay");
+
+                        }
+
+                        else if (f.type === "Document") {
+                            $("#docH").remove();
+                            $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#pfDisplay");
+                        }
+                        $('#projectFiles').modal();
+                    }
+                });
+            }
+            ;
+        </script>
         <script>
 
 
@@ -753,11 +827,227 @@
             }
 
         </script>
+        <script>
+            //These are the properties of the chart, you set what it  will look like here
+            var chartD;
+            var chartVal = Object.create(null);
+            var chart = AmCharts.makeChart("chartdiv", {
+                "type": "gantt",
+                "period": "DD",
+                "theme": "dark",
+                "valueAxis": {
+                    "type": "date"
+                },
+                "brightnessStep": 10,
+                "graph": {
+                    "fillAlphas": 1,
+                    "balloonText": "[[open]] - [[value]]"
+                },
+                "rotate": true,
+                "categoryField": "name",
+                "segmentsField": "schedules",
+                "dataDateFormat": "YYYY-MM-DD",
+                "startDateField": "startdate",
+                "endDateField": "enddate",
+                "dataProvider": <%=tasksJSON%>,
+                "chartCursor": {
+                    "valueBalloonsEnabled": false,
+                    "cursorAlpha": 0,
+                    "valueLineBalloonEnabled": true,
+                    "valueLineEnabled": true,
+                    "valueZoomable": true,
+                    "zoomable": false
+                },
+                "valueScrollbar": {
+                    "position": "top",
+                    "autoGridCount": true,
+                    "color": "#000000"
+                },
+            });
+
+
+            //Event method: click item
+            //Once you click one of the bars in the gantt chart, this method will execute
+            var index = 0;
+            var clickItemEvent = function (event) {
+                index = 0;
+
+                $.map(event.item.dataContext, function (val, i) {
+                    //When the index is referring to the category of the selected value
+                    if (i == "name") {
+
+                        //Place the name of the selected value on the textfield 
+                        $("#category").val(event.item.dataContext.name);
+
+
+                    }
+                    //Else, if the index is referring to the segments of that particular value selected
+                    else {
+
+
+                        var name = i.indexOf("start") != -1 ? "startdate" : "enddate";
+                        var labelName = i.indexOf("start") != -1 ? "Start date: " : "End date: ";
+
+
+
+                        var divInd = "#" + "div-" + index;
+
+
+                        //Creates a div that will store the start date and end date for a particular Task   
+                        if (i.indexOf("start") != -1) {
+
+
+                            //Creates a label and then pushes it  to the div
+                            var div = $("<div></div>");
+                            div.prop("id", "div-" + index);
+                            div.prop("class", "divinput");
+                            div.appendTo("#submitEntryEdit");
+
+                        }
+                        //Creates a label and then pushes it  to the div
+                        var label = $("<label/>");
+                        label.html(labelName);
+                        label.prop("id", name + index);
+                        label.appendTo("#" + "div-" + index);
+
+                        //Creates a textfield then puts it to the div
+                        var newStart = $("<label/>");
+                        newStart.prop("id", name + '-' + index);
+                        newStart.appendTo("#" + "div-" + index);
+                        newStart.val(formatDate(new Date(val)));
+
+                        $("<br>").appendTo("#" + "div-" + index);
+
+
+                        if (i.indexOf("end") != -1) {
+                            index++;
+                        }
+                    }
+                });
+            };
+            //var index = 0;
+            var addSegment = function (event) {
+                $.map(event.item.dataContext, function (val, i) {
+
+                    //When the index is referring to the category of the selected value
+                    if (i == "name") {
+
+                        //Place the name of the selected value on the textfield 
+                        $("#category").val(event.item.dataContext.category);
+
+
+                    }
+                    //Else, if the index is referring to the segments of that particular value selected
+                    else {
+
+
+                        var name = i.indexOf("start") != -1 ? "startdate" : "enddate";
+                        var labelName = i.indexOf("start") != -1 ? "Start date: " : "End date: ";
+                        var divInd = "#" + "div-" + index;
+
+                        //Creates a div that will store the start date and end date for a particular Task   
+                        if (i.indexOf("start") != -1) {
+                            //Creates a div and then pushes it  to the div
+                            var div = $("<div></div>");
+                            div.prop("id", "div-" + index);
+                            div.prop("class", "divinput");
+                            div.appendTo("#submitEntryEdit");
+                        }
+
+                        //Creates a label and then pushes it  to the div
+                        var label = $("<label/>");
+                        label.html(labelName);
+                        label.prop("id", name + index);
+                        label.appendTo("#" + "div-" + index);
+                        //Creates a label then puts it to the div
+                        var newStart = $("<input type='text'/>");
+                        newStart.prop("id", name + index);
+                        newStart.appendTo("#" + "div-" + index);
+                        newStart.val(new Date(val));
+                        $("<br>").appendTo("#" + "div-" + index);
+
+
+                        if (i.indexOf("end") != -1) {
+                            index++;
+
+                        }
+                    }
+                });
+
+            };
+
+            function formatDate(date) {
+                var d = new Date(date),
+                        month = '' + (d.getMonth() + 1),
+                        day = '' + d.getDate(),
+                        year = d.getFullYear();
+
+                if (month.length < 2)
+                    month = '0' + month;
+                if (day.length < 2)
+                    day = '0' + day;
+
+                return [year, month, day].join('-');
+            }
+
+            function getId(str) {
+                var spl = str.split("-");
+                return spl[1];
+            }
+            ;
+
+            function getUpdatedChartVal() {
+                return chartVal;
+            }
+            ;
+
+        </script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"async defer></script>
         <script src="js/bootstrap.min.js"></script>
         <script class="include" type="text/javascript" src="js/jquery.dcjqaccordion.2.7.js"></script>
-        <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
-        <script type="text/javascript" src="js/jquery.pulsate.min.js"></script>
+        <script src="js/jquery.scrollTo.min.js"></script>
         <script src="js/slidebars.min.js"></script>
+        <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+        <script src="js/respond.min.js" ></script>
+
+        <!--common script for all pages-->
+        <script src="js/common-scripts.js"></script>
+
+        <script>
+            var cal = <%=session.getAttribute("calendar")%>;
+            $('document').ready(function () {
+
+                $('#calendar').fullCalendar({
+                    defaultView: 'month',
+                    schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+                    header: {
+                        left: '',
+                        center: 'title',
+                        right: 'today prev,next'
+                    }
+                });
+                inputActivities(cal);
+
+            });
+
+            function inputActivities(sched) {
+                $('#calendar').fullCalendar('removeEvents');
+                $.each(sched, function (i) {
+                    var my_events = {
+                        events: [
+                            {
+                                title: sched[i].event,
+                                start: sched[i].startdate,
+                                end: sched[i].enddate,
+                                status: sched[i].status,
+                            }
+                        ]
+                    };
+
+                    $('#calendar').fullCalendar('addEventSource', my_events);
+                });
+            }
+
+        </script>
     </body>
 </html>

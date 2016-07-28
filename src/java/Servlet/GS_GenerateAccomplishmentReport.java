@@ -7,8 +7,12 @@ package Servlet;
 
 import DAO.GSDAO;
 import DAO.OCPDDAO;
+import Entity.Files;
+import Entity.Location;
 import Entity.Project;
 import Entity.Schedule;
+import Entity.Testimonial;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.System.out;
@@ -49,8 +53,27 @@ public class GS_GenerateAccomplishmentReport extends HttpServlet {
             Project project = ocpd.getAllProjectDetails(id);
             
             GSDAO gsDAO = new GSDAO();
+            
+            ArrayList<Location> projectLocation = project.getLocation();
+            String location = new Gson().toJson(projectLocation);
+            session.setAttribute("location", location);
+            session.setAttribute("cost", ocpd.getCost(project));
+
+            Testimonial mainTesti = gsDAO.getTestimonial(project.getMainTestimonial().getId());
+            project.setMainTestimonial(mainTesti);
+            
+            //References
+            ArrayList<Project> referencedPList = new ArrayList<Project>();
+            for(int x = 0; x < project.getReferredProjects().size();x++){
+                Project p = ocpd.getAllProjectDetails(project.getReferredProjects().get(x).getId());
+                referencedPList.add(p);
+            }
+            project.setReferredProjects(referencedPList);
             ArrayList<Schedule> completedDatesReport = gsDAO.getCompletedTaskReport(id);
             
+            //Set new arraylist of proposal files
+            ArrayList<Files> projectFiles = project.getFiles();
+            session.setAttribute("pFiles", projectFiles);
             session.setAttribute("project", project);
             session.setAttribute("completedDatesReport", completedDatesReport);
             ServletContext context = getServletContext();

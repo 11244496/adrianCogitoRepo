@@ -140,8 +140,8 @@ $(document).on('click', '.selectprojectbtn', function () {
     $("#selectedprojectlistTable").append(Rt);
     $(this).removeClass('btn btn-success btn-sm selectprojectbtn').addClass('btn btn-danger btn-sm unselectprojectbtn');
     $(this).text("Remove");
-    
-    
+
+
 });
 //Transfer from Referenced Table back to Testi list
 $(document).on('click', '.unselectprojectbtn', function () {
@@ -159,7 +159,7 @@ $(document).on('click', '.unselectprojectbtn', function () {
     $("#projectlistTable").append(detached);
     $(this).removeClass('btn btn-danger btn-sm unselectprojectbtn').addClass('btn btn-success btn-sm selectprojectbtn');
     $(this).text("Select Project");
-    
+
 });
 $.fn.searchableTable = function () {
     return this.each(function () {
@@ -543,9 +543,8 @@ function addScheduleToArray() {
 
     $('#startDate').val("");
     $('#endDate').val("");
-    
+
     renderChart(JSON.stringify(finalTasks));
-    
 }
 
 function finalizeTasks() {
@@ -689,7 +688,7 @@ var renderChart = function (data) {
     chart.validateData();
 
     //Adds event listener to the object.
-    chart.addListener("clickGraphItem", clickItemEvent);
+    //chart.addListener("clickGraphItem", clickItemEvent);
 
 
 }

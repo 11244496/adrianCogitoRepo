@@ -48,15 +48,15 @@ public class BAC_ViewContractorProfile extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("contractorID"));
 
             Contractor contractorProfile = bacdao.getContractorInfo(id);
-            ArrayList<Project> projectsImpl = bacdao.getAllProjects("Implementation", contractorProfile);
-            ArrayList<Project> projectsDone = bacdao.getAllProjects("Finished", contractorProfile);
+            //ArrayList<Project> projectsImpl = bacdao.getAllProjects("Implementation", contractorProfile);
+            //ArrayList<Project> projectsDone = bacdao.getAllProjects("Finished", contractorProfile);
             ArrayList<Project> allProjects = bacdao.getAllProjectsPerContractor(contractorProfile);
             
             ArrayList<Contractor_User> officers = bacdao.getContractorUsers(contractorProfile);
 
             request.setAttribute("contractorProfile", contractorProfile);
-            request.setAttribute("projectsImpl", projectsImpl);
-            request.setAttribute("projectsDone", projectsDone);
+            //request.setAttribute("projectsImpl", projectsImpl);
+            //request.setAttribute("projectsDone", projectsDone);
             request.setAttribute("allProjects", allProjects);
             request.setAttribute("contractorOfficers", officers);
 

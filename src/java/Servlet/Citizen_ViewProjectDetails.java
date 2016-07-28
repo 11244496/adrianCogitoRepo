@@ -16,6 +16,7 @@ import Entity.Testimonial;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import static java.lang.System.out;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -58,48 +59,58 @@ public class Citizen_ViewProjectDetails extends HttpServlet {
             String location = new Gson().toJson(projectLocation);
             session.setAttribute("location", location);
 
-//            ArrayList<Testimonial> tList = new ArrayList<>();
-//            ArrayList<Files> fList;
-//            ArrayList<Integer> idList = new ArrayList<>();
-//            Testimonial t;
-//
-//            for (Files f : p.getFiles()) {
-//                if (f.getTestimonial().getId() != 0) {
-//                    if (!idList.contains(f.getTestimonial().getId())) {
-//                        idList.add(f.getTestimonial().getId());
-//                    }
-//                }
-//            }
-//            for (int x : idList) {
-//                t = dao.getTestimonial(x);
-//                tList.add(t);
-//            }
-//            for (Testimonial tm : tList) {
-//                fList = new ArrayList<>();
-//                for (Files f : p.getFiles()) {
-//                    if (tm.getId() == f.getTestimonial().getId()) {
-//                        fList.add(f);
-//                    }
-//                }
-//                tm.setFiles(fList);
-//            }
+            ArrayList<Testimonial> tList = new ArrayList<>();
+            ArrayList<Files> fList;
+            ArrayList<Integer> idList = new ArrayList<>();
+            Testimonial t;
+
+            for (Files f : p.getFiles()) {
+                if (f.getTestimonial().getId() != 0) {
+                    if (!idList.contains(f.getTestimonial().getId())) {
+                        idList.add(f.getTestimonial().getId());
+                    }
+                }
+            }
+            for (int x : idList) {
+                t = dao.getTestimonial(x);
+                tList.add(t);
+            }
+            for (Testimonial tm : tList) {
+                fList = new ArrayList<>();
+                for (Files f : p.getFiles()) {
+                    if (tm.getId() == f.getTestimonial().getId()) {
+                        fList.add(f);
+                    }
+                }
+                tm.setFiles(fList);
+            }
 
             Citizen c = (Citizen) session.getAttribute("user");
             session.setAttribute("project", p);
             double percent = dao.getPercentage(p);
-
-            //Set new arraylist of proposal files
-//            ArrayList<Files> projectFiles = gsdao.getprojectfiles(p);
-//            session.setAttribute("pFiles", projectFiles);
-//            session.setAttribute("feedback", ct.getAverage(p));
             
+            //Set new arraylist of proposal files
+            //ArrayList<Files> projectFiles = gsdao.getprojectfiles(p);
+            //session.setAttribute("pFiles", projectFiles);
+            session.setAttribute("feedback", ct.getAverage(p));
+           
             session.setAttribute("percentage", percent);
-//            session.setAttribute("testimonials", tList);
-//            session.setAttribute("isFollowing", ct.isFollowing(p, c));
+            session.setAttribute("testimonials", tList);
+            //session.setAttribute("isFollowing", ct.isFollowing(p, c));
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch = context.getRequestDispatcher("/Citizen_ViewProjectDetails.jsp");
+            RequestDispatcher dispatch = null;
+            if (p.getStatus().equalsIgnoreCase("Finished")) {
+                dispatch = context.getRequestDispatcher("/Citizen_ViewProjectDetails.jsp");
+            } else {
+               dispatch = context.getRequestDispatcher("/Citizen_ViewProjectDetailsN.jsp");
+            }
+            
             dispatch.forward(request, response);
 
+        }finally{
+        
+            out.close();
+        
         }
     }
 

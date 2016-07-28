@@ -1,3 +1,5 @@
+<%@page import="Entity.PWorks"%>
+<%@page import="com.google.gson.Gson"%>
 <%@page import="java.util.Locale"%>
 <%@page import="Entity.Project_Inspection"%>
 <%@page import="Entity.Project_Progress"%>
@@ -19,10 +21,17 @@
 <!DOCTYPE html>
 <%Project p = (Project) session.getAttribute("project");%>
 
-<%//Employee e = (Employee) session.getAttribute("user");%>
+<!DOCTYPE html>
+<%Employee e = (Employee) session.getAttribute("user");%>
 
-
+<%float cost = (Float) session.getAttribute("cost");%>
+<%ArrayList<PWorks> pworks = p.getpWorks();%>
+<%ArrayList<Task> tasks = p.getTask();
+    String tasksJSON = new Gson().toJson(tasks);%>
+<%ArrayList<Files> files = p.getFiles();%>
+<%DecimalFormat df = new DecimalFormat("#,###.00");%>
 <%ArrayList<Files> pfiles = (ArrayList<Files>) session.getAttribute("pFiles");%>
+
 <!DOCTYPE html>
 
 <html>
@@ -211,7 +220,7 @@
                         <div class="col-md-12">
                             <section class="panel">
                                 <div class="bio-graph-heading project-heading">
-                                    <strong>Project Name </strong>
+                                    <strong><%=p.getName()%> </strong>
                                 </div><p>
                                 <div class="panel-body bio-graph-info">
                                     <!--<h1>New Dashboard BS3 </h1>-->
@@ -240,8 +249,6 @@
                                                         <p><span class="bold">Date Submitted</span> :</p>
                                                         <p><%=p.getDatesubmitted()%></p>
                                                     </div><br>
-                                                    
-                                                    <%--
                                                     <%if (p.getBudget() != 0) {%>
 
                                                     <div>
@@ -249,24 +256,14 @@
                                                         <p>PHP <%=df.format(p.getBudget())%></p>
                                                     </div><br>
                                                     <%}%>
-                                                    
-                                                    --%>
-                                                    
-                                                    <div>
-                                                        <p><span class="bold">Additional Files:</span> :</p>
-                                                        <p>FILE.doc</p>
-                                                    </div>
 
                                                     <br>  
 
                                                     <p><span class="bold">Project Progress:</span> :</p>
-
-                                                    
-
                                                     <div class="progress progress-striped active ">
-                                                        <div style="" class="progress-bar progress-bar-success"></div>
+                                                        <div style="width: 10;" class="progress-bar progress-bar-success"></div>
                                                     </div>
-                                                    <small>Current Status: <%=p.getStatus()%></small>
+                                                    <small>Current Status: <%out.print(p.getStatus());%></small>
 
 
 
@@ -279,7 +276,7 @@
                                         <div class="col-lg-6">
                                             <section class="panel">
                                                 <div class="panel-body">                            
-                                                    <div><p><span class="bold">Location: (Insert map here)</span> :</p></div>
+                                                    <div><p><span class="bold">Location: </span> :</p></div>
                                                     <div class="panel-body bio-graph-info">
                                                         <center>
                                                             <div id="map" style="height: 500px; width: 575px; margin: 0; padding: 0;"></div>
@@ -290,12 +287,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-                               
-                            </section>
-                            <div class="row">
 
-                                <!------------------------------------------------------MATERIALS------------------------------------------>
+                            </section>
+                             <div class="row">
+
+                                <!------------------------------------------------------PROGRAM OF WORKS------------------------------------------>
 
                                 <section class="panel">
 
@@ -307,47 +303,55 @@
                                         <section class="panel">
                                             <div class="panel-body">
                                                 <table class="table" style="width:100%; text-align: center">
+                                                    <%for (int x = 0; x < pworks.size(); x++) {%>
+
                                                     <tr>
-                                                        <th><center>Item Description</center></th>
-                                                    <th><center>% of Total</center></th>
+                                                        <th colspan="6"><%=pworks.get(x).getName()%></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th><center>Name</center></th>
                                                     <th><center>Quantity</center></th>
                                                     <th><center>Unit</center></th>
                                                     <th><center>Unit Price</center></th>
                                                     <th><center>Total</center></th>
                                                     </tr>
-                                                    
+                                                    <%for (int y = 0; y < pworks.get(x).getComponents().size(); y++) {%>
                                                     <tr>
-                                                        <td>Name</td>
-                                                        <td>Percentage</td>
-                                                        <td>Quantity</td>
-                                                        <td>Unit</td>
-                                                        <td>Unit price</td>
-                                                        <td>Total</td>
+                                                        <td><%=pworks.get(x).getComponents().get(y).getName()%></td>
+                                                        <td><%=pworks.get(x).getComponents().get(y).getQuantity()%></td>
+                                                        <td><%=pworks.get(x).getComponents().get(y).getUnit().getUnit()%></td>
+                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice()%></td>
+                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice() * pworks.get(x).getComponents().get(y).getQuantity()%></td>
                                                     </tr>
-                                                    
+
+
+                                                    <%}%>
+
+                                                    <%}%>
+
+                                                </table>
+                                                <br> 
+                                                <table class="table" style="width:100%; text-align: center">    
                                                     <tr>
-                                                        <td>Total cost: </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>PHP cost</td>
+                                                        <td colspan="4">Total cost: </td>
+                                                        <td>PHP <%=df.format(cost)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="5">Indirect Cost 17% of Total Cost: </td>
-                                                        <td>PHP cost</td>
+                                                        <td colspan="4">Indirect Cost 17% of Total Cost: </td>
+                                                        <td>PHP <%=df.format(cost * 0.17)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="5">Tax 5% of Total Cost + Indirect Cost: </td>
-                                                        <td>PHP cost</td>
+                                                        <td colspan="4">Tax 5% of Total Cost + Indirect Cost: </td>
+                                                        <td>PHP <%=df.format((cost * 0.17) * .05)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="5">Estimated cost: </td>
-                                                        <td>PHP cost</td>
+                                                        <td colspan="4">Estimated cost: </td>
+                                                        <td>PHP <%=df.format(cost + (cost * 0.17) + ((cost * 0.17) * .05))%></td>
                                                     </tr>
+
                                                 </table>
                                             </div>
                                         </section>
@@ -358,52 +362,30 @@
                             <!------------------------------------------------------SCHEDULE------------------------------------------>
 
 
-                            <section class="panel">
-                                <div class="bio-graph-heading project-heading">
-                                    <strong>Timeline</strong>
-                                </div>
-                                <div class="panel-body bio-graph-info">
-                                    <div id='calendar' style="height: 100%; width: 100%"></div>
-                                    <br>
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    
+                            <div class="row">
 
-                                </div>
+                                <!------------------------------------------------------GANTT CHART------------------------------------------>
 
-                                
-                                <br>             
+                                <section class="panel">
 
-
-
-                                <div class="modal fade" id="AddRemarks" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-                                                <h4 class="modal-title">Add Remarks</h4>
-                                            </div>
-                                            <div class="modal-body">
-
-
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-                                            </div>
+                                    <div class="col-lg-12">
+                                        <div class="bio-graph-heading project-heading">
+                                            <strong>Project Task</strong>
                                         </div>
-                                    </div>
-                                </div>
 
-                            </section>
+                                        <section class="panel">
+                                            <div class="panel-body">
+                                                <div id="chartdiv" style="width: 100%; height: 400px;"></div>
+                                            </div>
+
+                                            <div id="submitEntryEdit">
+
+                                            </div>
+
+                                        </section>
+                                    </div>
+                                </section>                                                 
+                            </div>
                             <input type="hidden" id="projId" value="" name="projId">
                             
                             
@@ -538,26 +520,92 @@
                             
                             
                             
-                            <!------------------------------------------------------UPLOADS------------------------------------------>
-                            <section class="panel">
+<section class="panel">
                                 <div class="bio-graph-heading project-heading">
-                                    <strong>Citizen Testimonials</strong>
+                                    <strong>Project Main Testimonial</strong>
                                 </div>
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
                                     <div class="DocumentList2">
-                                        
+                                        <div class="row2">
+                                            <%String url = null;%>
+                                            <%Testimonial t = p.getMainTestimonial();
+                                                for (Files f : t.getFiles()) {
+                                                    url = t.getFolderName() + "/" + t.getTitle() + "/" + f.getFileName();
+                                                    if (f.getType().equalsIgnoreCase("image")) {%>
+
+                                            <div class="col-lg-3 DocumentItem2">
+                                                <img src="<%=url%>" style="width:100%; height:100%">
+                                                <br/>
+                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                            </div>
+
+                                            <%} else if (f.getType().equalsIgnoreCase("video")) {%>
+
+                                            <div class="col-lg-3 DocumentItem2">
+                                                <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
+                                                    <source src="<%=url%>" type="video/mp4">
+                                                </video>
+                                                <br/>
+                                                <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getTestimonial(<%=f.getId()%>)">View Details</button>                                        
+                                            </div>
+
+                                            <%} else if (f.getType().equalsIgnoreCase("document")) {%>
+                                            <div class="col-lg-3 DocumentItem2">
+                                                <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
+                                                <br/>
+                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                            </div>
+
+                                            <%}
+                                                }
+                                            %>
+                                        </div>
                                     </div>
                                 </div>
-                            </section>
+                            </section>      
 
                             <!------------------------------------------------------GS UPLOADS------------------------------------------>
                             <section class="panel">
                                 <div class="bio-graph-heading project-heading">
-                                    <strong>Project Proposals</strong>
+                                    <strong>Project Files</strong>
                                 </div>
                                 <div class="panel-body bio-graph-info" style="height: 250px;">
                                     <div class="DocumentList2">
-                                        
+                                        <div class="row2">
+                                            <%
+                                                for (Files f : pfiles) {
+
+                                                    url = p.getFoldername() + "/" + p.getId() + "/" + f.getFileName();
+                                                    if (f.getType().equalsIgnoreCase("image")) {%>
+
+                                            <div class="col-lg-3 DocumentItem2">
+                                                <img src="<%=url%>" style="width:100%; height:100%">
+                                                <br/>
+                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getProjectFiles(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                            </div>
+
+                                            <%} else if (f.getType().equalsIgnoreCase("video")) {%>
+
+                                            <div class="col-lg-3 DocumentItem2">
+                                                <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
+                                                    <source src="<%=url%>" type="video/mp4">
+                                                </video>
+                                                <br/>
+                                                <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getProjectFiles(<%=f.getId()%>)">View Details</button>                                        
+                                            </div>
+
+                                            <%} else if (f.getType().equalsIgnoreCase("document")) {%>
+                                            <div class="col-lg-3 DocumentItem2">
+                                                <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
+                                                <br/>
+                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getProjectFiles(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                            </div>
+
+                                            <%}
+
+                                                }
+                                            %>
+                                        </div>
                                     </div>
                                 </div>
                             </section>
@@ -579,12 +627,7 @@
                                 <!-- page end-->
                             </section>             
 
-                            
-                            
-                            
-                            
-
-                            <section class="panel">				
+                        <section class="panel">				
                                 <div class="panel-body">
 
                                     <label>Progress Report</label>      
@@ -674,10 +717,67 @@
             </div>
 
         </section>
+        <script>
+            function getTestimonial(id) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX_BAC_gettestimonial',
+                    dataType: 'json',
+                    data: {testId: id}, cache: false,
+                    success: function (f) {
+                        $('#fDisplay').empty();
+                        var url = f.testimonial.folderName + "/" + f.testimonial.title + "/" + f.fileName;
+                        if (f.type === "Video") {
+                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
+
+                        }
+                        else if (f.type === "Image") {
+                            $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#fDisplay");
+
+                        }
+
+                        else if (f.type === "Document") {
+                            $("#docH").remove();
+                            $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#abcd");
+                        }
+                        $('#testTitle').text("Title: " + f.testimonial.title);
+                        $('#testDate').text("Date Uploaded: " + f.testimonial.dateUploaded);
+                        $('#testLoc').text("Location Details: " + f.testimonial.location + " + " + f.testimonial.locationdetails);
+                        $('#testDesc').text("Description: " + f.testimonial.message);
+                        $('#testModal').modal();
+                    }
+                });
+            }
 
 
+            function getProjectFiles(id) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX_BAC_getProjectFiles',
+                    dataType: 'json',
+                    data: {testId: id}, cache: false,
+                    success: function (f) {
+                        $('#pfDisplay').empty();
+                        var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
+                        if (f.type === "Video") {
+                            $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
 
-        
+                        }
+                        else if (f.type === "Image") {
+                            $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#pfDisplay");
+
+                        }
+
+                        else if (f.type === "Document") {
+                            $("#docH").remove();
+                            $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#pfDisplay");
+                        }
+                        $('#projectFiles').modal();
+                    }
+                });
+            }
+
+        </script>
 
         <!-- js placed at the end of the document so the pages load faster -->
         <!--<script src="js/jquery.js"></script>-->
@@ -690,7 +790,229 @@
         <script src="js/bootstrap.js"></script>
         <!--common script for all pages-->
         <script src="js/common-scripts.js"></script>
+        <script src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"async defer ></script>
+        <script>
+            var map;
+            var markers = <%=session.getAttribute("location")%>;
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: 14.45, lng: 120.98},
+                    zoom: 14
+                });
 
+                markers.forEach(function (coor) {
+                    var geocoder = new google.maps.Geocoder;
+                    var latLng = new google.maps.LatLng(coor.lats, coor.longs);
+                    var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map
+                    });
+
+                    var infowindow = new google.maps.InfoWindow;
+
+                    marker.addListener('click', function () {
+                        geocodeLatLng(geocoder, map, infowindow, latLng);
+                    });
+                });
+
+            }
+
+            function geocodeLatLng(geocoder, map, infowindow, latLng) {
+                var latlng = latLng;
+                geocoder.geocode({'location': latlng}, function (results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            var marker = new google.maps.Marker({
+                                position: latlng,
+                                map: map
+                            });
+                            infowindow.setContent(results[0].formatted_address);
+                            infowindow.open(map, marker);
+                        } else {
+                            window.alert('No results found');
+                        }
+                    } else {
+                        window.alert('Geocoder failed due to: ' + status);
+                    }
+                });
+            }
+
+        </script>
+        <script>
+            //These are the properties of the chart, you set what it  will look like here
+            var chartD;
+            var chartVal = Object.create(null);
+            var chart = AmCharts.makeChart("chartdiv", {
+                "type": "gantt",
+                "period": "DD",
+                "theme": "dark",
+                "valueAxis": {
+                    "type": "date"
+                },
+                "brightnessStep": 10,
+                "graph": {
+                    "fillAlphas": 1,
+                    "balloonText": "[[open]] - [[value]]"
+                },
+                "rotate": true,
+                "categoryField": "name",
+                "segmentsField": "schedules",
+                "dataDateFormat": "YYYY-MM-DD",
+                "startDateField": "startdate",
+                "endDateField": "enddate",
+        "dataProvider": <%=tasksJSON%>,
+                "chartCursor": {
+                    "valueBalloonsEnabled": false,
+                    "cursorAlpha": 0,
+                    "valueLineBalloonEnabled": true,
+                    "valueLineEnabled": true,
+                    "valueZoomable": true,
+                    "zoomable": false
+                },
+                "valueScrollbar": {
+                    "position": "top",
+                    "autoGridCount": true,
+                    "color": "#000000"
+                },
+            });
+
+
+            //Event method: click item
+            //Once you click one of the bars in the gantt chart, this method will execute
+            var index = 0;
+            var clickItemEvent = function (event) {
+                index = 0;
+
+                $.map(event.item.dataContext, function (val, i) {
+                    //When the index is referring to the category of the selected value
+                    if (i == "name") {
+
+                        //Place the name of the selected value on the textfield 
+                        $("#category").val(event.item.dataContext.name);
+
+
+                    }
+                    //Else, if the index is referring to the segments of that particular value selected
+                    else {
+
+
+                        var name = i.indexOf("start") != -1 ? "startdate" : "enddate";
+                        var labelName = i.indexOf("start") != -1 ? "Start date: " : "End date: ";
+
+
+
+                        var divInd = "#" + "div-" + index;
+
+
+                        //Creates a div that will store the start date and end date for a particular Task   
+                        if (i.indexOf("start") != -1) {
+
+
+                            //Creates a label and then pushes it  to the div
+                            var div = $("<div></div>");
+                            div.prop("id", "div-" + index);
+                            div.prop("class", "divinput");
+                            div.appendTo("#submitEntryEdit");
+
+                        }
+                        //Creates a label and then pushes it  to the div
+                        var label = $("<label/>");
+                        label.html(labelName);
+                        label.prop("id", name + index);
+                        label.appendTo("#" + "div-" + index);
+
+                        //Creates a textfield then puts it to the div
+                        var newStart = $("<label/>");
+                        newStart.prop("id", name + '-' + index);
+                        newStart.appendTo("#" + "div-" + index);
+                        newStart.val(formatDate(new Date(val)));
+
+                        $("<br>").appendTo("#" + "div-" + index);
+
+
+                        if (i.indexOf("end") != -1) {
+                            index++;
+                        }
+                    }
+                });
+            };
+            //var index = 0;
+            var addSegment = function (event) {
+                $.map(event.item.dataContext, function (val, i) {
+
+                    //When the index is referring to the category of the selected value
+                    if (i == "name") {
+
+                        //Place the name of the selected value on the textfield 
+                        $("#category").val(event.item.dataContext.category);
+
+
+                    }
+                    //Else, if the index is referring to the segments of that particular value selected
+                    else {
+
+
+                        var name = i.indexOf("start") != -1 ? "startdate" : "enddate";
+                        var labelName = i.indexOf("start") != -1 ? "Start date: " : "End date: ";
+                        var divInd = "#" + "div-" + index;
+
+                        //Creates a div that will store the start date and end date for a particular Task   
+                        if (i.indexOf("start") != -1) {
+                            //Creates a div and then pushes it  to the div
+                            var div = $("<div></div>");
+                            div.prop("id", "div-" + index);
+                            div.prop("class", "divinput");
+                            div.appendTo("#submitEntryEdit");
+                        }
+
+                        //Creates a label and then pushes it  to the div
+                        var label = $("<label/>");
+                        label.html(labelName);
+                        label.prop("id", name + index);
+                        label.appendTo("#" + "div-" + index);
+                        //Creates a label then puts it to the div
+                        var newStart = $("<input type='text'/>");
+                        newStart.prop("id", name + index);
+                        newStart.appendTo("#" + "div-" + index);
+                        newStart.val(new Date(val));
+                        $("<br>").appendTo("#" + "div-" + index);
+
+
+                        if (i.indexOf("end") != -1) {
+                            index++;
+
+                        }
+                    }
+                });
+
+            };
+
+            function formatDate(date) {
+                var d = new Date(date),
+                        month = '' + (d.getMonth() + 1),
+                        day = '' + d.getDate(),
+                        year = d.getFullYear();
+
+                if (month.length < 2)
+                    month = '0' + month;
+                if (day.length < 2)
+                    day = '0' + day;
+
+                return [year, month, day].join('-');
+            }
+
+            function getId(str) {
+                var spl = str.split("-");
+                return spl[1];
+            }
+            ;
+
+            function getUpdatedChartVal() {
+                return chartVal;
+            }
+            ;
+
+        </script>
      
 
     </body>

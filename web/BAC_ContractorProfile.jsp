@@ -128,8 +128,8 @@
 
             Contractor contractor = (Contractor) request.getAttribute("contractorProfile");
             ArrayList<Contractor_User> officers = (ArrayList<Contractor_User>) request.getAttribute("contractorOfficers");
-            ArrayList<Project> projectsImpl = (ArrayList<Project>) request.getAttribute("projectsImpl");
-            ArrayList<Project> projectsDone = (ArrayList<Project>) request.getAttribute("projectsDone");
+            //ArrayList<Project> projectsImpl = (ArrayList<Project>) request.getAttribute("projectsImpl");
+            //ArrayList<Project> projectsDone = (ArrayList<Project>) request.getAttribute("projectsDone");
             ArrayList<Project> allProjects = (ArrayList<Project>) request.getAttribute("allProjects");
 
 

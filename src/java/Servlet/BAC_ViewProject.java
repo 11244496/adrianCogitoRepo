@@ -8,6 +8,8 @@ package Servlet;
 import DAO.BACDAO;
 import DAO.GSDAO;
 import DAO.OCPDDAO;
+import DAO.ScheduleDAO;
+import Entity.BiddingSchedule;
 import Entity.Files;
 import Entity.Location;
 import Entity.Project;
@@ -72,6 +74,13 @@ public class BAC_ViewProject extends HttpServlet {
                 referencedPList.add(p);
             }
             project.setReferredProjects(referencedPList);
+            
+            //Get Calendar Elements
+            ScheduleDAO sd = new ScheduleDAO();
+            ArrayList<BiddingSchedule> bidlist = sd.getallSched(id);
+            String bidList2 = new Gson().toJson(bidlist);
+            session.setAttribute("calendar", bidList2);
+            
             
             //Set new arraylist of proposal files
             ArrayList<Files> projectFiles = project.getFiles();

@@ -174,7 +174,10 @@
                         View Project
 
                         <span class="pull-right">
+                            <button type="button" class="btn btn-info" onclick="checkFeedback()">Send a feedback form</button>  
+                            <br>
                         </span>
+                        <br>
                     </header>
                 </section>
 
@@ -628,11 +631,11 @@
     <script>
                                                         var proj = "<%=p.getId()%>";
 
-                                                        $(window).scroll(function () {
-                                                            if ($(window).scrollTop() + window.innerHeight === $(document).height()) {
-                                                                checkFeedback();
-                                                            }
-                                                        });
+//                                                        $(window).scroll(function () {
+//                                                            if ($(window).scrollTop() + window.innerHeight === $(document).height()) {
+//                                                                checkFeedback();
+//                                                            }
+//                                                        });
 
 
                                                         function checkFeedback() {
@@ -643,8 +646,17 @@
                                                                 data: {projId: proj},
                                                                 cache: false,
                                                                 success: function (r) {
-                                                                    if (r <= 0)
+                                                                    if (r <= 0){
                                                                         $('#myModal').modal();
+                                                                    
+                                                                }else{
+                                                                    
+                                                                    alert("You have submitted an evaluation already!");
+                                                                    
+                                                                }
+                                                                    
+                                                                    
+                                                                    
                                                                 }
                                                             });
 

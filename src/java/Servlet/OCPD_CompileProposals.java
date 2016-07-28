@@ -43,7 +43,6 @@ public class OCPD_CompileProposals extends HttpServlet {
             ArrayList<Project> pList = new ArrayList<>();
 
             for (String s : ids) {
-                p = new Project();
                 p = oc.getAllProjectDetails(s);
                 p.setId(s);
 

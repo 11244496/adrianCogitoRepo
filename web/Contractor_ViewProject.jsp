@@ -49,6 +49,13 @@
         <script src='amcharts/serial.js'></script>
         <script src='amcharts/themes/dark.js'></script>
         <script src='amcharts/gantt.js'></script>
+        
+        <link href = 'calendar/fullcalendar.css' rel='stylesheet'>
+        <link href = 'calendar/scheduler.css' rel='stylesheet'>
+        <script src ='calendar/moment.min.js'></script>
+        <script src ='calendar/jquery.min.js'></script>
+        <script src ='calendar/fullcalendar.js'></script>
+        <script src ='calendar/scheduler.js'></script>
     </head>
 
     <body>
@@ -432,7 +439,19 @@
                                         </section>
                                     </div>
                                 </section>                                                 
-                            </div>                        
+                            </div>            
+
+                            <!------------------------------------------------------Calendar SCHEDULE------------------------------------------>
+
+                            <section class="panel">
+                                <div class="bio-graph-heading project-heading">
+                                    <strong>Schedule</strong>
+                                </div>
+                                <div class="panel-body bio-graph-info">
+                                    <div id='calendar' style="height: 100%; width: 100%"></div>
+                                </div>
+                                <br>
+                            </section>
 
                             <!-------------------------------------------------MAIN TESTIMONIAL UPLOADS------------------------------------------>
                             <section class="panel">
@@ -611,7 +630,7 @@
                 </a>
             </div>
         </footer>
-        <script src="js/jquery.js"></script>
+        <!--<script src="js/jquery.js"></script>-->
         <script>
                                                 var proj = "<%=projid%>";
                                                 var cont = "<%=conid%>";
@@ -969,5 +988,43 @@
 
         <!--common script for all pages-->
         <script src="js/common-scripts.js"></script>
+        
+        
+        <script>
+            var cal = <%=session.getAttribute("calendar")%>;
+            $('document').ready(function () {
+
+                $('#calendar').fullCalendar({
+                    defaultView: 'month',
+                    schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+                    header: {
+                        left: '',
+                        center: 'title',
+                        right: 'today prev,next'
+                    }
+                });
+                inputActivities(cal);
+
+            });
+
+            function inputActivities(sched) {
+                $('#calendar').fullCalendar('removeEvents');
+                $.each(sched, function (i) {
+                    var my_events = {
+                        events: [
+                            {
+                                title: sched[i].event,
+                                start: sched[i].startdate,
+                                end: sched[i].enddate,
+                                status: sched[i].status,
+                            }
+                        ]
+                    };
+
+                    $('#calendar').fullCalendar('addEventSource', my_events);
+                });
+            }
+
+        </script>
     </body>
 </html>

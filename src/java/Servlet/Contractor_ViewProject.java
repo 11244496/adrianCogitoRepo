@@ -9,6 +9,8 @@ import DAO.BACDAO;
 import DAO.ContractorDAO;
 import DAO.GSDAO;
 import DAO.OCPDDAO;
+import DAO.ScheduleDAO;
+import Entity.BiddingSchedule;
 import Entity.Files;
 import Entity.InvitationToBid;
 import Entity.Location;
@@ -80,6 +82,12 @@ public class Contractor_ViewProject extends HttpServlet {
             request.setAttribute("pFiles", projectFiles);
             request.setAttribute("project", project);
             
+            
+            //Get Calendar Elements
+            ScheduleDAO sd = new ScheduleDAO();
+            ArrayList<BiddingSchedule> bidlist = sd.getallSched(id);
+            String bidList2 = new Gson().toJson(bidlist);
+            session.setAttribute("calendar", bidList2);
             
             ArrayList<InvitationToBid> invitation = contDAO.getInvitation(project);
             request.setAttribute("invitation", invitation);

@@ -7,6 +7,7 @@ package DAO;
 
 import DB.ConnectionFactory;
 import Entity.Bid_Notices;
+import Entity.BiddingSchedule;
 import Entity.Contractor;
 import Entity.Contractor_Has_Project;
 import Entity.Contractor_User;
@@ -647,8 +648,6 @@ public class BACDAO {
         }
         return d;
     }
-    
-    
 
     public void changeBACStatus4(Contractor_User con, String id) {
         try {
@@ -668,7 +667,7 @@ public class BACDAO {
             Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void changeBACStatus5(int id) {
         try {
             myFactory = ConnectionFactory.getInstance();
@@ -701,7 +700,7 @@ public class BACDAO {
             Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public ArrayList<Contractor_User> getAllContractors() {
 
         ArrayList<Contractor_User> contractors = new ArrayList<Contractor_User>();
@@ -736,7 +735,6 @@ public class BACDAO {
 
         return contractors;
     }
-
 
     //=======================================ALL ELIGIBILITY DOCUMENT RELATED CODES===============================
     public ArrayList<Eligibility_Document> getEligibilityDocuments(int id) {
@@ -803,7 +801,7 @@ public class BACDAO {
 
         return d;
     }
-    
+
     //=======================================NOTICES CODES========================================================
     public void uploadBidNotices(Bid_Notices notice) {
 
@@ -830,7 +828,7 @@ public class BACDAO {
             Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public ArrayList<Bid_Notices> getBidNotices(Project p, Contractor c) {
 
         ArrayList<Bid_Notices> bidnotices = new ArrayList<Bid_Notices>();
@@ -863,7 +861,6 @@ public class BACDAO {
 
         return bidnotices;
     }
-
 
 
     //=======================================Utility Codes========================================================
