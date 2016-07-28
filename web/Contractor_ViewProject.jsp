@@ -49,7 +49,7 @@
         <script src='amcharts/serial.js'></script>
         <script src='amcharts/themes/dark.js'></script>
         <script src='amcharts/gantt.js'></script>
-        
+
         <link href = 'calendar/fullcalendar.css' rel='stylesheet'>
         <link href = 'calendar/scheduler.css' rel='stylesheet'>
         <script src ='calendar/moment.min.js'></script>
@@ -378,8 +378,8 @@
                                                         <td><%=pworks.get(x).getComponents().get(y).getName()%></td>
                                                         <td><%=pworks.get(x).getComponents().get(y).getQuantity()%></td>
                                                         <td><%=pworks.get(x).getComponents().get(y).getUnit().getUnit()%></td>
-                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice()%></td>
-                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice() * pworks.get(x).getComponents().get(y).getQuantity()%></td>
+                                                        <td>PHP <%=df.format(pworks.get(x).getComponents().get(y).getUnitPrice())%></td>
+                                                        <td>PHP <%=df.format(pworks.get(x).getComponents().get(y).getUnitPrice() * pworks.get(x).getComponents().get(y).getQuantity())%></td>
                                                     </tr>
 
 
@@ -633,32 +633,32 @@
         </footer>
         <!--<script src="js/jquery.js"></script>-->
         <script>
-                                                var proj = "<%=projid%>";
-                                                var cont = "<%=conid%>";
+            var proj = "<%=projid%>";
+            var cont = "<%=conid%>";
 
-                                                $(document).ready(function () {
-                                                    $.ajax({
-                                                        type: 'POST',
-                                                        url: 'AJAX_Contractor_CheckPage',
-                                                        dataType: 'json',
-                                                        cache: false,
-                                                        data: {contprojID: cont, projID: proj},
-                                                        success: function (text) {
+            $(document).ready(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: 'AJAX_Contractor_CheckPage',
+                    dataType: 'json',
+                    cache: false,
+                    data: {contprojID: cont, projID: proj},
+                    success: function (text) {
 
-                                                            if (text === "Y") {
+                        if (text === "Y") {
 
-                                                                document.getElementById("respondToInvite").disabled = true;
+                            document.getElementById("respondToInvite").disabled = true;
 
-                                                            }
-                                                            else {
-                                                                document.getElementById("respondToInvite").disabled = false;
+                        }
+                        else {
+                            document.getElementById("respondToInvite").disabled = false;
 
-                                                            }
+                        }
 
 
-                                                        }
-                                                    });
-                                                });
+                    }
+                });
+            });
         </script>
 
         <script>
@@ -989,8 +989,8 @@
 
         <!--common script for all pages-->
         <script src="js/common-scripts.js"></script>
-        
-        
+
+
         <script>
             var cal = <%=session.getAttribute("calendar")%>;
             $('document').ready(function () {

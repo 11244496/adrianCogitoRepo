@@ -433,7 +433,7 @@ function onchanges(quantity, unitcost, amount, id) {
             $('#comp-' + id + ' .amount').each(function () {
                 total = total + parseFloat($(this).val());
             });
-            $('#comp-' + id + ' tfoot input').val(total.toFixed(2));
+            $('#comp-' + id + ' tfoot input').val("PHP " + numberWithCommas(total.toFixed(2)));
         }
     });
 }
@@ -717,3 +717,9 @@ function getUpdatedChartVal() {
     return chartVal;
 }
 ;
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+

@@ -332,8 +332,8 @@
                                                         <td><%=pworks.get(x).getComponents().get(y).getName()%></td>
                                                         <td><%=pworks.get(x).getComponents().get(y).getQuantity()%></td>
                                                         <td><%=pworks.get(x).getComponents().get(y).getUnit().getUnit()%></td>
-                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice()%></td>
-                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice() * pworks.get(x).getComponents().get(y).getQuantity()%></td>
+                                                        <td>PHP <%=df.format(pworks.get(x).getComponents().get(y).getUnitPrice())%></td>
+                                                        <td>PHP <%=df.format(pworks.get(x).getComponents().get(y).getUnitPrice() * pworks.get(x).getComponents().get(y).getQuantity())%></td>
                                                     </tr>
 
 
