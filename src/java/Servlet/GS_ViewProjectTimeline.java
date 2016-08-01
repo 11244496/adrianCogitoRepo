@@ -47,7 +47,7 @@ public class GS_ViewProjectTimeline extends HttpServlet {
             
             OCPDDAO oc = new OCPDDAO();
             String id = request.getParameter("projectId1");
-            Project project = oc.getBasicProjectDetails(id);
+            Project project = oc.getAllProjectDetails(id);
             
             ArrayList<Timeline_Update> tList = gsDAO.getTimeline_UpdateList(project);
 

@@ -809,6 +809,7 @@ public class GSDAO {
                 Project p = new Project();
                 Task t = new Task();
                 Schedule s = new Schedule();
+                sList = new ArrayList<>();
                 p.setId(result.getString("project.id"));
                 p.setName(result.getString("project.name"));
                 t.setId(result.getInt("task.id"));

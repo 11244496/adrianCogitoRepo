@@ -501,7 +501,7 @@
                                         action: "settodone"
                                     },
                                     success: function () {
-                                        alert("Meeting successfully approved");
+                                        alert("Meeting was held. You can now edit the proposal.");
                                         location.reload();
                                     }
                                 });

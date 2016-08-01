@@ -662,14 +662,14 @@ public class OCPDDAO {
         return aList;
     }
 
-    public Task getMeeting(String status, Project p) {
+        public Task getMeeting(String status, Project p) {
         Task t = null;
         Schedule s = null;
         ArrayList<Schedule> sList = new ArrayList<>();
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "SELECT max(startdate), task.id, task.name, schedule.startdate, schedule.enddate, schedule.time, schedule.remarks, schedule.remarks FROM task join schedule on task.id = task_id where status = ? and project_id = ?";
+            String query = "SELECT max(startdate), task.id, status, task.name, schedule.startdate, schedule.enddate, schedule.time, schedule.remarks, schedule.remarks FROM task join schedule on task.id = task_id where status = ? and project_id = ?";
             statement = connection.prepareStatement(query);
             statement.setString(1, status);
             statement.setString(2, p.getId());
@@ -701,7 +701,8 @@ public class OCPDDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "SELECT max(startdate), task.id, task.name, schedule.startdate, schedule.enddate, schedule.time, schedule.remarks, schedule.remarks FROM task join schedule on task.id = task_id where project_id = ?";
+            String query = "SELECT max(startdate) startdate, task.id, task.name, schedule.time, schedule.remarks FROM task \n"
+                    + "join schedule on task.id = task_id where project_id = ? and task.name=\"Meeting with OCPD\" and status != \"done\"";
             statement = connection.prepareStatement(query);
             statement.setString(1, p.getId());
             result = statement.executeQuery();

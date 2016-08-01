@@ -130,7 +130,7 @@ public class Citizen_SubmitReport extends HttpServlet {
                                 
                                 
                                 //path where the file will be stored
-                                path = new File("C:\\Users\\Krist\\Documents\\NetBeansProjects\\CogitoV3\\Upload" + "/" + projectName + " - " + user.getFirstName() + user.getLastName() + "'s report");
+                                path = new File("C:\\Users\\Krist\\Desktop\\Thesis 4\\FinalCogitoRepository\\Upload" + "/" + projectName + " - " + user.getFirstName() + user.getLastName() + "'s report");
                                 if (!path.exists()) {
                                     boolean status = path.mkdirs();
                                 }

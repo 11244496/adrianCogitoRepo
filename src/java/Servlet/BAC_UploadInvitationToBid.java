@@ -161,9 +161,9 @@ public class BAC_UploadInvitationToBid extends HttpServlet {
             actdao.addActivity(new Activity(0, "you uploaded invitation to bid", null, employee.getUser()));
             ArrayList<Contractor_User> conuser = bacdao.getAllContractors();
             
-            for(int x = 0; x < conuser.size();x++){
-            ntDAO.addNotification(new Notification(0, "Uploaded invitation to bid for project " + project.getName(), null, conuser.get(x).getUser()));
-            }
+//            for(int x = 0; x < conuser.size();x++){
+//            ntDAO.addNotification(new Notification(0, "Uploaded invitation to bid for project " + project.getName(), null, conuser.get(x).getUser()));
+//            }
 
             request.setAttribute("success", "Success");
             ServletContext context = getServletContext();

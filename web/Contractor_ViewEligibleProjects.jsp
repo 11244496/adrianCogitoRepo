@@ -127,7 +127,6 @@
                         </a>
                         <ul class="sub">
                             <li><a  href="Contractor_HandleInvitations">&nbsp; &nbsp; &nbsp; &nbsp;Handle Invitations</a></li>
-                            <li><a  href="Contractor_ViewEligibleProjects" class="active">&nbsp; &nbsp; &nbsp; &nbsp;Upload Works and Gantt</a></li>
                             <li><a  href="Contractor_ViewHistory">&nbsp; &nbsp; &nbsp; &nbsp; View History</a></li>
                         </ul>
                     </li>

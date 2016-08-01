@@ -362,30 +362,7 @@
                             <!------------------------------------------------------SCHEDULE------------------------------------------>
 
 
-                            <div class="row">
-
-                                <!------------------------------------------------------GANTT CHART------------------------------------------>
-
-                                <section class="panel">
-
-                                    <div class="col-lg-12">
-                                        <div class="bio-graph-heading project-heading">
-                                            <strong>Project Task</strong>
-                                        </div>
-
-                                        <section class="panel">
-                                            <div class="panel-body">
-                                                <div id="chartdiv" style="width: 100%; height: 400px;"></div>
-                                            </div>
-
-                                            <div id="submitEntryEdit">
-
-                                            </div>
-
-                                        </section>
-                                    </div>
-                                </section>                                                 
-                            </div>
+                            
                             <input type="hidden" id="projId" value="" name="projId">
                             
                             
@@ -627,26 +604,7 @@
                                 <!-- page end-->
                             </section>             
 
-                        <section class="panel">				
-                                <div class="panel-body">
-
-                                    <label>Progress Report</label>      
-
-
-                                </div>
-
-
-
-                                <div class="panel-body"  style="overflow: scroll;">
-
-                                    Progress report
-                                </div>
-
-
-
-
-                                <!-- page end-->
-                            </section>           
+                                 
 
 
 

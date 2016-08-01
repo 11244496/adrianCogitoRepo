@@ -57,6 +57,7 @@ public class BAC_SetFailBid extends HttpServlet {
             String reason = request.getParameter("failReason");
             Project p = oc.getBasicProjectDetails(projid);
             oc.changeProjStatus("BAC", p);
+            bac.addReasonFail(reason, itb);
             
             ScheduleDAO sd = new ScheduleDAO();
             sd.removeallBiddingSchedule(projid);

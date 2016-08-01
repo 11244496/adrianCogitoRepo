@@ -468,6 +468,10 @@
         <servlet-name>AJAX_ProjectWorks</servlet-name>
         <servlet-class>Servlet.AjaxServlet.AJAX_ProjectWorks</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Contractor_GenerateAccReport</servlet-name>
+        <servlet-class>Servlet.Contractor_GenerateAccReport</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -935,6 +939,10 @@
     <servlet-mapping>
         <servlet-name>AJAX_ProjectWorks</servlet-name>
         <url-pattern>/AJAX_ProjectWorks</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Contractor_GenerateAccReport</servlet-name>
+        <url-pattern>/Contractor_GenerateAccReport</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

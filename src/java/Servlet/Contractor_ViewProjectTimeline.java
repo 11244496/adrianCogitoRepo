@@ -46,7 +46,7 @@ public class Contractor_ViewProjectTimeline extends HttpServlet {
             ContractorDAO contDAO = new ContractorDAO();
             OCPDDAO oc = new OCPDDAO();
             String id = request.getParameter("projectID3");
-            Project project = oc.getBasicProjectDetails(id);
+            Project project = oc.getAllProjectDetails(id);
             
             ArrayList<Timeline_Update> tList = contDAO.getTimeline_UpdateList(project);
             

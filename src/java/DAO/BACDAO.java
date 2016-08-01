@@ -899,7 +899,7 @@ public class BACDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "UPDATE cogito.project SET Status = 'Posted Invitation' WHERE ID = ?";
+            String query = "UPDATE project SET Status = 'Posted Invitation' WHERE ID = ?";
             statement = connection.prepareStatement(query);
 
             statement.setString(1, id);

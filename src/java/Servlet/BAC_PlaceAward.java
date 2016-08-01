@@ -72,9 +72,9 @@ public class BAC_PlaceAward extends HttpServlet {
             actdao.addActivity(new Activity(0, "you confirmed " + contractor.getName() + " as the winning bidder", null, employee.getUser()));
             ArrayList<Contractor_User> conuser = bacdao.getAllContractors(id);
 
-            for (int x = 0; x < conuser.size(); x++) {
-                ntDAO.addNotification(new Notification(0, employee.getFirstName() + " " + employee.getLastName() + " confirmed " + contractor.getName() + " contractor ", null, conuser.get(x).getUser()));
-            }
+//            for (int x = 0; x < conuser.size(); x++) {
+//                ntDAO.addNotification(new Notification(0, employee.getFirstName() + " " + employee.getLastName() + " confirmed " + contractor.getName() + " contractor ", null, conuser.get(x).getUser()));
+//            }
 
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/BAC_PlaceAward.jsp");

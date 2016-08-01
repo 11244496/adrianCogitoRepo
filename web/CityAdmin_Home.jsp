@@ -208,7 +208,7 @@
                                             <div class="pull-right">
                                                 <i class="fa fa-square okaylegend" style="margin-left: 7px"></i> Less than 10 days without reply
                                                 <br>
-                                                <i class="fa fa-square semiokaylegend" style="margin-left: 7px"></i>  More than 10 days and less than 30 days without reply
+                                                <i class="fa fa-square semiokaylegend" style="margin-left: 7px"></i>  More than 10 days and less than 15 days without reply
                                                 <br>
                                                 <i class="fa fa-square notokaylegend" style="margin-left: 7px"></i>  Warning! More than 15 days without reply 
                                             </div>
@@ -258,9 +258,9 @@
                                                                         LocalDate end = LocalDate.parse(dateonly);
 
                                                                         long days = ChronoUnit.DAYS.between(end, start);
-                                                                        if (days < 10) {
+                                                                        if (days <= 10) {
                                                                             color = "green";
-                                                                        } else if (days > 10 && days < 30) {
+                                                                        } else if (days > 10 && days <= 15) {
                                                                             color = "orange";
                                                                         } else if (days > 15) {
                                                                             color = "red";
