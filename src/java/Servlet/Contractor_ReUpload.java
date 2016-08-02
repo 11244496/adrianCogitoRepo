@@ -130,7 +130,7 @@ public class Contractor_ReUpload extends HttpServlet {
 
                             String root = getServletContext().getRealPath("/");
                             //path where the file will be stored
-                            path = new File("C:\\Users\\Krist\\Desktop\\Thesis 4\\FinalCogitoRepository\\Upload" + "/Bids and Awards Department" + "/Eligibility Documents/" + title + "/" + contractor.getName());
+                            path = new File("C:\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\FinalCogitoRepository\\Upload" + "/Bids and Awards Department" + "/Eligibility Documents/" + title + "/" + contractor.getName());
 
                             if (!path.exists()) {
                                 boolean status = path.mkdirs();
@@ -146,7 +146,7 @@ public class Contractor_ReUpload extends HttpServlet {
                     Project project = oc.getBasicProjectDetails(id);
                     Contractor_Has_Project contProject = contDAO.getContractorHasProject(project, contractor);
 
-                    Eligibility_Document document = new Eligibility_Document(0, fileName, "chrome-extension://nioaipehgdakmfdbddhcckfihdjfjmoj/" + "Bids and Awards Department" + "/Eligibility Documents/" + title + "/" + contractor.getName(), null, contProject, documentType, null, "");
+                    Eligibility_Document document = new Eligibility_Document(0, fileName, "chrome-extension://cnjcgmljpkljlbhadlljlbhjkcbhlpcc/" + "Bids and Awards Department" + "/Eligibility Documents/" + title + "/" + contractor.getName(), null, contProject, documentType, null, "");
                     contDAO.updateEligibilityDocument(docID, document);
 
                     actdao.addActivity(new Activity(0, "you re-uploaded for project " + project.getName(), null, contractor_user.getUser()));

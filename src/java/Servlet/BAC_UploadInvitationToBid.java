@@ -124,7 +124,7 @@ public class BAC_UploadInvitationToBid extends HttpServlet {
                             String root = getServletContext().getRealPath("/");
 
                             //path where the file will be stored
-                            path = new File("C:\\Users\\Krist\\Desktop\\Thesis 4\\FinalCogitoRepository\\Upload" + "/Bids and Awards Department" + "/Invitations to bid" + "/" + title + " invitation");
+                            path = new File("C:\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\FinalCogitoRepository\\Upload" + "/Bids and Awards Department" + "/Invitations to bid" + "/" + title + " invitation");
                             if (!path.exists()) {
                                 boolean status = path.mkdirs();
                             }
@@ -141,7 +141,7 @@ public class BAC_UploadInvitationToBid extends HttpServlet {
 
                     bacdao.changeBACStatus1(id);
 
-                    InvitationToBid invite = new InvitationToBid(0, fileName, null, project, "chrome-extension://nioaipehgdakmfdbddhcckfihdjfjmoj/" + "Bids and Awards Department" + "/Invitations to bid" + "/" + title + " invitation");
+                    InvitationToBid invite = new InvitationToBid(0, fileName, null, project, "chrome-extension://cnjcgmljpkljlbhadlljlbhjkcbhlpcc/" + "Bids and Awards Department" + "/Invitations to bid" + "/" + title + " invitation");
                     bacdao.uploadInvitation(invite);
 
                     //Set Bidding Schedule

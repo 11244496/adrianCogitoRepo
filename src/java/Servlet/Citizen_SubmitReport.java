@@ -130,7 +130,7 @@ public class Citizen_SubmitReport extends HttpServlet {
                                 
                                 
                                 //path where the file will be stored
-                                path = new File("C:\\Users\\Krist\\Desktop\\Thesis 4\\FinalCogitoRepository\\Upload" + "/" + projectName + " - " + user.getFirstName() + user.getLastName() + "'s report");
+                                path = new File("C:\\Users\\AdrianKyle\\Desktop\\Final System Thesis 2\\FinalCogitoRepository\\Upload" + "/" + projectName + " - " + user.getFirstName() + user.getLastName() + "'s report");
                                 if (!path.exists()) {
                                     boolean status = path.mkdirs();
                                 }
@@ -169,7 +169,7 @@ public class Citizen_SubmitReport extends HttpServlet {
                         //Upload testimonial
                         //citizenDAO.uploadTestimonial(t);
                         
-                        Citizen_Report report = new Citizen_Report(0, message, "chrome-extension://nioaipehgdakmfdbddhcckfihdjfjmoj/"+projectName + " - " + user.getFirstName() + user.getLastName() + "'s report" ,null, user, proj);
+                        Citizen_Report report = new Citizen_Report(0, message, "chrome-extension://cnjcgmljpkljlbhadlljlbhjkcbhlpcc/"+projectName + " - " + user.getFirstName() + user.getLastName() + "'s report" ,null, user, proj);
                         
                         citizenDAO.uploadCitizenReport(report);
                         int id = citizenDAO.getRecentPostid(user, message);
