@@ -228,6 +228,9 @@ public class OCPDDAO {
                 Testimonial t = new Testimonial();
                 t.setId(result.getInt("Testimonial_ID"));
                 project.setMainTestimonial(t);
+                assignedContractor = new Contractor_User();
+                assignedContractor.setID(result.getInt("Contractor_ID"));
+                project.setContractorUser(assignedContractor);
             }
 
             //Location

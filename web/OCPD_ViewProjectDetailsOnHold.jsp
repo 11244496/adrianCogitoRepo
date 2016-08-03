@@ -24,8 +24,8 @@
 <%ArrayList<PWorks> pworks = p.getpWorks();%>
 <%ArrayList<Task> tasks = p.getTask();
     String tasksJSON = new Gson().toJson(tasks);
-Annotation annotation = (Annotation) session.getAttribute("annotations");
-Task meeting = (Task) session.getAttribute("meeting");
+    Annotation annotation = (Annotation) session.getAttribute("annotations");
+    Task meeting = (Task) session.getAttribute("meeting");
 %>
 <%ArrayList<Files> files = p.getFiles();%>
 <%DecimalFormat df = new DecimalFormat("#,###.00");%>
@@ -94,133 +94,133 @@ Task meeting = (Task) session.getAttribute("meeting");
         </style>
         <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
     </head>
-<body>
+    <body>
 
-    <section id="container" class="">
-        <!--header start-->
-        <header class="header green-bg">
-            <div class="sidebar-toggle-box">
-                <div data-original-title="Toggle Navigation" data-placement="right" class="fa fa-bars tooltips"></div>
-            </div>
-            <!--logo start-->
-            <a href="index.html" class="logo" >COGITO<span></span></a>
-            <!--logo end-->
-            <div class="nav notify-row" id="top_menu">
-                <!--  notification start -->
-                <ul class="nav top-menu">
-                    <!-- notification dropdown start-->
-                    <li id="header_notification_bar" class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+        <section id="container" class="">
+            <!--header start-->
+            <header class="header green-bg">
+                <div class="sidebar-toggle-box">
+                    <div data-original-title="Toggle Navigation" data-placement="right" class="fa fa-bars tooltips"></div>
+                </div>
+                <!--logo start-->
+                <a href="index.html" class="logo" >COGITO<span></span></a>
+                <!--logo end-->
+                <div class="nav notify-row" id="top_menu">
+                    <!--  notification start -->
+                    <ul class="nav top-menu">
+                        <!-- notification dropdown start-->
+                        <li id="header_notification_bar" class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
 
-                            <i class="fa fa-bell-o"></i>
-                            <span class="badge bg-warning"></span>
-                        </a>
-                        <ul class="dropdown-menu extended notification">
-                            <div class="notify-arrow notify-arrow-yellow"></div>
-                            <li>
+                                <i class="fa fa-bell-o"></i>
+                                <span class="badge bg-warning"></span>
+                            </a>
+                            <ul class="dropdown-menu extended notification">
+                                <div class="notify-arrow notify-arrow-yellow"></div>
+                                <li>
 
-                            </li>
-                            <!--
-                            SAMPLE CODE FOR NOTIFICATION
-        <li>
-            <a href="#">
-                <span class="label label-danger"><i class="fa fa-bolt"></i></span>
-                Server #3 overloaded.
-                <span class="small italic">34 mins</span>
-            </a>
-        </li>
+                                </li>
+                                <!--
+                                SAMPLE CODE FOR NOTIFICATION
+            <li>
+                <a href="#">
+                    <span class="label label-danger"><i class="fa fa-bolt"></i></span>
+                    Server #3 overloaded.
+                    <span class="small italic">34 mins</span>
+                </a>
+            </li>
+    
+                               ADD THE CODE BELOW IF AT LEAST ONE(?) NOTIFICATION IS LISTED
+    
+            <li>
+                <a href="#">See all notifications</a>
+            </li>
+                                -->
+                            </ul>
+                        </li>
+                        <!-- notification dropdown end -->
+                    </ul>
+                </div>
+                <div class="top-nav ">
+                    <ul class="nav pull-right top-menu">
+                        <li>
+                            <input type="text" class="form-control search" placeholder="">
+                        </li>
+                        <!-- user login dropdown start-->
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <img alt="" src="img/avatar1_small.jpg">
+                                <span class="username">Hello <b><u><%out.print(e.getFirstName());%></u></b>!</span>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu extended logout">
+                                <div class="log-arrow-up"></div>
+                                <li><a href="#"><i class=" fa fa-suitcase"></i>Profile</a></li>
+                                <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
+                                <li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
+                                <li><a href="Logout"><i class="fa fa-key"></i> Log Out</a></li>
+                            </ul>
+                        </li>
 
-                           ADD THE CODE BELOW IF AT LEAST ONE(?) NOTIFICATION IS LISTED
-
-        <li>
-            <a href="#">See all notifications</a>
-        </li>
-                            -->
-                        </ul>
-                    </li>
-                    <!-- notification dropdown end -->
-                </ul>
-            </div>
-            <div class="top-nav ">
-                <ul class="nav pull-right top-menu">
-                    <li>
-                        <input type="text" class="form-control search" placeholder="">
-                    </li>
-                    <!-- user login dropdown start-->
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img alt="" src="img/avatar1_small.jpg">
-                            <span class="username">Hello <b><u><%out.print(e.getFirstName());%></u></b>!</span>
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu extended logout">
-                            <div class="log-arrow-up"></div>
-                            <li><a href="#"><i class=" fa fa-suitcase"></i>Profile</a></li>
-                            <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
-                            <li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
-                            <li><a href="Logout"><i class="fa fa-key"></i> Log Out</a></li>
-                        </ul>
-                    </li>
-
-                    <!-- user login dropdown end -->
-                    <li class="sb-toggle-right">
-                        <i class="fa  fa-align-right"></i>
-                    </li>
-                </ul>
-            </div>
-        </header>
-        <!--header end-->
-        <!--sidebar start-->
-        <aside>
-            <div id="sidebar"  class="nav-collapse ">
-                <!-- sidebar menu start-->
-                <ul class="sidebar-menu" id="nav-accordion">
-                    <li>
-                        <a href="OCPD_Home" class="active">
-                            <i class="fa fa-dashboard"></i>
-                            <span>Home</span>
-                        </a>
-                    </li>
+                        <!-- user login dropdown end -->
+                        <li class="sb-toggle-right">
+                            <i class="fa  fa-align-right"></i>
+                        </li>
+                    </ul>
+                </div>
+            </header>
+            <!--header end-->
+            <!--sidebar start-->
+            <aside>
+                <div id="sidebar"  class="nav-collapse ">
+                    <!-- sidebar menu start-->
+                    <ul class="sidebar-menu" id="nav-accordion">
+                        <li>
+                            <a href="OCPD_Home" class="active">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
 
 
-                    <li>
-                        <a href="OCPD_ViewPlanningDocument">
-                            <i class="fa fa-book"></i>
-                            <span>CLUP and CDP</span>
-                        </a>
-                    </li>
+                        <li>
+                            <a href="OCPD_ViewPlanningDocument">
+                                <i class="fa fa-book"></i>
+                                <span>CLUP and CDP</span>
+                            </a>
+                        </li>
 
-                    <!--multi level menu start-->
-                    <li class="sub-menu">
-                        <a href="javascript:;" >
-                            <i class="fa fa-tasks"></i>
-                            <span>Project Proposals</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a  href="OCPD_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
-                            <li class="sub-menu">
-                                <a  href="">&nbsp; &nbsp; &nbsp; &nbsp; Monitor Projects</a>
-                                <ul class="sub">
-                                    <li><a  href="OCPD_Timeline.jsp">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Timeline</a></li>
-                                    <li class="sub-menu">
-                                        <a  href="OCPD_ViewProjectStatus">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Project Status</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <!--multi level menu end-->
-                    <li>
-                        <a href="OCPD_NotificationActivity">
-                            <i class="fa fa-book"></i>
-                            <span>Notification and Activity</span>
-                        </a>
-                    </li>
+                        <!--multi level menu start-->
+                        <li class="sub-menu">
+                            <a href="javascript:;" >
+                                <i class="fa fa-tasks"></i>
+                                <span>Project Proposals</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a  href="OCPD_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp; View Project Proposals</a></li>
+                                <li class="sub-menu">
+                                    <a  href="">&nbsp; &nbsp; &nbsp; &nbsp; Monitor Projects</a>
+                                    <ul class="sub">
+                                        <li><a  href="OCPD_Timeline.jsp">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Timeline</a></li>
+                                        <li class="sub-menu">
+                                            <a  href="OCPD_ViewProjectStatus">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; View Project Status</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--multi level menu end-->
+                        <li>
+                            <a href="OCPD_NotificationActivity">
+                                <i class="fa fa-book"></i>
+                                <span>Notification and Activity</span>
+                            </a>
+                        </li>
 
-                </ul>
-                <!-- sidebar menu end-->
-            </div>
-        </aside>            <!--sidebar end-->
+                    </ul>
+                    <!-- sidebar menu end-->
+                </div>
+            </aside>            <!--sidebar end-->
 
 
             <section id="main-content">
@@ -368,22 +368,34 @@ Task meeting = (Task) session.getAttribute("meeting");
                                                 <br> 
                                                 <table class="table" style="width:100%; text-align: center">    
                                                     <tr>
-                                                        <td colspan="4">Total cost: </td>
+                                                        <td>Total cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Indirect Cost 17% of Total Cost: </td>
+                                                        <td>Indirect Cost 17% of Total Cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost * 0.17)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Tax 5% of Total Cost + Indirect Cost: </td>
+                                                        <td>Tax 5% of Total Cost + Indirect Cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format((cost * 0.17) * .05)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Estimated cost: </td>
+                                                        <td>Estimated cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost + (cost * 0.17) + ((cost * 0.17) * .05))%></td>
                                                     </tr>
 
@@ -579,109 +591,109 @@ Task meeting = (Task) session.getAttribute("meeting");
             </div>
         </section>
 
-            <input type="hidden" name="projectid" value="<%=p.getId()%>">
-            <div class="modal fade full-width-modal-right" id="addComments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content-wrap">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                                <h4 class="modal-title" id="comHead">Title</h4>
-                            </div>
-                            <div class="modal-body">
-                                <label class="panel-heading">Comments:</label>
-                                <textarea rows="10" style="background: white; cursor:default; border:0px;" class="wysihtml5 form-control" id="detailsTA" readonly name="detailsTA"><%=annotation.getDetails()%></textarea>
-                                <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="pworksTA" readonly name="pworksTA"><%=annotation.getPworks()%></textarea>
-                                <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="scheduleTA" readonly name="scheduleTA"><%=annotation.getSchedule()%></textarea>
-                                <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="testimonialTA" readonly name="testimonialTA"><%=annotation.getTestimonial()%></textarea>
-                                <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="filesTA" readonly name="filesTA"><%=annotation.getFiles()%></textarea>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade " id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog" >
-                    <div class="modal-content" style="width: 50%;">
-
+        <input type="hidden" name="projectid" value="<%=p.getId()%>">
+        <div class="modal fade full-width-modal-right" id="addComments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content-wrap">
+                    <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Meeting Details</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                            <h4 class="modal-title" id="comHead">Title</h4>
                         </div>
-
-                        <div class="modal-body form-group">
-                            <div class="col-md-12">
-                                <div class="col-md-12">
-                                    <label class="control-label">Additional Comments </label>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="col-md-12">
-                                    <textarea type="text" name="general" style="background: white; cursor:default; border:0px;"  class="form-control" rows="3" placeholder=""><%=annotation.getGeneral()%></textarea><br>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-
-
-                                <div class="col-md-2">
-                                    <label class="control-label">Date: </label>
-                                </div>
-                                <div class="col-md-10">
-                                    <input type="text" style="background: white; cursor:default; border:0px;" value="<%=meeting.getSchedules().get(0).getStartdate()%>" class="form-control" name="date">
-                                    <br>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="col-md-2">
-                                    <label class="control-label">Time: </label>
-                                </div>
-                                <div class="col-md-10">
-                                    <input type="text" style="background: white; cursor:default; border:0px;" value="<%=meeting.getSchedules().get(0).getTime()%>" class="form-control" name="time">
-                                    <br>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="col-md-2">
-                                    <label class="control-label">Agenda </label>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div id="agendaDiv">
-                                    <br>
-                                    <table class="table table-bordered table-striped table-condensed" style="background: white; cursor:default; border:0px;"  id="agendaTable">
-                                        <% for (Agenda a : meeting.getAgenda()){%>
-                                        <tr>
-                                            <td><%=a.getAgenda()%></td>
-                                        </tr>
-                                        <%}%>
-                                    </table>
-
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="col-md-2">
-                                    <label class="control-label">Remarks </label>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="col-md-12">
-                                    <textarea type="text" style="background: white; cursor:default; border:0px;" name="remarks"  class="form-control" rows="3" placeholder=""> <%=meeting.getSchedules().get(0).getRemarks()%></textarea>
-                                </div>
-                            </div>
-
+                        <div class="modal-body">
+                            <label class="panel-heading">Comments:</label>
+                            <textarea rows="10" style="background: white; cursor:default; border:0px;" class="wysihtml5 form-control" id="detailsTA" readonly name="detailsTA"><%=annotation.getDetails()%></textarea>
+                            <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="pworksTA" readonly name="pworksTA"><%=annotation.getPworks()%></textarea>
+                            <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="scheduleTA" readonly name="scheduleTA"><%=annotation.getSchedule()%></textarea>
+                            <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="testimonialTA" readonly name="testimonialTA"><%=annotation.getTestimonial()%></textarea>
+                            <textarea rows="10" style="background: white; border:0px; cursor:default;" class="wysihtml5 form-control" id="filesTA" readonly name="filesTA"><%=annotation.getFiles()%></textarea>
 
                         </div>
                         <div class="modal-footer">
-                            <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
                         </div>
                     </div>
+
                 </div>
-            </div>               
+            </div>
+        </div>
+        <div class="modal fade " id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" >
+                <div class="modal-content" style="width: 50%;">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Meeting Details</h4>
+                    </div>
+
+                    <div class="modal-body form-group">
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <label class="control-label">Additional Comments </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <textarea type="text" name="general" style="background: white; cursor:default; border:0px;"  class="form-control" rows="3" placeholder=""><%=annotation.getGeneral()%></textarea><br>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+
+
+                            <div class="col-md-2">
+                                <label class="control-label">Date: </label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" style="background: white; cursor:default; border:0px;" value="<%=meeting.getSchedules().get(0).getStartdate()%>" class="form-control" name="date">
+                                <br>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                                <label class="control-label">Time: </label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" style="background: white; cursor:default; border:0px;" value="<%=meeting.getSchedules().get(0).getTime()%>" class="form-control" name="time">
+                                <br>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                                <label class="control-label">Agenda </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="agendaDiv">
+                                <br>
+                                <table class="table table-bordered table-striped table-condensed" style="background: white; cursor:default; border:0px;"  id="agendaTable">
+                                    <% for (Agenda a : meeting.getAgenda()){%>
+                                    <tr>
+                                        <td><%=a.getAgenda()%></td>
+                                    </tr>
+                                    <%}%>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                                <label class="control-label">Remarks </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <textarea type="text" style="background: white; cursor:default; border:0px;" name="remarks"  class="form-control" rows="3" placeholder=""> <%=meeting.getSchedules().get(0).getRemarks()%></textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>               
 
         <script>
             function getTestimonial(id) {

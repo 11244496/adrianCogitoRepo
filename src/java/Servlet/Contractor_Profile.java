@@ -44,10 +44,12 @@ public class Contractor_Profile extends HttpServlet {
         HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
             
+            Contractor_User contractor_user = (Contractor_User) session.getAttribute("user");
+            
             ContractorDAO contDAO = new ContractorDAO();
             //Gets the contractor
             //Contractor_User contractor_user = (Contractor_User) session.getAttribute("user");
-           ArrayList<Project> pList = contDAO.getProjectHistoryList("Finished");
+           ArrayList<Project> pList = contDAO.getProjectHistoryList("Finished",contractor_user.getID());
             
             
             request.setAttribute("pList", pList);

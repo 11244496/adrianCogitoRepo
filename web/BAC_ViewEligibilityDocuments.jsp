@@ -1,4 +1,5 @@
 
+<%@page import="Entity.Contractor_User"%>
 <%@page import="Entity.Eligibility_Document"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="Entity.Project"%>
@@ -122,7 +123,8 @@
         </aside>
 
 
-
+        <%ArrayList<Project> pList = (ArrayList<Project>) request.getAttribute("contractorPList");%>
+        <%Contractor_User cu = (Contractor_User) request.getAttribute("contractor");%>
         <%
             Eligibility_Document doc = (Eligibility_Document) request.getAttribute("doc");
 
@@ -273,6 +275,98 @@
 
                                         </table>
                                         <hr>
+
+                                        <!--Insert Contractor rating and history here-->
+                                        <section class="panel">
+                                            <div class="bio-graph-heading">
+                                                Project history of contractor <%out.print(cu.getName() + " of " + cu.getContractor().getName());%>
+                                            </div>
+                                            <div class="panel-body bio-graph-info">
+
+                                                <div class="row">
+
+                                                    <div class="panel-body">
+                                                        <table class="table table-hover p-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Description</th>
+                                                                    <th>Completed</th>
+                                                                    <th>Rating</th>
+                                                                    <th></th>
+                                                                    <th></th>
+
+
+
+                                                                </tr>
+                                                            </thead>
+
+
+                                                            <tbody>
+
+                                                                <%
+                                                                    if (pList.size() != 0) {
+                                                                        for (int x = 0; x < pList.size(); x++) {
+
+                                                                %>
+                                                                <tr>
+                                                                    <td class="p-name">
+                                                                        <%=pList.get(x).getName()%>
+                                                                    </td>
+                                                                    <td class="p-name">
+                                                                        <%=pList.get(x).getDescription()%>
+                                                                    </td>
+                                                                    <td class="p-name">
+
+                                                                    </td>
+                                                                    <td class="p-name">
+
+                                                                    </td>
+                                                                    <td>
+                                                                        <form action="BAC_Contractor_GetEvaluation" target="_blank">
+                                                                            <input type="hidden" name="projectID" value="<%=pList.get(x).getId()%>">
+
+                                                                            <button type="submit" class="btn btn-success" value="View proposal details">Evaluation</button>
+
+                                                                        </form>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <form action="BAC_ViewProject" target="_blank">
+                                                                            <input type="hidden" name="projectID" value="<%=pList.get(x).getId()%>">
+
+                                                                            <button type="submit" class="btn btn-success" value="View proposal details">Project details</button>
+
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <%
+                                                                    }
+                                                                } else {
+                                                                %>
+                                                                <tr>
+                                                                    <td colspan="6">
+                                                                        <center>
+                                                                        No Projects Finished Yet
+                                                                        </center>
+                                                                    <td>
+                                                                </tr>
+                                                                <%}%>
+
+                                                            </tbody>
+
+
+
+                                                        </table>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+
+
 
                                         <form action="BAC_ConfirmContractor">
 

@@ -127,63 +127,25 @@
                 <ul class="sidebar-menu" id="nav-accordion">
 
                     <li>
-                        <a href="Contractor_Home" class="active">
+                        <a href="BAC_Home" class="active">
                             <i class="fa fa-dashboard"></i>
                             <span>Home</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="Contractor_Profile">
-                            <i class="fa fa-dashboard"></i>
-                            <span>Profile</span>
-                        </a>
-                    </li>
 
                     <li>
-                        <a href="Contractor_ViewProjectList">
-                            <i class="fa fa-dashboard"></i>
-                            <span>View All Projects</span>
-                        </a>
-                    </li>
-
-                    <li class="sub-menu">
-                        <a href="javascript:;" >
-                            <i class="fa fa-tasks"></i>
-                            <span>Bidding</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a  href="Contractor_HandleInvitations">&nbsp; &nbsp; &nbsp; &nbsp;Handle Invitations</a></li>
-                            <li><a  href="Contractor_ViewHistory">&nbsp; &nbsp; &nbsp; &nbsp; View History</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="sub-menu">
-                        <a href="javascript:;" >
-                            <i class="fa fa-tasks"></i>
-                            <span>Implementation</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a  href="Contractor_ViewProjectList">&nbsp; &nbsp; &nbsp; &nbsp;Monitor Projects</a></li>
-                            <li><a  href="Contractor_ViewAR">&nbsp; &nbsp; &nbsp; &nbsp; View Accomplishment Reports</a></li>
-                        </ul>
-                    </li>
-
-                    <li>
-                        <a href="Contractor_ScheduleChange">
-                            <i class="fa fa-dashboard"></i>
-                            <span>Schedule Change</span>
+                        <a href="BAC_ViewContractorList">
+                            <i class="fa fa-book"></i>
+                            <span>Contractors</span>
                         </a>
                     </li>
 
                     <li>
-                        <a href="Contractor_ActivityandNotification">
-                            <i class="fa fa-dashboard"></i>
-                            <span>View Activity and Notifications</span>
+                        <a href="BAC_NotificationActivity">
+                            <i class="fa fa-book"></i>
+                            <span>Notifications and Activity</span>
                         </a>
                     </li>
-
-
-
                 </ul>
             </div>
         </aside>

@@ -181,5 +181,54 @@ public class LoginDAO {
         }
         return u;
     }
+    
+    public Contractor_User getContInfobyID(int id) {
+        Contractor_User c = null;
+        User u = null;
+        Contractor contractor = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from contractorusers join users on Users_ID = users.id join contractor on Company_ID = contractor.id where contractorusers.id = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                u = new User(result.getInt("users.id"), result.getString("username"));
+                contractor = new Contractor(result.getInt("contractor.ID"), result.getString("contractor.Name"));
+                c = new Contractor_User(result.getInt("contractorusers.ID"), result.getString("contractorusers.Name"), result.getString("Telephone"), result.getString("Address"), result.getString("Email"), contractor, u);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.LoginDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return c;
+    }
+    
+    public Contractor_User getContInfobyCHPID(int id) {
+        Contractor_User c = null;
+        User u = null;
+        Contractor contractor = null;
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select * from contractor_has_project join contractor on contractor_has_project.Contractor_ID = contractor.ID join contractorusers on contractorusers.Company_ID = contractor.ID where contractor_has_project.ID = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                contractor = new Contractor(result.getInt("contractor.ID"), result.getString("contractor.Name"));
+                c = new Contractor_User(result.getInt("contractorusers.ID"), result.getString("contractorusers.Name"), result.getString("Telephone"), result.getString("Address"), result.getString("Email"), contractor, u);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.LoginDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return c;
+    }
 
 }

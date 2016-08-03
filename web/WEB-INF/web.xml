@@ -472,6 +472,14 @@
         <servlet-name>Contractor_GenerateAccReport</servlet-name>
         <servlet-class>Servlet.Contractor_GenerateAccReport</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Citizen_ViewProjectDetails2</servlet-name>
+        <servlet-class>Servlet.Citizen_ViewProjectDetails2</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BAC_Contractor_GetEvaluation</servlet-name>
+        <servlet-class>Servlet.BAC_Contractor_GetEvaluation</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -943,6 +951,14 @@
     <servlet-mapping>
         <servlet-name>Contractor_GenerateAccReport</servlet-name>
         <url-pattern>/Contractor_GenerateAccReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Citizen_ViewProjectDetails2</servlet-name>
+        <url-pattern>/Citizen_ViewProjectDetails2</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BAC_Contractor_GetEvaluation</servlet-name>
+        <url-pattern>/BAC_Contractor_GetEvaluation</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -140,7 +140,7 @@
                     <ul class="sidebar-menu" id="nav-accordion">
 
                         <li>
-                            <a href="Citizen_Home" class="active">
+                            <a href="Citizen_Home">
                                 <i class="fa fa-dashboard"></i>
                                 <span>Home</span>
                             </a>
@@ -154,7 +154,7 @@
                         </li>
 
                         <li>
-                            <a href="Citizen_ProjectsImplemented">
+                            <a href="Citizen_ProjectsImplemented" class="active">
                                 <i class="fa fa-book"></i>
                                 <span>Projects Implemented</span>
                             </a>

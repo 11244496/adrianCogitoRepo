@@ -404,18 +404,22 @@
 
             $('#sendInv').click(function () {
 
-                $.ajax({
-                    type: 'post',
-                    url: 'AJAX_BAC_SendBidInvitation',
-                    dataType: 'json',
-                    data: {itbId: $('#itbId').val(), projId: $('#projId').val(), messageN: $('#messageN').val(), contractor: JSON.stringify(arr)},
-                    cache: false,
-                    success: function (data) {
-                        alert("Invitations has been sent");
-                        window.location = data.url;
-                    }
+                if (arr.length < 3) {
+                    alert("You need to select atleast 3 contractors");
+                } else {
+                    $.ajax({
+                        type: 'post',
+                        url: 'AJAX_BAC_SendBidInvitation',
+                        dataType: 'json',
+                        data: {itbId: $('#itbId').val(), projId: $('#projId').val(), messageN: $('#messageN').val(), contractor: JSON.stringify(arr)},
+                        cache: false,
+                        success: function (data) {
+                            alert("Invitations has been sent");
+                            window.location = data.url;
+                        }
 
-                });
+                    });
+                }
 
             });
         </script>

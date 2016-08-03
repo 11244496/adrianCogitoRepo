@@ -4,12 +4,14 @@
     Author     : RoAnn
 --%>
 
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="Entity.Project"%>
 <%@page import="Entity.Employee"%>
 <%@page import="Entity.Citizen"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%Employee bac = (Employee) session.getAttribute("user");%>
+<%DecimalFormat df = new DecimalFormat("#,###.00");%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -217,7 +219,7 @@
                                                             </td>
 
                                                             <td class="p-name">
-                                                                <%out.print(budget);%>
+                                                                PHP <%out.print(df.format(budget));%>
                                                             </td>
                                                             <td>
                                                                 <form action="BAC_ViewProject">

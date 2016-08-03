@@ -387,22 +387,34 @@
                                                 <br> 
                                                 <table class="table" style="width:100%; text-align: center">    
                                                     <tr>
-                                                        <td colspan="4">Total cost: </td>
+                                                        <td>Total cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Indirect Cost 17% of Total Cost: </td>
+                                                        <td>Indirect Cost 17% of Total Cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost * 0.17)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Tax 5% of Total Cost + Indirect Cost: </td>
+                                                        <td>Tax 5% of Total Cost + Indirect Cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format((cost * 0.17) * .05)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Estimated cost: </td>
+                                                        <td>Estimated cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost + (cost * 0.17) + ((cost * 0.17) * .05))%></td>
                                                     </tr>
 
@@ -583,50 +595,48 @@
         </section>
         <script>
             function getTestimonial(id) {
-                $.ajax({
+                                                                $.ajax({
                     type: 'POST',
-                    url: 'AJAX_BAC_gettestimonial',
+                                                                    url: 'AJAX_BAC_gettestimonial',
                     dataType: 'json',
-                    data: {testId: id}, cache: false,
-                    success: function (f) {
-                        $('#fDisplay').empty();
-                        var url = f.testimonial.folderName + "/" + f.testimonial.title + "/" + f.fileName;
-                        if (f.type === "Video") {
-                    $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
+                                                                data: {testId: id}, cache: false,
+                                                                success: function (f) {
+                                                                    $('#fDisplay').empty();
+                                                                    var url = f.testimonial.folderName + "/" + f.testimonial.title + "/" + f.fileName;
+                                                                if (f.type === "Video") {                     $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#fDisplay");
 
                     }
                     else if (f.type === "Image") {
-                        $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#fDisplay");
+                                                                $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#fDisplay");
 
-                        }
+                                                                }
 
-                        else if (f.type === "Document") {
-                        $("#docH").remove();
-                            $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#abcd");
-                        }
-                        $('#testTitle').text("Title: " + f.testimonial.title);
-                            $('#testDate').text("Date Uploaded: " + f.testimonial.dateUploaded);
-                            $('#testLoc').text("Location Details: " + f.testimonial.location + " + " + f.testimonial.locationdetails);
-                            $('#testDesc').text("Description: " + f.testimonial.message);
-                        $('#testModal').modal();
+                                                                else if (f.type === "Document") {                         $("#docH").remove();
+                                                            $("<header id=\"docH\" class=\"panel-heading\">File: " + "<a class=\"panel-heading\" href=\"" + url + "\">" + f.fileName + "</a> </header>").appendTo("#abcd");
+                                                            }
+                                                            $('#testTitle').text("Title: " + f.testimonial.title);
+                                                                $('#testDate').text("Date Uploaded: " + f.testimonial.dateUploaded);                             $('#testLoc').text("Location Details: " + f.testimonial.location + " + " + f.testimonial.locationdetai ls);
+                                                                $('#testDesc').text("Description: " + f.testimonial.message);
+                                                                    $('#testModal').modal();
                     }
-                });
-            } 
+                });             } 
 
                         function getProjectFiles(id) {
                         $.ajax({
-                    type: 'POST',
-                        url: 'AJAX_BAC_getProjectFiles',
-                    dataType: 'json',
+                                                                type: 'POST',
+                                                                url: 'AJAX_BAC_getProjectFiles',
+                                                                    dataType: 'json',
                         data: {testId: id}, cache: false,
                     success: function (f) {
-                        $('#pfDisplay').empty();
-                        var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
-                                        if (f.type === "Video") {
-                                    $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
+                                                                $('#pfDisplay').empty();
+                                                                                    var url = "<%=p.getFoldername()%>" + "/" +<%=p.getId()%> + "/" + f.fileName;
+                            
+                                                                                    if (f.type === "Video") {
+                                                                                $("<div data-p=\"144.50\"><video><source src=\"" + url + "\" type=\"video/mp4\"><source src=" + url + " type=\"video/ogg\"></video></div>").appendTo("#pfDisplay");
                          }
-                                    else if (f.type === "Image") {
-                                        $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#pfDisplay");
+                                    el
+                                                                        se if (f.type === "Image") {
+                                                                    $("<img src=\"" + url + "\" style=\"max-width: 570px; height:400px;\">").appendTo("#pfDisplay");
 
                                         }
 
@@ -652,111 +662,110 @@
         <script src="js/common-scripts.js"></script>
         <script src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"async defer ></script>
         <script>
-            var map;
+                                                                            var map;
             var markers = <%=session.getAttribute("location")%>;
-            function initMap() {
-                map = new google.maps.Map(document.getElementById('map'), {
-                    center: {lat: 14.45, lng: 120.98},
-                    zoom: 14
+                            function initMap() {                 map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 14.45, lng: 120.98},
+                zoom: 14
                 });
 
                 markers.forEach(function (coor) {
                     var geocoder = new google.maps.Geocoder;
-                    var latLng = new google.maps.LatLng(coor.lats, coor.longs);
+                        var latLng = new google.maps.LatLng(coor.lats, coor.longs);
                     var marker = new google.maps.Marker({
-                position: latLng,
-                        map: map
+                            position: latLng,
+                                map: map
                 });
 
-                    var infowindow = new google.maps.InfoWindow;
+                                    var infowindow = new google.maps.InfoWindow;
 
-                        marker.addListener('click', function () {
-                    geocodeLatLng(geocoder, map, infowindow, latLng);
-                    });
+                                marker.addListener('click', function () {
+                                geocodeLatLng(geocoder, map, infowindow, latLng);
+                                });
                 });
 
-                        }
+                            }
 
-                        function geocodeLatLng(geocoder, map, infowindow, latLng) {
-                var latlng = latLng;
-                        geocoder.geocode({'location': latlng}, function (results, status) {
-                            if (status === google.maps.GeocoderStatus.OK) {
-                        if (results[0]) {
+                            function geocodeLatLng(geocoder, map, infowindow, latLng) {
+                        var latlng = latLng;
+                       
+                            geocoder.geocode({'location': latlng}, function (results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
                         var marker = new google.maps.Marker({
-                                position: latlng,
+                position: latlng,
                             map: map
-                            });
-                infowindow.setContent(results[0].formatted_address);
-                    infowindow.open(map, marker);
-                        } else {
-                    window.alert('No results found');
-                        }
-                            } else {                         window.alert('Geocoder failed due to: ' + status);
-                                }
                 });
+                    infowindow.setContent(results[0].formatted_address);
+                    infowindow.open(map, marker);
+                    } else {
+                    window.alert('No results found');
+                    }
+                        } else {                         window.alert('Geocoder failed due to: ' + status);
+                    }
+                    });
             }
 
         </script>
         <script>
-            //These are the properties of the chart, you set what it  will look like here
-            var chartD;
-            var chartVal = Object.create(null);
-            var chart = AmCharts.makeChart("chartdiv", {
+                //These are the properties of the chart, you set what it  will look like here
+                var chartD;
+                var chartVal = Object.create(null);
+                var chart = AmCharts.makeChart("chartdiv", {
                 "type": "gantt",
-                "period": "DD",
+                    "period": "DD",
                 "theme": "dark",
-                "valueAxis": {
+                    "valueAxis": {
                     "type": "date"
                 },
-                "brightnessStep": 10,
+                    "brightnessStep": 10,
                 "graph": {
                     "fillAlphas": 1,
-                    "balloonText": "[[open]] - [[value]]"
+                "balloonText": "[[open]] - [[value]]"
                 },
-                "rotate": true,
-                "categoryField": "name",
-                "segmentsField": "schedules",
-                "dataDateFormat": "YYYY-MM-DD",
-                "startDateField": "startdate",
-                "endDateField": "enddate",
+                    "rotate": true,
+                    "categoryField": "name",
+                    "segmentsField": "schedules",
+            "dataDateFormat": "YYYY-MM-DD", "startDateField": "startdate",
+            "endDateField": "enddate",
                 "dataProvider": <%=tasksJSON%>,
-                "chartCursor": {
-                    "valueBalloonsEnabled": false,
-                    "cursorAlpha": 0,
-                    "valueLineBalloonEnabled": true,
+            "chartCursor": {
+            "valueBalloonsEnabled": false,
+                "cursorAlpha": 0,
+                "valueLineBalloonEnabled": true,
                     "valueLineEnabled": true,
                     "valueZoomable": true,
                     "zoomable": false
                 },
-                "valueScrollbar": {
+                        "valueScrollbar": {
                     "position": "top",
-                    "autoGridCount": true,
+                        "autoGridCount": true,
                     "color": "#000000"
-                },
-                
+                    },
+                    
             });
 
 
             //Event method: click item
-            //Once you click one of the bars in the gantt chart, this method will execute
+                        //Once you click one of the bars in the gantt chart, this method will execute
             var index = 0;
-            var clickItemEvent = function (event) {
+                        var clickItemEvent = function (event) {
                 index = 0;
 
-                $.map(event.item.dataContext, function (val, i) {
-                    //When the index is referring to the category of the selected value
+                        $.map(event.item.dataContext, function (val, i) {
+                        //When the index is referring to the category of the selected value
                     if (i == "name") {
 
                         //Place the name of the selected value on the textfield 
-                        $("#category").val(event.item.dataContext.name);
+                            $("#category").val(event.item.dataContext.name);
 
 
-                    }
-                    //Else, if the index is referring to the segments of that particular value selected
-                    else {
+                            }
+                            //Else, if the index is referring to the segments of that particular value selected
+                            else {
 
 
-                        var name = i.indexOf("start") != -1 ? "startdate" : "enddate";
+                            var name = i.indexOf("start") != -1 ? "startdate" : "enddate";
                         var labelName = i.indexOf("start") != -1 ? "Start date: " : "End date: ";
 
 
@@ -768,47 +777,47 @@
                         if (i.indexOf("start") != -1) {
 
 
-                            //Creates a label and then pushes it  to the div
-                            var div = $("<div></div>");
-                            div.prop("id", "div-" + index);
-                            div.prop("class", "divinput");
+                        //Creates a label and then pushes it  to the div
+                        var div = $("<div></div>");
+                        div.prop("id", "div-" + index);
+                        div.prop("class", "divinput");
                             div.appendTo("#submitEntryEdit");
 
                         }
                         //Creates a label and then pushes it  to the div
-                        var label = $("<label/>");
-                        label.html(labelName);
-                        label.prop("id", name + index);
-                        label.appendTo("#" + "div-" + index);
+                            var label = $("<label/>");
+                    label.html(labelName);
+            label.prop("id", name + index);
+            label.appendTo("#" + "div-" + index);
 
-                        //Creates a textfield then puts it to the div
-                        var newStart = $("<label/>");
-                        newStart.prop("id", name + '-' + index);
+                //Creates a textfield then puts it to the div
+                    var newStart = $("<label/>");
+                    newStart.prop("id", name + '-' + index);
                         newStart.appendTo("#" + "div-" + index);
                         newStart.val(formatDate(new Date(val)));
 
-                        $("<br>").appendTo("#" + "div-" + index);
+                    $("<br>").appendTo("#" + "div-" + index);
 
 
                         if (i.indexOf("end") != -1) {
                             index++;
-                        }
                     }
+                        }
                 });
             };
             //var index = 0;
-            var addSegment = function (event) {
-                $.map(event.item.dataContext, function (val, i) {
+                        var addSegment = function (event) {
+                        $.map(event.item.dataContext, function (val, i) {
 
-                    //When the index is referring to the category of the selected value
+                        //When the index is referring to the category of the selected value
                     if (i == "name") {
 
                         //Place the name of the selected value on the textfield 
-                        $("#category").val(event.item.dataContext.category);
+                            $("#category").val(event.item.dataContext.category);
 
 
-                    }
-                    //Else, if the index is referring to the segments of that particular value selected
+                            }
+                            //Else, if the index is referring to the segments of that particular value selected
                     else {
 
 
@@ -818,37 +827,35 @@
 
                         //Creates a div that will store the start date and end date for a particular Task   
                         if (i.indexOf("start") != -1) {
-                            //Creates a div and then pushes it  to the div
-                            var div = $("<div></div>");
-                            div.prop("id", "div-" + index);
-                            div.prop("class", "divinput");
-                            div.appendTo("#submitEntryEdit");
+                        //Creates a div and then pushes it  to the div
+                        var div = $("<div></div>");
+                        div.prop("id", "div-" + index);
+                        div.prop("class", "divinput");
+                        div.appendTo("#submitEntryEdit");
                         }
 
                         //Creates a label and then pushes it  to the div
                         var label = $("<label/>");
-                        label.html(labelName);
-                        label.prop("id", name + index);
+                label.html(labelName);
+            label.prop("id", name + index);
                         label.appendTo("#" + "div-" + index);
                         //Creates a label then puts it to the div
-                        var newStart = $("<input type='text'/>");
-                        newStart.prop("id", name + index);
-                        newStart.appendTo("#" + "div-" + index);
-                        newStart.val(new Date(val));
-                        $("<br>").appendTo("#" + "div-" + index);
+                    var newStart = $("<input type='text'/>");                         newStart.prop("id", name + index);
+                newStart.appendTo("#" + "div-" + index);
+                newStart.val(new Date(val));
+            $("<br>").appendTo("#" + "div-" + index);
 
 
-                        if (i.indexOf("end") != -1) {
-                            index++;
+                if (i.indexOf("end") != -1) {                             index++;
 
-                        }
-                    }
+            }
+            }
                 });
 
             };
-
+                
             function formatDate(date) {
-                var d = new Date(date),
+            var d = new Date(date),
                         month = '' + (d.getMonth() + 1),
                         day = '' + d.getDate(),
                         year = d.getFullYear();

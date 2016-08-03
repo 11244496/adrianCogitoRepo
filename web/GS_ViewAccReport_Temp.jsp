@@ -200,9 +200,9 @@
             <!--header end-->
 
             <section id="main-content">
-                
-                
-                
+
+
+
                 <section class="wrapper site-min-height">
                     <!-- page start-->
                     <section class="panel">
@@ -289,7 +289,7 @@
                                 </div>
 
                             </section>
-                             <div class="row">
+                            <div class="row">
 
                                 <!------------------------------------------------------PROGRAM OF WORKS------------------------------------------>
 
@@ -320,8 +320,8 @@
                                                         <td><%=pworks.get(x).getComponents().get(y).getName()%></td>
                                                         <td><%=pworks.get(x).getComponents().get(y).getQuantity()%></td>
                                                         <td><%=pworks.get(x).getComponents().get(y).getUnit().getUnit()%></td>
-                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice()%></td>
-                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice() * pworks.get(x).getComponents().get(y).getQuantity()%></td>
+                                                        <td>PHP <%=df.format(pworks.get(x).getComponents().get(y).getUnitPrice())%></td>
+                                                        <td>PHP <%=df.format(pworks.get(x).getComponents().get(y).getUnitPrice() * pworks.get(x).getComponents().get(y).getQuantity())%></td>
                                                     </tr>
 
 
@@ -333,22 +333,34 @@
                                                 <br> 
                                                 <table class="table" style="width:100%; text-align: center">    
                                                     <tr>
-                                                        <td colspan="4">Total cost: </td>
+                                                        <td>Total cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Indirect Cost 17% of Total Cost: </td>
+                                                        <td>Indirect Cost 17% of Total Cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost * 0.17)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Tax 5% of Total Cost + Indirect Cost: </td>
+                                                        <td>Tax 5% of Total Cost + Indirect Cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format((cost * 0.17) * .05)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Estimated cost: </td>
+                                                        <td>Estimated cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost + (cost * 0.17) + ((cost * 0.17) * .05))%></td>
                                                     </tr>
 
@@ -362,101 +374,99 @@
                             <!------------------------------------------------------SCHEDULE------------------------------------------>
 
 
-                            
+
                             <input type="hidden" id="projId" value="" name="projId">
-                            
-                            
+
+
                             <!---------------------------------------------For the summary of the works----------------->
-                            
+
                             <section class="panel">
-                                
-            <%ArrayList<Schedule> completedDatesReport = (ArrayList<Schedule>) session.getAttribute("completedDatesReport");%>
-                                
+
+                                <%ArrayList<Schedule> completedDatesReport = (ArrayList<Schedule>) session.getAttribute("completedDatesReport");%>
+
                                 <div class="bio-graph-heading project-heading">
                                     <strong>Work Done</strong>
                                 </div>
                                 <div class="panel-body bio-graph-info">
-                                    
-                                    
-<%
-
-                                   long total = 0; 
 
 
-%>
-                                   
+                                    <%
+
+                                        long total = 0;
+
+
+                                    %>
+
+                                    <style>
+                                        .okaylegend {color: blue;}
+                                        .semiokaylegend {color: green;}
+                                        .notokaylegend {color: red;}
+                                    </style>
+
+                                    <div class="pull-right">
+                                        <i class="fa fa-square okaylegend" style="margin-left: 7px"></i> Ahead
+                                        <br>
+                                        <i class="fa fa-square semiokaylegend" style="margin-left: 7px"></i>  On-time
+                                        <br>
+                                        <i class="fa fa-square notokaylegend" style="margin-left: 7px"></i>  Delayed
+                                    </div>
+
                                     <table class="table table-bordered">
-                                        
+
                                         <thead>
                                         <th>Work</th>
-                                        <th>Description</th>
                                         <th>Date Started</th>
                                         <th>Target End date</th>
                                         <th>Actual date completed</th>
                                         <th>Status</th>
-                                        
-                                        
+
+
                                         </thead>
                                         <tbody>
-                                            <%
-                                                
-                                            Date convertedCurrentDate1;
-                                            Date convertedCurrentDate2;
-                                            
-                                             for(int x = 0; x < completedDatesReport.size();x++){
-                                                
-                                                
-                                              SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                              convertedCurrentDate1 = sdf.parse(completedDatesReport.get(x).getEnddate());
-                                              String date1 = sdf.format(convertedCurrentDate1);
-                                              
-                                              String date2 = "";
-                                              long diffDays = 0;
-                                              
-                                              
-                                              convertedCurrentDate2 = sdf.parse(completedDatesReport.get(x).getActualenddate());
-                                              date2 = sdf.format(convertedCurrentDate2);
-                                              
-                                              
-                                              long diff = Math.abs(convertedCurrentDate1.getTime() - convertedCurrentDate2.getTime());
-                                              diffDays = diff / (24 * 60 * 60 * 1000);
-                                              
-                                               total += diffDays;
-                                              
+                                            <%                                                Date convertedCurrentDate1;
+                                                Date convertedCurrentDate2;
 
+                                                for (int x = 0; x < completedDatesReport.size(); x++) {
 
+                                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                                    convertedCurrentDate1 = sdf.parse(completedDatesReport.get(x).getEnddate());
+                                                    String date1 = sdf.format(convertedCurrentDate1);
 
+                                                    String date2 = "";
+                                                    long diffDays = 0;
 
+                                                    convertedCurrentDate2 = sdf.parse(completedDatesReport.get(x).getActualenddate());
+                                                    date2 = sdf.format(convertedCurrentDate2);
 
+                                                    long diff = Math.abs(convertedCurrentDate1.getTime() - convertedCurrentDate2.getTime());
+                                                    diffDays = diff / (24 * 60 * 60 * 1000);
 
-
-
+                                                    total += diffDays;
 
 
                                             %>
                                             <tr>
                                                 <td><%=completedDatesReport.get(x).getTask().getName()%></td>
-                                                <td><%=completedDatesReport.get(x).getTask().getDescription()%></td>
                                                 <td><%=completedDatesReport.get(x).getStartdate()%></td>
                                                 <td><%=completedDatesReport.get(x).getEnddate()%></td>
                                                 <td><%=completedDatesReport.get(x).getActualenddate()%></td>
                                                 <%
-                                                if(convertedCurrentDate1.after(convertedCurrentDate2)){
+                                                    if (convertedCurrentDate1.after(convertedCurrentDate2)) {
                                                 %>
                                                 <td>
                                                     <font color="blue"> Ahead <%out.print(diffDays + " days");%></font>
                                                 </td>
                                                 <%
-                                                }
+                                                    }
 
-                                                if(convertedCurrentDate1.equals(convertedCurrentDate2)){
+                                                    if (convertedCurrentDate1.equals(convertedCurrentDate2)) {
                                                 %>
                                                 <td>
                                                     <font color="green"> On-time </font>
                                                 </td>
                                                 <%
-                                                }
-                                                if(convertedCurrentDate1.before(convertedCurrentDate2)){
+                                                    }
+                                                    if (convertedCurrentDate1.before(convertedCurrentDate2)) {
                                                 %>
 
                                                 <td>
@@ -464,40 +474,39 @@
                                                 </td>
 
                                                 <%
-                                                }
+                                                    }
                                                 %>
-                                                
-                                                
+
+
                                             </tr>
-                                            
+
                                             <%
-                                            
                                                 }
-                                            
+
                                             %>
                                         </tbody>
-                                        
-                                        
+
+
                                     </table>    
-                                    
-                                    
-                                    
-               
+
+
+
+
 
                                 </div>
 
-                                
+
                                 <br>             
 
 
 
                             </section>
-                            
-                            
-                            
-                            
-                            
-<section class="panel">
+
+
+
+
+
+                            <section class="panel">
                                 <div class="bio-graph-heading project-heading">
                                     <strong>Project Main Testimonial</strong>
                                 </div>
@@ -591,7 +600,7 @@
                                 <div class="row">
 
                                     <div class="col-md-12">
-                                        
+
 
 
 
@@ -604,7 +613,7 @@
                                 <!-- page end-->
                             </section>             
 
-                                 
+
 
 
 
@@ -818,7 +827,7 @@
                 "dataDateFormat": "YYYY-MM-DD",
                 "startDateField": "startdate",
                 "endDateField": "enddate",
-        "dataProvider": <%=tasksJSON%>,
+                "dataProvider": <%=tasksJSON%>,
                 "chartCursor": {
                     "valueBalloonsEnabled": false,
                     "cursorAlpha": 0,
@@ -971,7 +980,7 @@
             ;
 
         </script>
-     
+
 
     </body>
 

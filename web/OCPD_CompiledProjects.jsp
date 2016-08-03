@@ -118,8 +118,8 @@
                                             <td><%=p.getpWorks().get(y).getComponents().get(z).getName()%></td>
                                             <td><%=p.getpWorks().get(y).getComponents().get(z).getQuantity()%></td>
                                             <td><%=p.getpWorks().get(y).getComponents().get(z).getUnit().getUnit()%></td>
-                                            <td><%=p.getpWorks().get(y).getComponents().get(z).getUnitPrice()%></td>
-                                            <td><%=p.getpWorks().get(y).getComponents().get(z).getUnitPrice() * p.getpWorks().get(y).getComponents().get(z).getQuantity()%></td>
+                                            <td>PHP <%=df.format(p.getpWorks().get(y).getComponents().get(z).getUnitPrice())%></td>
+                                            <td>PHP <%=df.format(p.getpWorks().get(y).getComponents().get(z).getUnitPrice() * p.getpWorks().get(y).getComponents().get(z).getQuantity())%></td>
                                         </tr>
 
 
@@ -131,24 +131,36 @@
                                     <br> 
                                     <table class="table" style="width:100%; text-align: center">    
                                         <tr>
-                                            <td colspan="4">Total cost: </td>
-                                            <td>PHP <%=df.format(oc.getCost(p))%></td>
-                                        </tr>
+                                                    <td>Total cost: </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>PHP <%=df.format(oc.getCost(p))%></td>
+                                                </tr>
 
-                                        <tr>
-                                            <td colspan="4">Indirect Cost 17% of Total Cost: </td>
-                                            <td>PHP <%=df.format(oc.getCost(p) * 0.17)%></td>
-                                        </tr>
+                                                <tr>
+                                                    <td>Indirect Cost 17% of Total Cost: </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>PHP <%=df.format(oc.getCost(p) * 0.17)%></td>
+                                                </tr>
 
-                                        <tr>
-                                            <td colspan="4">Tax 5% of Total Cost + Indirect Cost: </td>
-                                            <td>PHP <%=df.format((oc.getCost(p) * 0.17) * .05)%></td>
-                                        </tr>
+                                                <tr>
+                                                    <td>Tax 5% of Total Cost + Indirect Cost: </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>PHP <%=df.format((oc.getCost(p) * 0.17) * .05)%></td>
+                                                </tr>
 
-                                        <tr>
-                                            <td colspan="4">Estimated cost: </td>
-                                            <td>PHP <%=df.format(oc.getCost(p) + (oc.getCost(p) * 0.17) + ((oc.getCost(p) * 0.17) * .05))%></td>
-                                        </tr>
+                                                <tr>
+                                                    <td>Estimated cost: </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>PHP <%=df.format(oc.getCost(p) + (oc.getCost(p) * 0.17) + ((oc.getCost(p) * 0.17) * .05))%></td>
+                                                </tr>
 
                                     </table>
                                 </div>

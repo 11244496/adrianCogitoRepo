@@ -6,13 +6,18 @@
 package Servlet;
 
 import DAO.CitizenDAO;
+import DAO.ContractorDAO;
 import DAO.GSDAO;
+import DAO.LoginDAO;
 import DAO.OCPDDAO;
 import Entity.Citizen;
+import Entity.Contractor_User;
 import Entity.Files;
 import Entity.Location;
 import Entity.Project;
+import Entity.Schedule;
 import Entity.Testimonial;
+import Entity.User;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -46,72 +51,62 @@ public class Citizen_ViewProjectDetails extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-         HttpSession session = request.getSession();
-
-        try (PrintWriter out = response.getWriter()) {
-            OCPDDAO dao = new OCPDDAO();
-            GSDAO gsdao = new GSDAO();
+        HttpSession session = request.getSession();
+        try {
+            GSDAO gdao = new GSDAO();
+            OCPDDAO oc = new OCPDDAO();
             CitizenDAO ct = new CitizenDAO();
+            ContractorDAO contdao = new ContractorDAO();
+            LoginDAO lDAO = new LoginDAO();
+            
+            
             String id = request.getParameter("projid");
 
-            Project p = dao.getAllProjectDetails(id);
-            ArrayList<Location> projectLocation = p.getLocation();
+            Project project = oc.getAllProjectDetails(id);
+            ArrayList<Location> projectLocation = project.getLocation();
             String location = new Gson().toJson(projectLocation);
             session.setAttribute("location", location);
 
-            ArrayList<Testimonial> tList = new ArrayList<>();
-            ArrayList<Files> fList;
-            ArrayList<Integer> idList = new ArrayList<>();
-            Testimonial t;
-
-            for (Files f : p.getFiles()) {
-                if (f.getTestimonial().getId() != 0) {
-                    if (!idList.contains(f.getTestimonial().getId())) {
-                        idList.add(f.getTestimonial().getId());
-                    }
-                }
+            Testimonial mainTesti = gdao.getTestimonial(project.getMainTestimonial().getId());
+            project.setMainTestimonial(mainTesti);
+            
+            //References
+            ArrayList<Project> referencedPList = new ArrayList<Project>();
+            for(int x = 0; x < project.getReferredProjects().size();x++){
+                Project p = oc.getAllProjectDetails(project.getReferredProjects().get(x).getId());
+                referencedPList.add(p);
             }
-            for (int x : idList) {
-                t = dao.getTestimonial(x);
-                tList.add(t);
-            }
-            for (Testimonial tm : tList) {
-                fList = new ArrayList<>();
-                for (Files f : p.getFiles()) {
-                    if (tm.getId() == f.getTestimonial().getId()) {
-                        fList.add(f);
-                    }
-                }
-                tm.setFiles(fList);
-            }
-
-            Citizen c = (Citizen) session.getAttribute("user");
-            session.setAttribute("project", p);
-            double percent = dao.getPercentage(p);
+            project.setReferredProjects(referencedPList);
             
             //Set new arraylist of proposal files
-            //ArrayList<Files> projectFiles = gsdao.getprojectfiles(p);
-            //session.setAttribute("pFiles", projectFiles);
-            session.setAttribute("feedback", ct.getAverage(p));
-           
-            session.setAttribute("percentage", percent);
-            session.setAttribute("testimonials", tList);
-            //session.setAttribute("isFollowing", ct.isFollowing(p, c));
+            ArrayList<Files> projectFiles = project.getFiles();
+            session.setAttribute("pFiles", projectFiles);
+            session.setAttribute("project", project);
+            session.setAttribute("feedback", ct.getAverage(project));
+
+            //Get contractor
+            Contractor_User cu = lDAO.getContInfobyID(project.getContractorUser().getID());
+            session.setAttribute("contractor", cu);
+            ArrayList<Project> pList = contdao.getProjectHistoryList("Finished",cu.getID());
+            session.setAttribute("contractorPList", pList);
+            
+            //Schedule
+            ArrayList<Schedule> completedDatesReport = gdao.getCompletedTaskReport(id);
+            session.setAttribute("completedDatesReport", completedDatesReport);
+            
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch = null;
-            if (p.getStatus().equalsIgnoreCase("Finished")) {
+            RequestDispatcher dispatch;
+            if (project.getStatus().equalsIgnoreCase("Finished")) {
                 dispatch = context.getRequestDispatcher("/Citizen_ViewProjectDetails.jsp");
             } else {
-               dispatch = context.getRequestDispatcher("/Citizen_ViewProjectDetailsN.jsp");
+                dispatch = context.getRequestDispatcher("/Citizen_ViewProjectDetailsN.jsp");
             }
-            
             dispatch.forward(request, response);
 
-        }finally{
-        
+        } finally {
             out.close();
-        
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

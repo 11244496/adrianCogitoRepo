@@ -472,6 +472,7 @@
                         var marker = new google.maps.Marker({
                             position: latLng,
                             map: map
+                            //icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
                         });
 
                         var infowindow = new google.maps.InfoWindow;

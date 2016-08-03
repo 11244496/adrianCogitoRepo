@@ -376,22 +376,34 @@
                                                 <br> 
                                                 <table class="table" style="width:100%; text-align: center">    
                                                     <tr>
-                                                        <td colspan="4">Total cost: </td>
+                                                        <td>Total cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Indirect Cost 17% of Total Cost: </td>
+                                                        <td>Indirect Cost 17% of Total Cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost * 0.17)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Tax 5% of Total Cost + Indirect Cost: </td>
+                                                        <td>Tax 5% of Total Cost + Indirect Cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format((cost * 0.17) * .05)%></td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td colspan="4">Estimated cost: </td>
+                                                        <td>Estimated cost: </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         <td>PHP <%=df.format(cost + (cost * 0.17) + ((cost * 0.17) * .05))%></td>
                                                     </tr>
 
@@ -713,7 +725,7 @@
                 "dataDateFormat": "YYYY-MM-DD",
                 "startDateField": "startdate",
                 "endDateField": "enddate",
-        "dataProvider": <%=tasksJSON%>,
+                "dataProvider": <%=tasksJSON%>,
                 "chartCursor": {
                     "valueBalloonsEnabled": false,
                     "cursorAlpha": 0,

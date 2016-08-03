@@ -56,8 +56,8 @@
         <!-- Custom styles for this template -->
         <link href="css/style.css" rel="stylesheet">
         <link href="css/style-responsive.css" rel="stylesheet" />
-        
-        
+
+
         <!-- Custom styles for this template -->
         <link href="css/style.css" rel="stylesheet">
         <link href="css/style-responsive.css" rel="stylesheet">
@@ -107,7 +107,7 @@
             .uneditablelegend {color:#ff6666;}
         </style>
         <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
-        
+
 
     </head>
 
@@ -248,433 +248,443 @@
 
         <!--main content start-->
         <section id="main-content">
-                
-                
-                
-                <section class="wrapper site-min-height">
-                    <!-- page start-->
-                    <section class="panel">
-
-                        <header class="panel-heading">
-                            <h3>Accomplishment Report</h3>
-
-                            <span class="pull-right">
-                            </span>
-                        </header>
-                    </section>
-
-                    <div class="row">
-
-                        <div class="col-md-12">
-                            <section class="panel">
-                                <div class="bio-graph-heading project-heading">
-                                    <strong><%=p.getName()%> </strong>
-                                </div><p>
-                                <div class="panel-body bio-graph-info">
-                                    <!--<h1>New Dashboard BS3 </h1>-->
-                                    <div class="row">
-                                        <div class="col-lg-5" >
-                                            <section class="panel">
-                                                <div class="panel-body">
-
-
-                                                    <!------------------------------------------------------DETAILS------------------------------------------>
-                                                    <div>
-                                                        <p><span class="bold">Project ID: </span></p>
-                                                        <p><%=p.getId()%></p>
-                                                    </div><br>
-
-                                                    <div>
-                                                        <p><span class="bold">Brief description: </span></p>
-                                                        <p><%=p.getDescription()%></p>
-                                                    </div><br>
-
-                                                    <div>
-                                                        <p><span class="bold">Category </span>:</p>
-                                                        <p><%=p.getCategory()%></p>
-                                                    </div><br>
-                                                    <div>
-                                                        <p><span class="bold">Date Submitted</span> :</p>
-                                                        <p><%=p.getDatesubmitted()%></p>
-                                                    </div><br>
-                                                    <%if (p.getBudget() != 0) {%>
-
-                                                    <div>
-                                                        <p><span class="bold">Budget</span> :</p>
-                                                        <p>PHP <%=df.format(p.getBudget())%></p>
-                                                    </div><br>
-                                                    <%}%>
-
-                                                    <br>  
-
-                                                    <p><span class="bold">Project Progress:</span> :</p>
-                                                    <div class="progress progress-striped active ">
-                                                        <div style="width: 10;" class="progress-bar progress-bar-success"></div>
-                                                    </div>
-                                                    <small>Current Status: <%out.print(p.getStatus());%></small>
 
 
 
-                                                </div>
-                                            </section>
-                                        </div>
+            <section class="wrapper site-min-height">
+                <!-- page start-->
+                <section class="panel">
 
-                                        <!------------------------------------------------------LOCATION------------------------------------------>
+                    <header class="panel-heading">
+                        <h3>Accomplishment Report</h3>
 
-                                        <div class="col-lg-6">
-                                            <section class="panel">
-                                                <div class="panel-body">                            
-                                                    <div><p><span class="bold">Location: </span> :</p></div>
-                                                    <div class="panel-body bio-graph-info">
-                                                        <center>
-                                                            <div id="map" style="height: 500px; width: 575px; margin: 0; padding: 0;"></div>
-                                                        </center>
-                                                    </div>
-                                                </div>
-                                            </section>
-                                        </div>
-                                    </div>
-                                </div>
+                        <span class="pull-right">
+                        </span>
+                    </header>
+                </section>
 
-                            </section>
-                             <div class="row">
+                <div class="row">
 
-                                <!------------------------------------------------------PROGRAM OF WORKS------------------------------------------>
-
-                                <section class="panel">
-
-                                    <div class="col-lg-12">
-                                        <div class="bio-graph-heading project-heading">
-                                            <strong>Program Works</strong>
-                                        </div>
-
+                    <div class="col-md-12">
+                        <section class="panel">
+                            <div class="bio-graph-heading project-heading">
+                                <strong><%=p.getName()%> </strong>
+                            </div><p>
+                            <div class="panel-body bio-graph-info">
+                                <!--<h1>New Dashboard BS3 </h1>-->
+                                <div class="row">
+                                    <div class="col-lg-5" >
                                         <section class="panel">
                                             <div class="panel-body">
-                                                <table class="table" style="width:100%; text-align: center">
-                                                    <%for (int x = 0; x < pworks.size(); x++) {%>
-
-                                                    <tr>
-                                                        <th colspan="6"><%=pworks.get(x).getName()%></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th><center>Name</center></th>
-                                                    <th><center>Quantity</center></th>
-                                                    <th><center>Unit</center></th>
-                                                    <th><center>Unit Price</center></th>
-                                                    <th><center>Total</center></th>
-                                                    </tr>
-                                                    <%for (int y = 0; y < pworks.get(x).getComponents().size(); y++) {%>
-                                                    <tr>
-                                                        <td><%=pworks.get(x).getComponents().get(y).getName()%></td>
-                                                        <td><%=pworks.get(x).getComponents().get(y).getQuantity()%></td>
-                                                        <td><%=pworks.get(x).getComponents().get(y).getUnit().getUnit()%></td>
-                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice()%></td>
-                                                        <td><%=pworks.get(x).getComponents().get(y).getUnitPrice() * pworks.get(x).getComponents().get(y).getQuantity()%></td>
-                                                    </tr>
 
 
-                                                    <%}%>
+                                                <!------------------------------------------------------DETAILS------------------------------------------>
+                                                <div>
+                                                    <p><span class="bold">Project ID: </span></p>
+                                                    <p><%=p.getId()%></p>
+                                                </div><br>
 
-                                                    <%}%>
+                                                <div>
+                                                    <p><span class="bold">Brief description: </span></p>
+                                                    <p><%=p.getDescription()%></p>
+                                                </div><br>
 
-                                                </table>
-                                                <br> 
-                                                <table class="table" style="width:100%; text-align: center">    
-                                                    <tr>
-                                                        <td colspan="4">Total cost: </td>
-                                                        <td>PHP <%=df.format(cost)%></td>
-                                                    </tr>
+                                                <div>
+                                                    <p><span class="bold">Category </span>:</p>
+                                                    <p><%=p.getCategory()%></p>
+                                                </div><br>
+                                                <div>
+                                                    <p><span class="bold">Date Submitted</span> :</p>
+                                                    <p><%=p.getDatesubmitted()%></p>
+                                                </div><br>
+                                                <%if (p.getBudget() != 0) {%>
 
-                                                    <tr>
-                                                        <td colspan="4">Indirect Cost 17% of Total Cost: </td>
-                                                        <td>PHP <%=df.format(cost * 0.17)%></td>
-                                                    </tr>
+                                                <div>
+                                                    <p><span class="bold">Budget</span> :</p>
+                                                    <p>PHP <%=df.format(p.getBudget())%></p>
+                                                </div><br>
+                                                <%}%>
 
-                                                    <tr>
-                                                        <td colspan="4">Tax 5% of Total Cost + Indirect Cost: </td>
-                                                        <td>PHP <%=df.format((cost * 0.17) * .05)%></td>
-                                                    </tr>
+                                                <br>  
 
-                                                    <tr>
-                                                        <td colspan="4">Estimated cost: </td>
-                                                        <td>PHP <%=df.format(cost + (cost * 0.17) + ((cost * 0.17) * .05))%></td>
-                                                    </tr>
+                                                <p><span class="bold">Project Progress:</span> :</p>
+                                                <div class="progress progress-striped active ">
+                                                    <div style="width: 10;" class="progress-bar progress-bar-success"></div>
+                                                </div>
+                                                <small>Current Status: <%out.print(p.getStatus());%></small>
 
-                                                </table>
+
+
                                             </div>
                                         </section>
                                     </div>
-                                </section>                                                 
+
+                                    <!------------------------------------------------------LOCATION------------------------------------------>
+
+                                    <div class="col-lg-6">
+                                        <section class="panel">
+                                            <div class="panel-body">                            
+                                                <div><p><span class="bold">Location: </span> :</p></div>
+                                                <div class="panel-body bio-graph-info">
+                                                    <center>
+                                                        <div id="map" style="height: 500px; width: 575px; margin: 0; padding: 0;"></div>
+                                                    </center>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!------------------------------------------------------SCHEDULE------------------------------------------>
+                        </section>
+                        <div class="row">
 
+                            <!------------------------------------------------------PROGRAM OF WORKS------------------------------------------>
 
-                            
-                            <input type="hidden" id="projId" value="" name="projId">
-                            
-                            
-                            <!---------------------------------------------For the summary of the works----------------->
-                            
                             <section class="panel">
-                                
-            <%ArrayList<Schedule> completedDatesReport = (ArrayList<Schedule>) session.getAttribute("completedDatesReport");%>
-                                
-                                <div class="bio-graph-heading project-heading">
-                                    <strong>Work Done</strong>
-                                </div>
-                                <div class="panel-body bio-graph-info">
-                                    
-                                    
-<%
 
-                                   long total = 0; 
-
-
-%>
-                                   
-                                    <table class="table table-bordered">
-                                        
-                                        <thead>
-                                        <th>Work</th>
-                                        <th>Description</th>
-                                        <th>Date Started</th>
-                                        <th>Target End date</th>
-                                        <th>Actual date completed</th>
-                                        <th>Status</th>
-                                        
-                                        
-                                        </thead>
-                                        <tbody>
-                                            <%
-                                                
-                                            Date convertedCurrentDate1;
-                                            Date convertedCurrentDate2;
-                                            
-                                             for(int x = 0; x < completedDatesReport.size();x++){
-                                                
-                                                
-                                              SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                              convertedCurrentDate1 = sdf.parse(completedDatesReport.get(x).getEnddate());
-                                              String date1 = sdf.format(convertedCurrentDate1);
-                                              
-                                              String date2 = "";
-                                              long diffDays = 0;
-                                              
-                                              
-                                              convertedCurrentDate2 = sdf.parse(completedDatesReport.get(x).getActualenddate());
-                                              date2 = sdf.format(convertedCurrentDate2);
-                                              
-                                              
-                                              long diff = Math.abs(convertedCurrentDate1.getTime() - convertedCurrentDate2.getTime());
-                                              diffDays = diff / (24 * 60 * 60 * 1000);
-                                              
-                                               total += diffDays;
-                                              
-
-
-
-
-
-
-
-
-
-
-                                            %>
-                                            <tr>
-                                                <td><%=completedDatesReport.get(x).getTask().getName()%></td>
-                                                <td><%=completedDatesReport.get(x).getTask().getDescription()%></td>
-                                                <td><%=completedDatesReport.get(x).getStartdate()%></td>
-                                                <td><%=completedDatesReport.get(x).getEnddate()%></td>
-                                                <td><%=completedDatesReport.get(x).getActualenddate()%></td>
-                                                <%
-                                                if(convertedCurrentDate1.after(convertedCurrentDate2)){
-                                                %>
-                                                <td>
-                                                    <font color="blue"> Ahead <%out.print(diffDays + " days");%></font>
-                                                </td>
-                                                <%
-                                                }
-
-                                                if(convertedCurrentDate1.equals(convertedCurrentDate2)){
-                                                %>
-                                                <td>
-                                                    <font color="green"> On-time </font>
-                                                </td>
-                                                <%
-                                                }
-                                                if(convertedCurrentDate1.before(convertedCurrentDate2)){
-                                                %>
-
-                                                <td>
-                                                    <font color="red"> Delayed <%out.print(diffDays + " days");%></font>
-                                                </td>
-
-                                                <%
-                                                }
-                                                %>
-                                                
-                                                
-                                            </tr>
-                                            
-                                            <%
-                                            
-                                                }
-                                            
-                                            %>
-                                        </tbody>
-                                        
-                                        
-                                    </table>    
-                                    
-                                    
-                                    
-               
-
-                                </div>
-
-                                
-                                <br>             
-
-
-
-                            </section>
-                            
-                            
-                            
-                            
-                            
-<section class="panel">
-                                <div class="bio-graph-heading project-heading">
-                                    <strong>Project Main Testimonial</strong>
-                                </div>
-                                <div class="panel-body bio-graph-info" style="height: 250px;">
-                                    <div class="DocumentList2">
-                                        <div class="row2">
-                                            <%String url = null;%>
-                                            <%Testimonial t = p.getMainTestimonial();
-                                                for (Files f : t.getFiles()) {
-                                                    url = t.getFolderName() + "/" + t.getTitle() + "/" + f.getFileName();
-                                                    if (f.getType().equalsIgnoreCase("image")) {%>
-
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="<%=url%>" style="width:100%; height:100%">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
-
-                                            <%} else if (f.getType().equalsIgnoreCase("video")) {%>
-
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
-                                                    <source src="<%=url%>" type="video/mp4">
-                                                </video>
-                                                <br/>
-                                                <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getTestimonial(<%=f.getId()%>)">View Details</button>                                        
-                                            </div>
-
-                                            <%} else if (f.getType().equalsIgnoreCase("document")) {%>
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
-
-                                            <%}
-                                                }
-                                            %>
-                                        </div>
+                                <div class="col-lg-12">
+                                    <div class="bio-graph-heading project-heading">
+                                        <strong>Program Works</strong>
                                     </div>
-                                </div>
-                            </section>      
 
-                            <!------------------------------------------------------GS UPLOADS------------------------------------------>
-                            <section class="panel">
-                                <div class="bio-graph-heading project-heading">
-                                    <strong>Project Files</strong>
-                                </div>
-                                <div class="panel-body bio-graph-info" style="height: 250px;">
-                                    <div class="DocumentList2">
-                                        <div class="row2">
-                                            <%
-                                                for (Files f : pfiles) {
+                                    <section class="panel">
+                                        <div class="panel-body">
+                                            <table class="table" style="width:100%; text-align: center">
+                                                <%for (int x = 0; x < pworks.size(); x++) {%>
 
-                                                    url = p.getFoldername() + "/" + p.getId() + "/" + f.getFileName();
-                                                    if (f.getType().equalsIgnoreCase("image")) {%>
+                                                <tr>
+                                                    <th colspan="6"><%=pworks.get(x).getName()%></th>
+                                                </tr>
+                                                <tr>
+                                                    <th><center>Name</center></th>
+                                                <th><center>Quantity</center></th>
+                                                <th><center>Unit</center></th>
+                                                <th><center>Unit Price</center></th>
+                                                <th><center>Total</center></th>
+                                                </tr>
+                                                <%for (int y = 0; y < pworks.get(x).getComponents().size(); y++) {%>
+                                                <tr>
+                                                    <td><%=pworks.get(x).getComponents().get(y).getName()%></td>
+                                                    <td><%=pworks.get(x).getComponents().get(y).getQuantity()%></td>
+                                                    <td><%=pworks.get(x).getComponents().get(y).getUnit().getUnit()%></td>
+                                                    <td>PHP <%=df.format(pworks.get(x).getComponents().get(y).getUnitPrice())%></td>
+                                                    <td>PHP <%=df.format(pworks.get(x).getComponents().get(y).getUnitPrice() * pworks.get(x).getComponents().get(y).getQuantity())%></td>
+                                                </tr>
 
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="<%=url%>" style="width:100%; height:100%">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getProjectFiles(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
 
-                                            <%} else if (f.getType().equalsIgnoreCase("video")) {%>
+                                                <%}%>
 
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
-                                                    <source src="<%=url%>" type="video/mp4">
-                                                </video>
-                                                <br/>
-                                                <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getProjectFiles(<%=f.getId()%>)">View Details</button>                                        
-                                            </div>
+                                                <%}%>
 
-                                            <%} else if (f.getType().equalsIgnoreCase("document")) {%>
-                                            <div class="col-lg-3 DocumentItem2">
-                                                <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
-                                                <br/>
-                                                <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getProjectFiles(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
-                                            </div>
+                                            </table>
+                                            <br> 
+                                            <table class="table" style="width:100%; text-align: center">    
+                                                <tr>
+                                                    <td>Total cost: </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>PHP <%=df.format(cost)%></td>
+                                                </tr>
 
-                                            <%}
+                                                <tr>
+                                                    <td>Indirect Cost 17% of Total Cost: </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>PHP <%=df.format(cost * 0.17)%></td>
+                                                </tr>
 
-                                                }
-                                            %>
+                                                <tr>
+                                                    <td>Tax 5% of Total Cost + Indirect Cost: </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>PHP <%=df.format((cost * 0.17) * .05)%></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Estimated cost: </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>PHP <%=df.format(cost + (cost * 0.17) + ((cost * 0.17) * .05))%></td>
+                                                </tr>
+
+                                            </table>
                                         </div>
-                                    </div>
+                                    </section>
                                 </div>
-                            </section>
-
-                            <section class="panel">
-                                <div class="row">
-
-                                    <div class="col-md-12">
-                                        
-
-
-
-                                    </div>   
-
-
-                                </div>
-
-
-                                <!-- page end-->
-                            </section>             
-
-                                 
-
-
-
-
-
-
-
-
-
-
-
-
+                            </section>                                                 
                         </div>
+
+                        <!------------------------------------------------------SCHEDULE------------------------------------------>
+
+
+
+                        <input type="hidden" id="projId" value="" name="projId">
+
+
+                        <!---------------------------------------------For the summary of the works----------------->
+
+                        <section class="panel">
+
+                            <%ArrayList<Schedule> completedDatesReport = (ArrayList<Schedule>) session.getAttribute("completedDatesReport");%>
+
+                            <div class="bio-graph-heading project-heading">
+                                <strong>Work Done</strong>
+                            </div>
+                            <div class="panel-body bio-graph-info">
+
+
+                                <%
+
+                                    long total = 0;
+
+
+                                %>
+
+
+                                <style>
+                                    .okaylegend {color: blue;}
+                                    .semiokaylegend {color: green;}
+                                    .notokaylegend {color: red;}
+                                </style>
+
+                                <div class="pull-right">
+                                    <i class="fa fa-square okaylegend" style="margin-left: 7px"></i> Ahead
+                                    <br>
+                                    <i class="fa fa-square semiokaylegend" style="margin-left: 7px"></i>  On-time
+                                    <br>
+                                    <i class="fa fa-square notokaylegend" style="margin-left: 7px"></i>  Delayed
+                                </div>
+
+                                <table class="table table-bordered">
+
+                                    <thead>
+                                    <th>Work</th>
+                                    <th>Date Started</th>
+                                    <th>Target End date</th>
+                                    <th>Actual date completed</th>
+                                    <th>Status</th>
+
+
+                                    </thead>
+                                    <tbody>
+                                        <%                                                Date convertedCurrentDate1;
+                                            Date convertedCurrentDate2;
+
+                                            for (int x = 0; x < completedDatesReport.size(); x++) {
+
+                                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                                convertedCurrentDate1 = sdf.parse(completedDatesReport.get(x).getEnddate());
+                                                String date1 = sdf.format(convertedCurrentDate1);
+
+                                                String date2 = "";
+                                                long diffDays = 0;
+
+                                                convertedCurrentDate2 = sdf.parse(completedDatesReport.get(x).getActualenddate());
+                                                date2 = sdf.format(convertedCurrentDate2);
+
+                                                long diff = Math.abs(convertedCurrentDate1.getTime() - convertedCurrentDate2.getTime());
+                                                diffDays = diff / (24 * 60 * 60 * 1000);
+
+                                                total += diffDays;
+
+
+                                        %>
+                                        <tr>
+                                            <td><%=completedDatesReport.get(x).getTask().getName()%></td>
+                                            <td><%=completedDatesReport.get(x).getStartdate()%></td>
+                                            <td><%=completedDatesReport.get(x).getEnddate()%></td>
+                                            <td><%=completedDatesReport.get(x).getActualenddate()%></td>
+                                            <%
+                                                if (convertedCurrentDate1.after(convertedCurrentDate2)) {
+                                            %>
+                                            <td>
+                                                <font color="blue"> Ahead <%out.print(diffDays + " days");%></font>
+                                            </td>
+                                            <%
+                                                }
+
+                                                if (convertedCurrentDate1.equals(convertedCurrentDate2)) {
+                                            %>
+                                            <td>
+                                                <font color="green"> On-time </font>
+                                            </td>
+                                            <%
+                                                }
+                                                if (convertedCurrentDate1.before(convertedCurrentDate2)) {
+                                            %>
+
+                                            <td>
+                                                <font color="red"> Delayed <%out.print(diffDays + " days");%></font>
+                                            </td>
+
+                                            <%
+                                                }
+                                            %>
+
+
+                                        </tr>
+
+                                        <%
+                                            }
+
+                                        %>
+                                    </tbody>
+
+
+                                </table>    
+
+
+
+
+
+                            </div>
+
+
+                            <br>             
+
+
+
+                        </section>
+
+
+
+
+
+                        <section class="panel">
+                            <div class="bio-graph-heading project-heading">
+                                <strong>Project Main Testimonial</strong>
+                            </div>
+                            <div class="panel-body bio-graph-info" style="height: 250px;">
+                                <div class="DocumentList2">
+                                    <div class="row2">
+                                        <%String url = null;%>
+                                        <%Testimonial t = p.getMainTestimonial();
+                                            for (Files f : t.getFiles()) {
+                                                url = t.getFolderName() + "/" + t.getTitle() + "/" + f.getFileName();
+                                                if (f.getType().equalsIgnoreCase("image")) {%>
+
+                                        <div class="col-lg-3 DocumentItem2">
+                                            <img src="<%=url%>" style="width:100%; height:100%">
+                                            <br/>
+                                            <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                        </div>
+
+                                        <%} else if (f.getType().equalsIgnoreCase("video")) {%>
+
+                                        <div class="col-lg-3 DocumentItem2">
+                                            <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
+                                                <source src="<%=url%>" type="video/mp4">
+                                            </video>
+                                            <br/>
+                                            <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getTestimonial(<%=f.getId()%>)">View Details</button>                                        
+                                        </div>
+
+                                        <%} else if (f.getType().equalsIgnoreCase("document")) {%>
+                                        <div class="col-lg-3 DocumentItem2">
+                                            <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
+                                            <br/>
+                                            <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getTestimonial(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                        </div>
+
+                                        <%}
+                                            }
+                                        %>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>      
+
+                        <!------------------------------------------------------GS UPLOADS------------------------------------------>
+                        <section class="panel">
+                            <div class="bio-graph-heading project-heading">
+                                <strong>Project Files</strong>
+                            </div>
+                            <div class="panel-body bio-graph-info" style="height: 250px;">
+                                <div class="DocumentList2">
+                                    <div class="row2">
+                                        <%
+                                            for (Files f : pfiles) {
+
+                                                url = p.getFoldername() + "/" + p.getId() + "/" + f.getFileName();
+                                                if (f.getType().equalsIgnoreCase("image")) {%>
+
+                                        <div class="col-lg-3 DocumentItem2">
+                                            <img src="<%=url%>" style="width:100%; height:100%">
+                                            <br/>
+                                            <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getProjectFiles(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                        </div>
+
+                                        <%} else if (f.getType().equalsIgnoreCase("video")) {%>
+
+                                        <div class="col-lg-3 DocumentItem2">
+                                            <video style="position: absolute; width: 100%; height: 100%; top:0px; left:0px;">
+                                                <source src="<%=url%>" type="video/mp4">
+                                            </video>
+                                            <br/>
+                                            <button type="button" class="btn btn-info btn-sm" style="width:100%; position: absolute; bottom:0;" onclick="getProjectFiles(<%=f.getId()%>)">View Details</button>                                        
+                                        </div>
+
+                                        <%} else if (f.getType().equalsIgnoreCase("document")) {%>
+                                        <div class="col-lg-3 DocumentItem2">
+                                            <img src="img/docu.png" style="width:50px; height:50px; vertical-align: middle;">
+                                            <br/>
+                                            <button type="button" value="<%=f.getId()%>" class="btn btn-info btn-sm" onclick="getProjectFiles(<%=f.getId()%>)" style="width:100%; position: absolute; bottom:0;">View Details</button>                                        
+                                        </div>
+
+                                        <%}
+
+                                            }
+                                        %>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="panel">
+                            <div class="row">
+
+                                <div class="col-md-12">
+
+
+
+
+                                </div>   
+
+
+                            </div>
+
+
+                            <!-- page end-->
+                        </section>             
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     </div>
 
-                    <!-- page end-->
-                </section>
+                </div>
 
+                <!-- page end-->
             </section>
+
+        </section>
         <!--main content end-->
-        
+
         <script>
             function getTestimonial(id) {
                 $.ajax({
@@ -736,7 +746,7 @@
             }
 
         </script>
-        
+
 
         <!--footer start-->
         <footer class="site-footer">
@@ -747,8 +757,8 @@
                 </a>
             </div>
         </footer>
-        
-        
+
+
         <script src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAI6e73iIoB6fgzlEmgdJBFYO3DX0OhMLw&callback=initMap"async defer ></script>
         <script>
             var map;
@@ -819,7 +829,7 @@
                 "dataDateFormat": "YYYY-MM-DD",
                 "startDateField": "startdate",
                 "endDateField": "enddate",
-        "dataProvider": <%=tasksJSON%>,
+                "dataProvider": <%=tasksJSON%>,
                 "chartCursor": {
                     "valueBalloonsEnabled": false,
                     "cursorAlpha": 0,

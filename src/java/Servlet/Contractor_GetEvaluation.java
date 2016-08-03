@@ -6,12 +6,15 @@
 package Servlet;
 
 import DAO.ContractorDAO;
+import DAO.GSDAO;
 import DAO.OCPDDAO;
 import Entity.Feedback;
 import Entity.Project;
+import Entity.Schedule;
 import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.System.out;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -44,16 +47,22 @@ public class Contractor_GetEvaluation extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             
             ContractorDAO contDAO = new ContractorDAO();
+            GSDAO gsDAO  = new GSDAO();
             OCPDDAO oc = new OCPDDAO();
             String projectId = request.getParameter("projectID");
             
             Project project = oc.getAllProjectDetails(projectId);
             Feedback feedbackSummary = contDAO.getAverage(project);
+            int tRespondents = contDAO.totalRespondents(project);
+            
+            
+            ArrayList<Schedule> completedDatesReport = gsDAO.getCompletedTaskReport(projectId);
             
             
             request.setAttribute("project", project);
             request.setAttribute("feedbackSummary", feedbackSummary);
-            
+            request.setAttribute("tRespondents",tRespondents);
+            request.setAttribute("completedDatesReport",completedDatesReport);
             
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/Contractor_Evaluation.jsp");

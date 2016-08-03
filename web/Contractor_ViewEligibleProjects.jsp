@@ -4,6 +4,7 @@
     Author     : RoAnn
 --%>
 
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="DAO.ContractorDAO"%>
 <%@page import="Entity.InvitationToBid"%>
 <%@page import="Entity.Contractor_User"%>
@@ -13,7 +14,7 @@
 <%@page import="Entity.Contractor_Has_Project"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%Contractor_User c = (Contractor_User) session.getAttribute("user");%>
-
+<%DecimalFormat df = new DecimalFormat("#,###.00");%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -230,7 +231,7 @@
                                                                 <%=category%>
                                                             </td>
                                                             <td class="p-name">
-                                                                <%=budget%>
+                                                                <%=df.format(budget)%>
                                                             </td>
 
                                                             <%ContractorDAO cd = new ContractorDAO();

@@ -5,12 +5,12 @@
  */
 package Servlet;
 
-import DAO.BACDAO;
 import DAO.ContractorDAO;
-import DAO.LoginDAO;
-import Entity.Contractor_User;
-import Entity.Eligibility_Document;
+import DAO.GSDAO;
+import DAO.OCPDDAO;
+import Entity.Feedback;
 import Entity.Project;
+import Entity.Schedule;
 import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.System.out;
@@ -18,16 +18,16 @@ import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Krist
+ * @author AdrianKyle
  */
-public class BAC_ViewEligibilityDocuments extends HttpServlet {
+public class BAC_Contractor_GetEvaluation extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,38 +41,38 @@ public class BAC_ViewEligibilityDocuments extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        try {
-
-            BACDAO bacdao = new BACDAO();
-            LoginDAO lDAO = new LoginDAO();
-            ContractorDAO cdao = new ContractorDAO();
+        HttpSession session = request.getSession();
+        try (PrintWriter out = response.getWriter()) {
             
-            int id = Integer.parseInt(request.getParameter("contractor_has_projectID"));
-            String projID = request.getParameter("projID");
+            ContractorDAO contDAO = new ContractorDAO();
+            GSDAO gsDAO  = new GSDAO();
+            OCPDDAO oc = new OCPDDAO();
+            String projectId = request.getParameter("projectID");
+            
+            Project project = oc.getAllProjectDetails(projectId);
+            Feedback feedbackSummary = contDAO.getAverage(project);
+            int tRespondents = contDAO.totalRespondents(project);
             
             
-            ArrayList<Eligibility_Document> documents = bacdao.getEligibilityDocuments(id);
-            Eligibility_Document doc = bacdao.getDocumentStat(id);
-
-            //Get contractor
-            Contractor_User cu = lDAO.getContInfobyCHPID(id);
-            request.setAttribute("contractor", cu);
-            ArrayList<Project> pList = cdao.getProjectHistoryList("Finished",cu.getID());
-            request.setAttribute("contractorPList", pList);
+            ArrayList<Schedule> completedDatesReport = gsDAO.getCompletedTaskReport(projectId);
             
-            request.setAttribute("projID", projID);
-            request.setAttribute("documents", documents);
-            request.setAttribute("doc", doc);
-
+            
+            request.setAttribute("project", project);
+            request.setAttribute("feedbackSummary", feedbackSummary);
+            request.setAttribute("tRespondents",tRespondents);
+            request.setAttribute("completedDatesReport",completedDatesReport);
+            
             ServletContext context = getServletContext();
-            RequestDispatcher dispatch = context.getRequestDispatcher("/BAC_ViewEligibilityDocuments.jsp");
+            RequestDispatcher dispatch = context.getRequestDispatcher("/Contractor_Evaluation.jsp");
             dispatch.forward(request, response);
-
-        } finally {
-            out.close();
+            
+            
+            
+        }finally{
+            
+        out.close();
+        
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

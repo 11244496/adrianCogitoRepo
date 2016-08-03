@@ -578,7 +578,7 @@ public class ContractorDAO {
         return result2;
     }
 
-    public ArrayList<Project> getProjectHistoryList(String input) {
+    public ArrayList<Project> getProjectHistoryList(String input, int ContractorID) {
 
         ArrayList<Project> projectlist = new ArrayList<Project>();
         Project project = null;
@@ -586,10 +586,11 @@ public class ContractorDAO {
         try {
             myFactory = ConnectionFactory.getInstance();
             connection = myFactory.getConnection();
-            String query = "select * from project where Status = ?";
+            String query = "select * from project where Status = ? and Contractor_ID = ?";
 
             statement = connection.prepareStatement(query);
             statement.setString(1, input);
+            statement.setInt(2, ContractorID);
 
             result = statement.executeQuery();
 
@@ -879,6 +880,36 @@ public class ContractorDAO {
             Logger.getLogger(DAO.ContractorDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+    
+    public int totalRespondents(Project p) {
+
+        int total = 0;
+
+        try {
+            myFactory = ConnectionFactory.getInstance();
+            connection = myFactory.getConnection();
+            String query = "select count(*) as c from feedback where project_ID = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                total = result.getInt("c");
+            }
+
+            
+
+            statement.close();
+
+            connection.close();
+            return total;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.BACDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return total;
     }
     
 }
